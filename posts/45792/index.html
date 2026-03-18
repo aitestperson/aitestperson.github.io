@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aitestperson.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="java基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="javaBase">
+<meta property="og:url" content="https://aitestperson.github.io/posts/45792/index.html">
+<meta property="og:site_name" content="AI测试员">
+<meta property="og:description" content="java基础">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aitestperson.github.io/%E6%B3%9B%E5%9E%8B%E8%A6%86%E7%9B%96.png">
+<meta property="og:image" content="https://aitestperson.github.io/bimap%E4%BE%8B%E5%AD%901.png">
+<meta property="og:image" content="https://aitestperson.github.io/bimap%E4%BE%8B%E5%AD%902.png">
+<meta property="og:image" content="https://aitestperson.github.io/%E5%BC%82%E5%B8%B8%E7%B1%BB%E7%9A%84%E5%85%B3%E8%81%94.png">
+<meta property="article:published_time" content="2017-10-06T07:28:12.000Z">
+<meta property="article:modified_time" content="2026-03-18T13:32:20.548Z">
+<meta property="article:author" content="AI测试员">
+<meta property="article:tag" content="java基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aitestperson.github.io/%E6%B3%9B%E5%9E%8B%E8%A6%86%E7%9B%96.png">
+
+
+<link rel="canonical" href="https://aitestperson.github.io/posts/45792/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aitestperson.github.io/posts/45792/","path":"posts/45792/","title":"javaBase"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>javaBase | AI测试员</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">AI测试员</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#public-private-protected-%E5%8F%8A%E4%B8%8D%E5%86%99%E6%97%B6%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.</span> <span class="nav-text">public ,private ,protected 及不写时的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BC%96%E8%AF%91%E5%87%BA%E7%9A%84class%E7%9A%84%E6%96%87%E4%BB%B6%E5%90%8D%E6%9C%89%E4%BA%9B%E5%B8%A6%E6%9C%89-1-2%E8%BF%99%E7%A7%8D"><span class="nav-number">2.</span> <span class="nav-text">为什么编译出的class的文件名有些带有$1,$2这种</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java%E4%B8%8D%E5%85%81%E8%AE%B8%E5%8F%AA%E6%9C%89%E8%BF%94%E5%9B%9E%E7%B1%BB%E5%9E%8B%E4%B8%8D%E5%90%8C%E7%9A%84%E6%96%B9%E6%B3%95%E9%87%8D%E8%BD%BD"><span class="nav-number">3.</span> <span class="nav-text">Java不允许只有返回类型不同的方法重载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E5%8F%98%E5%BC%8F%E8%A6%86%E7%9B%96%E5%92%8C%E6%B3%9B%E5%9E%8B%E9%87%8D%E8%BD%BD"><span class="nav-number">4.</span> <span class="nav-text">协变式覆盖和泛型重载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%8F%E5%8F%98%E5%BC%8F%E8%A6%86%E7%9B%96"><span class="nav-number">4.1.</span> <span class="nav-text">协变式覆盖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%9B%E5%9E%8B%E9%87%8D%E8%BD%BD"><span class="nav-number">4.2.</span> <span class="nav-text">泛型重载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#enum%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%BC%8A%E7%AB%AF"><span class="nav-number">5.</span> <span class="nav-text">enum类型的弊端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap-LinkedHashMap%E4%B8%8ETreeMap"><span class="nav-number">6.</span> <span class="nav-text">HashMap,LinkedHashMap与TreeMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-number">7.</span> <span class="nav-text">异常的分类</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">AI测试员</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aitestperson.github.io/posts/45792/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="AI测试员">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AI测试员">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="javaBase | AI测试员">
+      <meta itemprop="description" content="java基础">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          javaBase
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-10-06 15:28:12" itemprop="dateCreated datePublished" datetime="2017-10-06T15:28:12+08:00">2017-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-03-18 21:32:20" itemprop="dateModified" datetime="2026-03-18T21:32:20+08:00">2026-03-18</time>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">java基础</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="public-private-protected-及不写时的区别"><a href="#public-private-protected-及不写时的区别" class="headerlink" title="public ,private ,protected 及不写时的区别"></a>public ,private ,protected 及不写时的区别</h2><p><code>注意:不写时默认为friendly</code><br>各个作用域所起的作用如下:</p>
+<table>
+<thead>
+<tr>
+<th>作用域</th>
+<th>当前类</th>
+<th>同一package</th>
+<th>子孙类</th>
+<th>其他package</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>protected</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>×</td>
+</tr>
+<tr>
+<td>friendly</td>
+<td>√</td>
+<td>√</td>
+<td>×</td>
+<td>×</td>
+</tr>
+<tr>
+<td>private</td>
+<td>√</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+</tr>
+</tbody></table>
+<h2 id="为什么编译出的class的文件名有些带有-1-2这种"><a href="#为什么编译出的class的文件名有些带有-1-2这种" class="headerlink" title="为什么编译出的class的文件名有些带有$1,$2这种"></a>为什么编译出的class的文件名有些带有$1,$2这种</h2><p>Those are the <code>.class</code> files that hold the anonymous inner classes.<br>参考资料:<br><a href="https://stackoverflow.com/questions/1075207/what-are-the-1-in-class-file">https://stackoverflow.com/questions/1075207/what-are-the-1-in-class-file</a></p>
+<h2 id="Java不允许只有返回类型不同的方法重载"><a href="#Java不允许只有返回类型不同的方法重载" class="headerlink" title="Java不允许只有返回类型不同的方法重载"></a>Java不允许只有返回类型不同的方法重载</h2><p>在<code>同一个类</code>中，无论返回值、访问修饰符是否相同，方法名必须相同，参数列表必须不参相同。</p>
+<p>因为Java语言层面上<code>overload resolution</code>只看方法名和参数列表的类型，不看返回值类型。<br>如果<code>overload resolution</code>发现方法名+参数列表找到了多个版本匹配度一样，那<code>overload resolution</code>就以“冲突”失败。</p>
+<p>在JVM层面上，其实是允许同一个类里有多个同名同参数的方法只在返回值类型上不同。但这个特点没有暴露给Java语言（甚至反射API也处理不了这个特点，只有新的MethodHandle API能处理）。</p>
+<h2 id="协变式覆盖和泛型重载"><a href="#协变式覆盖和泛型重载" class="headerlink" title="协变式覆盖和泛型重载"></a>协变式覆盖和泛型重载</h2><h3 id="协变式覆盖"><a href="#协变式覆盖" class="headerlink" title="协变式覆盖"></a>协变式覆盖</h3><p>只要子类方法与超类方法具有相同的方法签名，或者子类方法的返回值是超类方法的子类型(增加了对协变返回值的支持)，就可以覆盖。</p>
+<h3 id="泛型重载"><a href="#泛型重载" class="headerlink" title="泛型重载"></a>泛型重载</h3><p>JDK7、8是不可以编译的，需要用JDK6才可以<br>泛型擦除指的是:比如<code>List&lt;String&gt;</code>和<code>List&lt;Integer&gt;</code>,擦除后都变成<code>List</code><br>如果两个泛型方法在擦除泛型信息后，如果只是具有相同的参数类型，而返回值不一样，就可以进行重载；</p>
+<p><img src="/%E6%B3%9B%E5%9E%8B%E8%A6%86%E7%9B%96.png" alt="泛型覆盖"></p>
+<h2 id="enum类型的弊端"><a href="#enum类型的弊端" class="headerlink" title="enum类型的弊端"></a>enum类型的弊端</h2><p>使用枚举类型进行映射有一个弊端就是,将来有一天修改了枚举类型的定义,<code>会造成数据库中的数据无法被加载</code>,所以如果对改动的枚举定义(如顺序调整了– ORDINAL;或名称改了;或增减了选项)时一定要同步update数据库中的记录,这对于产品数据库也是个麻烦事. 这一点上还是需要谨慎的思考是否真要用 Java 的枚举值来映射.<br>而用 Integer 或 String 来作为 Java 的属性时则不会造成数据加载的异常,顶多是数据混乱,或有些值无法理解而已.<br>所以,对于一些常用而又量不大的数据,可以一次性把它的映射关系加载进缓存里面,可以考虑用guava–谷歌开源一个jar,其中的BiMap很好用,但是要注意右边要保证唯一性,比如下面这个不能同时是22L</p>
+<p><img src="/bimap%E4%BE%8B%E5%AD%901.png" alt="bimap例子1"></p>
+<p>还有下面这个例子,左边的key重复了,会以后面执行的为主:</p>
+<p><img src="/bimap%E4%BE%8B%E5%AD%902.png" alt="bimap例子2"></p>
+<h2 id="HashMap-LinkedHashMap与TreeMap"><a href="#HashMap-LinkedHashMap与TreeMap" class="headerlink" title="HashMap,LinkedHashMap与TreeMap"></a>HashMap,LinkedHashMap与TreeMap</h2><p>HashMap不保证数据有序，LinkedHashMap保证数据可以保持插入顺序，而如果我们希望Map可以保持key的大小顺序的时候，我们就需要利用TreeMap了。</p>
+<p><a href="http://yikun.github.io/2015/04/06/Java-TreeMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/">http://yikun.github.io/2015/04/06/Java-TreeMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/</a></p>
+<h2 id="异常的分类"><a href="#异常的分类" class="headerlink" title="异常的分类"></a>异常的分类</h2><ol>
+<li>异常的继承结构：基类为Throwable，Error和Exception继承Throwable，RuntimeException和IOException等继承Exception，具体的RuntimeException继承RuntimeException。 </li>
+<li>Error和RuntimeException及其子类成为未检查异常（unchecked），其它异常成为已检查异常（checked）。</li>
+</ol>
+<p><img src="/%E5%BC%82%E5%B8%B8%E7%B1%BB%E7%9A%84%E5%85%B3%E8%81%94.png" alt="异常类的关联"></p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag"># java基础</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/12425/" rel="prev" title="javaIO">
+                  <i class="fa fa-angle-left"></i> javaIO
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/2135/" rel="next" title="javaClassLoader">
+                  javaClassLoader <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">AI测试员</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
