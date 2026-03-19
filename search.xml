@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>developToolsDescription</title>
-    <url>/posts/4352/</url>
+    <url>/article/4352.html</url>
     <content><![CDATA[<h2 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h2><p>最基本的复制是 y，粘贴是 p，剪切是 d。<br>复制和剪切的命令后面都可以接一个移动命令，表示将光标移动区间内的文本复制过来。<br>粘贴时 p 与 P 的区别是贴到光标前后的区别。<br>如果是在插入模式下想粘贴，也可以不退回普通模式，用 <code>ctrl+r再输入*</code> 来粘贴。</p>
 <p>在窗格间切换的方法:</p>
 <table>
@@ -50,41 +50,8 @@
       </tags>
   </entry>
   <entry>
-    <title>javaClassLoader</title>
-    <url>/posts/2135/</url>
-    <content><![CDATA[<h2 id="了解ClassLoader的好处"><a href="#了解ClassLoader的好处" class="headerlink" title="了解ClassLoader的好处"></a>了解ClassLoader的好处</h2><p>有助于了解java类的加载机制,了解web应用服务器是怎么加载进war包并怎么工作的</p>
-<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><ol>
-<li>相信很多人都会在各种文章中见到<code>AppClassloader</code>和<code>SystemClassloader</code>,其实这两个是指同一个东西,只是叫法不同.</li>
-<li><code>ClassLoader.getSystemResourceAsStream(name);</code>类似这种,ClassLoader有且仅有提供了几个方法跟systemloader有关的方法.</li>
-<li>Bootstrap是爷爷、ExtClassLoader是爸爸、AppClassLoader是孩子（孙子）。但由于爸爸ExtClassLoader太忙了，所以照顾孩子AppClassLoader的责任就有爷爷Bootstrap来处理了(意思是，虽然ExtClassLoader是AppClassLoader老爸，但却是由爷爷Bootstrap加载的AppClassLoader。该情况与中国国情完全一样)。</li>
-<li>项目的配置文件的覆盖顺序为：根类加载器 &gt; 扩展类加载器 &gt; 应用中的资源文件 &gt; 应用所依赖的第三方jar</li>
-</ol>
-<h2 id="各个ClassLoader的关联"><a href="#各个ClassLoader的关联" class="headerlink" title="各个ClassLoader的关联"></a>各个ClassLoader的关联</h2><p>普通java项目:<br><code>AppClassLoader</code>&gt;&gt;<code>ExtClassLoader</code>&gt;&gt;<code>bootstrapLoader</code><br>glassfish web项目:<br><code>WebappClassLoader</code>&gt;&gt;<code>DelegatingClassLoader</code>&gt;&gt;<code>URLClassLoader</code>&gt;&gt;<code>APIClassLoader</code>&gt;&gt;<code>ExtClassLoader</code>&gt;&gt;<code>bootstrapLoader</code></p>
-<h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p>有一次我在编写一个sdk,打算把它打包成jar,给另外的web应用使用,姑且叫该项目为B工程;<br>A工程(web项目)依赖B工程,在B工程中的classpath下有个配置文件plugins.xml,同时在A工程的classpath下也有一个同名的配置文件,那么<strong>A工程下的配置文件则会覆盖B下的文件,同样包路径的class文件也会覆盖</strong>。</p>
-<p>所以,如果我在A工程下写一个配置文件<code>plugins.xml</code>,那么它打包成war文件的时候会覆盖B工程jar包里面的配置文件<code>plugins.xml</code>,然后在glassfish上运行war包的时候会被<br>WebAppClassLoader加载(如果是java项目则会被AppClassloader获取到)</p>
-<p>下面是项目中用到的部分代码:<br><img src="/ClassLoader1.png" alt="读取配置文件"></p>
-<p><img src="/ClassLoader2.png" alt="深挖代码1"></p>
-<p>这里解释下,因为BootstrapLoader是jvm底层实现,没有具体实现的Class类,所以如果获取到的ClassLoader为null,则表示是由BootstrapLoader加载的;<br>所以这里的逻辑为:如果是bootstraploader,但是因为bootstraploader下肯定没有资源文件,就获取systemloader下的资源文件<br>如果不是bootstraploader,就直接取得classloader然后调用getResourceAsStream方法</p>
-<p><img src="/ClassLoader3.png" alt="深挖代码2"></p>
-<p><img src="/ClassLoader4.png" alt="深挖代码3"></p>
-<p>这里的findResource是每个继承了ClassLoader的类可以自行实现的方法,是为了自定义自己独特的加载方法.</p>
-<p>getResource方法,是委托模型,先遍历到最顶部的ClassLoader(即bootstrapClassLoader),如果找到直接返回url,如果找不到,就找extClassLoader,这样逐渐遍历.</p>
-<p>逻辑是这样的,从WebappClassLoader开始找,儿子让父亲去找,父亲让自己的父亲去找…到了bootstrapClassLoader了,自己都是祖先了,没有父亲可以找了,所以调用自己的getBootstrapResource方法找,找不到,再继续调用自己独特的方法findResource找,还是找不到,只能返回null给儿子,儿子说”父亲找不到,只能自己找了”,所以调用自己独特的方法findResource去找,结果也找不到,再继续交给儿子…直到后面WebappClassLoader自己找到了…你说为什么WebappClassLoader一开始不自己找呢,这就是所谓的委托模型…</p>
-<blockquote>
-<p>依次遍历的顺序如下:<br>org.glassfish.web.loader.WebappClassLoader<br>org.glassfish.internal.api.DelegatingClassLoader<br>java.net.URLClassLoader<br>APIClassLoader<br>ExtClassLoader——ext下的jar里面<br>bootstrapLoader——–jre&#x2F;classes下</p>
-</blockquote>
-<p>看下图可能更理解点,我把配置文件放在classpath的包里面,然后最外层的项目没有配置文件:<br><img src="/ClassLoader5.png" alt="深挖代码4"></p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><blockquote>
-<p><a href="http://blog.csdn.net/lyjshen/article/details/52421554">http://blog.csdn.net/lyjshen/article/details/52421554</a></p>
-</blockquote>
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
-      <tags>
-        <tag>Classloader</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>javaBase</title>
-    <url>/posts/45792/</url>
+    <url>/article/45792.html</url>
     <content><![CDATA[<h2 id="public-private-protected-及不写时的区别"><a href="#public-private-protected-及不写时的区别" class="headerlink" title="public ,private ,protected 及不写时的区别"></a>public ,private ,protected 及不写时的区别</h2><p><code>注意:不写时默认为friendly</code><br>各个作用域所起的作用如下:</p>
 <table>
 <thead>
@@ -131,36 +98,67 @@
 <p>在JVM层面上，其实是允许同一个类里有多个同名同参数的方法只在返回值类型上不同。但这个特点没有暴露给Java语言（甚至反射API也处理不了这个特点，只有新的MethodHandle API能处理）。</p>
 <h2 id="协变式覆盖和泛型重载"><a href="#协变式覆盖和泛型重载" class="headerlink" title="协变式覆盖和泛型重载"></a>协变式覆盖和泛型重载</h2><h3 id="协变式覆盖"><a href="#协变式覆盖" class="headerlink" title="协变式覆盖"></a>协变式覆盖</h3><p>只要子类方法与超类方法具有相同的方法签名，或者子类方法的返回值是超类方法的子类型(增加了对协变返回值的支持)，就可以覆盖。</p>
 <h3 id="泛型重载"><a href="#泛型重载" class="headerlink" title="泛型重载"></a>泛型重载</h3><p>JDK7、8是不可以编译的，需要用JDK6才可以<br>泛型擦除指的是:比如<code>List&lt;String&gt;</code>和<code>List&lt;Integer&gt;</code>,擦除后都变成<code>List</code><br>如果两个泛型方法在擦除泛型信息后，如果只是具有相同的参数类型，而返回值不一样，就可以进行重载；</p>
-<p><img src="/%E6%B3%9B%E5%9E%8B%E8%A6%86%E7%9B%96.png" alt="泛型覆盖"></p>
+<p><img src="/uploads/%E6%B3%9B%E5%9E%8B%E8%A6%86%E7%9B%96.png" alt="泛型覆盖"></p>
 <h2 id="enum类型的弊端"><a href="#enum类型的弊端" class="headerlink" title="enum类型的弊端"></a>enum类型的弊端</h2><p>使用枚举类型进行映射有一个弊端就是,将来有一天修改了枚举类型的定义,<code>会造成数据库中的数据无法被加载</code>,所以如果对改动的枚举定义(如顺序调整了– ORDINAL;或名称改了;或增减了选项)时一定要同步update数据库中的记录,这对于产品数据库也是个麻烦事. 这一点上还是需要谨慎的思考是否真要用 Java 的枚举值来映射.<br>而用 Integer 或 String 来作为 Java 的属性时则不会造成数据加载的异常,顶多是数据混乱,或有些值无法理解而已.<br>所以,对于一些常用而又量不大的数据,可以一次性把它的映射关系加载进缓存里面,可以考虑用guava–谷歌开源一个jar,其中的BiMap很好用,但是要注意右边要保证唯一性,比如下面这个不能同时是22L</p>
-<p><img src="/bimap%E4%BE%8B%E5%AD%901.png" alt="bimap例子1"></p>
+<p><img src="/uploads/bimap%E4%BE%8B%E5%AD%901.png" alt="bimap例子1"></p>
 <p>还有下面这个例子,左边的key重复了,会以后面执行的为主:</p>
-<p><img src="/bimap%E4%BE%8B%E5%AD%902.png" alt="bimap例子2"></p>
+<p><img src="/uploads/bimap%E4%BE%8B%E5%AD%902.png" alt="bimap例子2"></p>
 <h2 id="HashMap-LinkedHashMap与TreeMap"><a href="#HashMap-LinkedHashMap与TreeMap" class="headerlink" title="HashMap,LinkedHashMap与TreeMap"></a>HashMap,LinkedHashMap与TreeMap</h2><p>HashMap不保证数据有序，LinkedHashMap保证数据可以保持插入顺序，而如果我们希望Map可以保持key的大小顺序的时候，我们就需要利用TreeMap了。</p>
 <p><a href="http://yikun.github.io/2015/04/06/Java-TreeMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/">http://yikun.github.io/2015/04/06/Java-TreeMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/</a></p>
 <h2 id="异常的分类"><a href="#异常的分类" class="headerlink" title="异常的分类"></a>异常的分类</h2><ol>
-<li>异常的继承结构：基类为Throwable，Error和Exception继承Throwable，RuntimeException和IOException等继承Exception，具体的RuntimeException继承RuntimeException。 </li>
+<li>异常的继承结构：基类为Throwable，Error和Exception继承Throwable，RuntimeException和IOException等继承Exception，具体的RuntimeException继承RuntimeException。</li>
 <li>Error和RuntimeException及其子类成为未检查异常（unchecked），其它异常成为已检查异常（checked）。</li>
 </ol>
-<p><img src="/%E5%BC%82%E5%B8%B8%E7%B1%BB%E7%9A%84%E5%85%B3%E8%81%94.png" alt="异常类的关联"></p>
+<p><img src="/uploads/%E5%BC%82%E5%B8%B8%E7%B1%BB%E7%9A%84%E5%85%B3%E8%81%94.png" alt="异常类的关联"></p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
       <tags>
         <tag>java基础</tag>
       </tags>
   </entry>
   <entry>
+    <title>javaClassLoader</title>
+    <url>/article/2135.html</url>
+    <content><![CDATA[<h2 id="了解ClassLoader的好处"><a href="#了解ClassLoader的好处" class="headerlink" title="了解ClassLoader的好处"></a>了解ClassLoader的好处</h2><p>有助于了解java类的加载机制,了解web应用服务器是怎么加载进war包并怎么工作的</p>
+<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><ol>
+<li>相信很多人都会在各种文章中见到<code>AppClassloader</code>和<code>SystemClassloader</code>,其实这两个是指同一个东西,只是叫法不同.</li>
+<li><code>ClassLoader.getSystemResourceAsStream(name);</code>类似这种,ClassLoader有且仅有提供了几个方法跟systemloader有关的方法.</li>
+<li>Bootstrap是爷爷、ExtClassLoader是爸爸、AppClassLoader是孩子（孙子）。但由于爸爸ExtClassLoader太忙了，所以照顾孩子AppClassLoader的责任就有爷爷Bootstrap来处理了(意思是，虽然ExtClassLoader是AppClassLoader老爸，但却是由爷爷Bootstrap加载的AppClassLoader。该情况与中国国情完全一样)。</li>
+<li>项目的配置文件的覆盖顺序为：根类加载器 &gt; 扩展类加载器 &gt; 应用中的资源文件 &gt; 应用所依赖的第三方jar</li>
+</ol>
+<h2 id="各个ClassLoader的关联"><a href="#各个ClassLoader的关联" class="headerlink" title="各个ClassLoader的关联"></a>各个ClassLoader的关联</h2><p>普通java项目:<br><code>AppClassLoader</code>&gt;&gt;<code>ExtClassLoader</code>&gt;&gt;<code>bootstrapLoader</code><br>glassfish web项目:<br><code>WebappClassLoader</code>&gt;&gt;<code>DelegatingClassLoader</code>&gt;&gt;<code>URLClassLoader</code>&gt;&gt;<code>APIClassLoader</code>&gt;&gt;<code>ExtClassLoader</code>&gt;&gt;<code>bootstrapLoader</code></p>
+<h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p>有一次我在编写一个sdk,打算把它打包成jar,给另外的web应用使用,姑且叫该项目为B工程;<br>A工程(web项目)依赖B工程,在B工程中的classpath下有个配置文件plugins.xml,同时在A工程的classpath下也有一个同名的配置文件,那么<strong>A工程下的配置文件则会覆盖B下的文件,同样包路径的class文件也会覆盖</strong>。</p>
+<p>所以,如果我在A工程下写一个配置文件<code>plugins.xml</code>,那么它打包成war文件的时候会覆盖B工程jar包里面的配置文件<code>plugins.xml</code>,然后在glassfish上运行war包的时候会被<br>WebAppClassLoader加载(如果是java项目则会被AppClassloader获取到)</p>
+<p>下面是项目中用到的部分代码:<br><img src="/uploads/ClassLoader1.png" alt="读取配置文件"></p>
+<p><img src="/uploads/ClassLoader2.png" alt="深挖代码1"></p>
+<p>这里解释下,因为BootstrapLoader是jvm底层实现,没有具体实现的Class类,所以如果获取到的ClassLoader为null,则表示是由BootstrapLoader加载的;<br>所以这里的逻辑为:如果是bootstraploader,但是因为bootstraploader下肯定没有资源文件,就获取systemloader下的资源文件<br>如果不是bootstraploader,就直接取得classloader然后调用getResourceAsStream方法</p>
+<p><img src="/uploads/ClassLoader3.png" alt="深挖代码2"></p>
+<p><img src="/uploads/ClassLoader4.png" alt="深挖代码3"></p>
+<p>这里的findResource是每个继承了ClassLoader的类可以自行实现的方法,是为了自定义自己独特的加载方法.</p>
+<p>getResource方法,是委托模型,先遍历到最顶部的ClassLoader(即bootstrapClassLoader),如果找到直接返回url,如果找不到,就找extClassLoader,这样逐渐遍历.</p>
+<p>逻辑是这样的,从WebappClassLoader开始找,儿子让父亲去找,父亲让自己的父亲去找…到了bootstrapClassLoader了,自己都是祖先了,没有父亲可以找了,所以调用自己的getBootstrapResource方法找,找不到,再继续调用自己独特的方法findResource找,还是找不到,只能返回null给儿子,儿子说”父亲找不到,只能自己找了”,所以调用自己独特的方法findResource去找,结果也找不到,再继续交给儿子…直到后面WebappClassLoader自己找到了…你说为什么WebappClassLoader一开始不自己找呢,这就是所谓的委托模型…</p>
+<blockquote>
+<p>依次遍历的顺序如下:<br>org.glassfish.web.loader.WebappClassLoader<br>org.glassfish.internal.api.DelegatingClassLoader<br>java.net.URLClassLoader<br>APIClassLoader<br>ExtClassLoader——ext下的jar里面<br>bootstrapLoader——–jre&#x2F;classes下</p>
+</blockquote>
+<p>看下图可能更理解点,我把配置文件放在classpath的包里面,然后最外层的项目没有配置文件:<br><img src="/uploads/ClassLoader5.png" alt="深挖代码4"></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><blockquote>
+<p><a href="http://blog.csdn.net/lyjshen/article/details/52421554">http://blog.csdn.net/lyjshen/article/details/52421554</a></p>
+</blockquote>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+      <tags>
+        <tag>Classloader</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>javaIO</title>
-    <url>/posts/12425/</url>
+    <url>/article/12425.html</url>
     <content><![CDATA[<h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>java IO框架是java开发中最常用到的,通常用于读取,写入文件.</p>
 <h2 id="关于编码"><a href="#关于编码" class="headerlink" title="关于编码"></a>关于编码</h2><p>jvm使用无编码的Unicode字符存储字符串于内存中</p>
 <h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>说起使用方法之前,这里先给两张思维导图,认识下java IO的各个类的关系:</p>
-<img src="/posts/12425/IO%E6%A1%86%E6%9E%B6%E5%A4%A7%E7%9A%84%E4%BD%93%E7%B3%BB.png" class="" title="IO框架大的体系图">
-
-<img src="/posts/12425/IO%E6%A1%86%E6%9E%B6%E5%B0%8F%E7%9A%84%E4%BD%93%E7%B3%BB.png" class="" title="IO框架小的体系图">
-
+<p><img src="/uploads/IO%E6%A1%86%E6%9E%B6%E5%A4%A7%E7%9A%84%E4%BD%93%E7%B3%BB.png" alt="IO框架大的体系图"></p>
+<p><img src="/uploads/IO%E6%A1%86%E6%9E%B6%E5%B0%8F%E7%9A%84%E4%BD%93%E7%B3%BB.png" alt="IO框架小的体系图"></p>
 <h3 id="文件编码跟系统的编码不一致"><a href="#文件编码跟系统的编码不一致" class="headerlink" title="文件编码跟系统的编码不一致"></a>文件编码跟系统的编码不一致</h3><p>这个时候就要进行转换(假设文件的编码是UTF8,而系统的编码是GBK):<br>File–&gt;(转换成字节)FileInputStream–&gt;(对字节进行UTF8读取,转换成Reader字符)InputStreamReader–&gt;(加个缓冲,这个缓冲有read和readLine方法)BufferedReader.</p>
-<p>例子如下:<br><img src="/%E4%BE%8B%E5%AD%901.png" alt="例子1.png"></p>
-<h3 id="文件的编码跟系统的编码一致"><a href="#文件的编码跟系统的编码一致" class="headerlink" title="文件的编码跟系统的编码一致"></a>文件的编码跟系统的编码一致</h3><p>Reader类其实是可以直接接收File作为参数的,这个时候会转换成字节,然后对字节按照系统的编码进行读取,例子如下:<br><img src="/%E4%BE%8B%E5%AD%902.png" alt="例子2.png"></p>
+<p>例子如下:<br><img src="/uploads/%E4%BE%8B%E5%AD%901.png" alt="例子1.png"></p>
+<h3 id="文件的编码跟系统的编码一致"><a href="#文件的编码跟系统的编码一致" class="headerlink" title="文件的编码跟系统的编码一致"></a>文件的编码跟系统的编码一致</h3><p>Reader类其实是可以直接接收File作为参数的,这个时候会转换成字节,然后对字节按照系统的编码进行读取,例子如下:<br><img src="/uploads/%E4%BE%8B%E5%AD%902.png" alt="例子2.png"></p>
 <h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><h3 id="read与readLine的区别"><a href="#read与readLine的区别" class="headerlink" title="read与readLine的区别"></a>read与readLine的区别</h3><p>read如果结束了返回-1,如果没结束返回char类型(一个中文算一个字符);<br>readLine如果结束了返回null,如果没结束返回String类型.</p>
 <h3 id="bufferedInputStream与dataInputStream的区别"><a href="#bufferedInputStream与dataInputStream的区别" class="headerlink" title="bufferedInputStream与dataInputStream的区别"></a>bufferedInputStream与dataInputStream的区别</h3><p>dataInputStream(bufferedInputStream),包裹层…<br>如果您正在做一些特别的尝试将类的字段序列化到文件中，那么您可以使用DataInput &#x2F; OutputStream，因为它可以在二进制级别更好地控制数据。</p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
@@ -170,7 +168,7 @@
   </entry>
   <entry>
     <title>initMyBlogDone</title>
-    <url>/posts/18588/</url>
+    <url>/article/18588.html</url>
     <content><![CDATA[<p>说起搭建博客,发现以前的我真的很折腾,用过WordPress,折腾各种主题各种插件,好不容易折腾完了放到了sae上,又搞下seo优化,到头来发现,真正写的文章少,质量也不行,后面干脆就都写在自己的txt文件里面存起来好了</p>
 <p>直到最近做项目看别人的博客看多了,发现好多大牛都直接把博客放在github pages上,是静态博客,想着又不用自己去操作貌似功能很强大的管理后台,于是我决定动刀了,于是有了现在这个我很喜欢的博客,应该不会再换了!</p>
 <p>搭建的思路先写下:</p>
@@ -231,8 +229,60 @@
       </tags>
   </entry>
   <entry>
+    <title>myFrontEndWorks</title>
+    <url>/article/36228.html</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+<p>友情提示:此页面延迟大,自备梯子,效果更佳~~~ </p>
+
+</blockquote>
+
+
+<h2 id="d3-柱状图-官网demo"><a href="#d3-柱状图-官网demo" class="headerlink" title="d3-柱状图(官网demo)"></a>d3-柱状图(官网demo)</h2>
+<script async src="//jsfiddle.net/godtreeGGG/0qx8x0oL/embed/result,js,html,css/"></script>
+
+
+<h2 id="上拉效果"><a href="#上拉效果" class="headerlink" title="上拉效果"></a>上拉效果</h2>
+<script async src="//jsfiddle.net/godtreeGGG/qtbdsqfx/embed/result,html,css/"></script>
+
+
+<h2 id="echarts"><a href="#echarts" class="headerlink" title="echarts"></a>echarts</h2><h3 id="仪表盘"><a href="#仪表盘" class="headerlink" title="仪表盘"></a>仪表盘</h3>
+<script async src="//jsfiddle.net/godtreeGGG/waf66rgp/embed/result,js,html/"></script>
+
+
+<h3 id="折线图"><a href="#折线图" class="headerlink" title="折线图"></a>折线图</h3>
+<script async src="//jsfiddle.net/godtreeGGG/xjta89wp/embed/result,js,html/"></script>
+
+
+<h3 id="折线图2"><a href="#折线图2" class="headerlink" title="折线图2"></a>折线图2</h3>
+<script async src="//jsfiddle.net/godtreeGGG/jkewbx66/embed/result,js,html/"></script>
+
+
+<h3 id="折线图3"><a href="#折线图3" class="headerlink" title="折线图3"></a>折线图3</h3>
+<script async src="//jsfiddle.net/godtreeGGG/cme8uhc3/embed/result,js,html/"></script>
+
+
+<h3 id="折线图-条形图"><a href="#折线图-条形图" class="headerlink" title="折线图&amp;条形图"></a>折线图&amp;条形图</h3>
+<script async src="//jsfiddle.net/godtreeGGG/orja0d4r/embed/result,js,html/"></script>
+
+
+<h3 id="扇形图"><a href="#扇形图" class="headerlink" title="扇形图"></a>扇形图</h3>
+<script async src="//jsfiddle.net/godtreeGGG/w7e62xdf/embed/result,js,html/"></script>
+
+
+<h3 id="柱状图"><a href="#柱状图" class="headerlink" title="柱状图"></a>柱状图</h3>
+<script async src="//jsfiddle.net/godtreeGGG/vh7bjzaw/embed/result,js,html/"></script>
+
+
+<h3 id="横向柱状图"><a href="#横向柱状图" class="headerlink" title="横向柱状图"></a>横向柱状图</h3>
+<script async src="//jsfiddle.net/godtreeGGG/ejt7gs9c/embed/result,js,html/"></script>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+      <tags>
+        <tag>前端开发</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>knowledgeMap</title>
-    <url>/posts/90001/</url>
+    <url>/article/90001.html</url>
     <content><![CDATA[<h1 id="个人后端知识体系整理（完善中）"><a href="#个人后端知识体系整理（完善中）" class="headerlink" title="个人后端知识体系整理（完善中）"></a>个人后端知识体系整理（完善中）</h1><blockquote class="pullquote mindmap mindmap-md"><ul>
 <li>中心节点<ul>
 <li>数据结构与算法<ul>
@@ -400,7 +450,7 @@
   </entry>
   <entry>
     <title>regexNote</title>
-    <url>/posts/37573/</url>
+    <url>/article/37573.html</url>
     <content><![CDATA[<h1 id="正则的用途"><a href="#正则的用途" class="headerlink" title="正则的用途"></a>正则的用途</h1><p>在很多地方都会用到正则表达式,如果熟练掌握正则,在爬虫,一些渗透实验中会占有优势</p>
 <h1 id="正则的发展历程"><a href="#正则的发展历程" class="headerlink" title="正则的发展历程"></a>正则的发展历程</h1><p>看了一些总结正则发展历程的文章,我想大概总结下正则的几种标准:</p>
 <p>从一开始的grep,再到egrep( 这里的e表示extended，加强版的意思,支持了+、|与?这三个元符号，并且可以在分组中使用*，分组可以直接写成(…)，同时用\1,\2…来引用分组。 )诞生,再到一系列类似sed,awk类的程序产生,这是时候是正则发展的混乱期,因为始终都没有一个标准.</p>
@@ -408,7 +458,7 @@
 <p>这种混乱度情况一直持续到了1986年。在1986年，POSIX（Portable Operating System Interface）标准公诸于世，POSIX制定了不同的操作系统都需要遵守的一套规则，当然，正则表达式也包括其中。</p>
 <p>当然，除了POSIX标准外，还有一个Perl分支，也就是我们现在熟知的PCRE，随着Perl语言的发展，Perl语言中的正则表达式功能越来越强悍，为了把Perl语言中正则的功能移植到其他语言中，PCRE就诞生了。现在的编程语言中的正则表达式，大部分都属于PCRE这个分支。</p>
 </blockquote>
-<h1 id="正则标准分类"><a href="#正则标准分类" class="headerlink" title="正则标准分类"></a>正则标准分类</h1><h2 id="POSIX标准"><a href="#POSIX标准" class="headerlink" title="POSIX标准"></a>POSIX标准</h2><p>POSIX把正则表达式分为两种（favor）：BRE（Basic Regular Expressions）与ERE（Extended Regular Expressions ）。所有的POSIX程序可以选择支持其中的一种。具体对比引用别人的图,如下表：<br>![BRE和ERE的区别](2017-09-28 10-21-40.png)</p>
+<h1 id="正则标准分类"><a href="#正则标准分类" class="headerlink" title="正则标准分类"></a>正则标准分类</h1><h2 id="POSIX标准"><a href="#POSIX标准" class="headerlink" title="POSIX标准"></a>POSIX标准</h2><p>POSIX把正则表达式分为两种（favor）：BRE（Basic Regular Expressions）与ERE（Extended Regular Expressions ）。所有的POSIX程序可以选择支持其中的一种。具体对比引用别人的图,如下表：<br>![BRE和ERE的区别](uploads&#x2F;2017-09-28 10-21-40.png)</p>
 <p>翻译过来就是:</p>
 <p>|正则功能|BREs|EREs|<br>|–|–|<br>|<code>.,^,$,[...],[!...]</code>这四种用法|支持|支持|<br>|用<code>*</code>代表任意数量的字符匹配|支持|支持|<br>|用<code>+,?</code>分别代表一个以上和任意多个的字符匹配||支持|<br>|范围确定|写法例子为\{1,10\}|写法例子为{1,10}|<br>|分组|写法例子为\(…\)|写法例子为(…)|<br>|在括号分组后面指定分组出现次数|支持|支持|<br>|反向引用|写法例子为<code>\1</code>||<br>|用竖线表示多种情况匹配||支持|</p>
 <p>我们现在使用的linux发行版，都是集成GNU套件的，GNU是Gnu’s Not Unix的缩写，GNU在实现了POXIS标准的同时，做了一定的扩展，所以上面空白栏中的功能也能使用。下面一一讲解：</p>
@@ -451,7 +501,7 @@
 </ul>
 <h1 id="正则使用时候的注意点"><a href="#正则使用时候的注意点" class="headerlink" title="正则使用时候的注意点"></a>正则使用时候的注意点</h1><h2 id="关于哪个工具用的哪个正则标准"><a href="#关于哪个工具用的哪个正则标准" class="headerlink" title="关于哪个工具用的哪个正则标准"></a>关于哪个工具用的哪个正则标准</h2><p>记住一点,在某个语言中,像 Java、Python等,这些语言的正则表达式都是基于PCRE标准的;而Linux下使用各种处理文本的命令，是继承自POSIX标准，不过是由GNU扩展后的而已。<br><strong>注意,因为平时在编程语言里面用正则的多些,所以下面的注意点都是以PCRE标准说的.等下不要说我怎么在awk中测试不通过就尴尬了^_^.</strong></p>
 <h2 id="正则的匹配方式"><a href="#正则的匹配方式" class="headerlink" title="正则的匹配方式"></a>正则的匹配方式</h2><p>正则是从左到右,依次匹配,如果匹配完了,作为第一个匹配结果,这个时候如果还没到字符串末尾,则再继续往后匹配,如果还能再匹配上,作为第二个匹配结果,直到遍历完该字符串,匹配结束,然后匹配结果会按照括号进行分组,分组从1下标开始,如果是0下标表示整个匹配到的字符串,下面有一个例子</p>
-<p>![匹配例子](2017-09-28 11-48-39.png)</p>
+<p>![匹配例子](uploads&#x2F;2017-09-28 11-48-39.png)</p>
 <h2 id="正则的处理选项"><a href="#正则的处理选项" class="headerlink" title="正则的处理选项"></a>正则的处理选项</h2><p><strong>单行模式和多行模式要特别注意下</strong></p>
 <table>
 <thead>
@@ -525,24 +575,15 @@
 <li>嵌套分组</li>
 <li>反向引用分组</li>
 </ol>
-<p>关于嵌套分组的有总结得比较好的,就不解释了:</p>
-<img src="/posts/37573/2017-09-28%2015-50-57.png" class="" title="嵌套分组">
-
-<p>剩下的直接上例子最好说明了:</p>
-<img src="/posts/37573/2017-09-28%2011-24-11.png" class="" title="使用分组">
-<img src="/posts/37573/2017-09-28%2015-30-36.png" class="" title="使用分组命名并引用相应命名的分组">
-<img src="/posts/37573/2017-09-28%2015-35-36.png" class="" title="忽略分组">
-<img src="/posts/37573/2017-09-28%2011-24-57.png" class="" title="使用分组并反向引用分组">
-
-
+<p>关于嵌套分组的有总结得比较好的,就不解释了:<br>![嵌套分组](uploads&#x2F;2017-09-28 15-50-57.png)</p>
+<p>剩下的直接上例子最好说明了:<br>![使用分组](uploads&#x2F;2017-09-28 11-24-11.png)<br>![使用分组命名并引用相应命名的分组](uploads&#x2F;2017-09-28 15-30-36.png)<br>![忽略分组](uploads&#x2F;2017-09-28 15-35-36.png)<br>![使用分组并反向引用分组](uploads&#x2F;2017-09-28 11-24-57.png)</p>
 <h2 id="零宽断言和负向零宽断言"><a href="#零宽断言和负向零宽断言" class="headerlink" title="零宽断言和负向零宽断言"></a>零宽断言和负向零宽断言</h2><h3 id="零宽断言"><a href="#零宽断言" class="headerlink" title="零宽断言"></a>零宽断言</h3><p>通俗点讲,就是限制需要匹配的字符串前后能有什么,不能有什么.</p>
 <p><code>(?=exp)</code>也叫零宽度正预测先行断言，它断言自身出现的位置的后面能匹配表达式exp。比如<code>\b\w+(?=ing\b)</code>，匹配以ing结尾的单词的前面部分(除了ing以外的部分)，如查找<code>I&#39;m singing while you&#39;re dancing.</code>时，它会匹配<code>sing</code>和<code>danc</code>。</p>
 <p><code>(?&lt;=exp)</code>也叫零宽度正回顾后发断言，它断言自身出现的位置的前面能匹配表达式exp。比如<code>(?&lt;=\bre)\w+\b</code>会匹配以re开头的单词的后半部分(除了re以外的部分)，例如在查找<code>reading a book</code>时，它匹配<code>ading</code>。</p>
 <p>下面这个例子同时使用了这两种断言<code>(?&lt;=\s)\d+(?=\s)</code>匹配以空白符间隔的数字(再次强调，不包括这些空白符)。</p>
 <h3 id="负向零宽断言"><a href="#负向零宽断言" class="headerlink" title="负向零宽断言"></a>负向零宽断言</h3><p>那有了这个<strong>零宽断言</strong>,为什么还要有另外一个<strong>负向零宽断言</strong>呢?</p>
 <p>看下下面的例子(引用,因为这个例子已经足够好说明了):</p>
-<img src="/posts/37573/2017-09-28%2015-12-03.png" class="" title="匹配包含p但是后面不要带有u的单词">
-
+<p>![匹配包含p但是后面不要带有u的单词](uploads&#x2F;2017-09-28 15-12-03.png)</p>
 <p><code>(?!exp)</code>，断言此位置的后面不能匹配表达式exp。它只匹配一个位置，并不消费任何字符。<br><code>(?&lt;!exp)</code>，断言此位置的前面不能匹配表达式exp。它只匹配一个位置，并不消费任何字符。</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>总算写完了这篇文章,参考了许多资料,一开始接触awk,sed程序发现,跟java里面用的正则又不太一样,才有了后面去探索为什么有这些区别,顺便翻了下正则的发展史,总的来说正则的使用思路才清晰了些.这里只是把一些常用的用法在这里做了下汇总和总结,有错误的地方欢迎指正.</p>
 <p>在java中,用<code>Pattern.compile(String inputString)</code>来产生一个<code>Pattern</code>类,<code>Pattern</code>类通过<code>Pattern.matcher(String regexString)</code>产生一个<code>Matcher</code>类,该<code>Matcher</code>类有group(用来获取分组)方法,start 和 end 方法,matches 和 lookingAt 方法,replaceFirst 和 replaceAll 方法,appendReplacement 和 appendTail 方法,具体使用详情请看: <a href="http://www.runoob.com/java/java-regular-expressions.html">菜鸟教程</a> ;快速测试java代码,可以在线使用 <a href="http://www.javarepl.com/term.html">Java Repl</a> 检验下.</p>
@@ -556,58 +597,6 @@
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
       <tags>
         <tag>正则表达式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>myFrontEndWorks</title>
-    <url>/posts/36228/</url>
-    <content><![CDATA[<blockquote class="blockquote-center">
-<p>友情提示:此页面延迟大,自备梯子,效果更佳~~~ </p>
-
-</blockquote>
-
-
-<h2 id="d3-柱状图-官网demo"><a href="#d3-柱状图-官网demo" class="headerlink" title="d3-柱状图(官网demo)"></a>d3-柱状图(官网demo)</h2>
-<script async src="//jsfiddle.net/godtreeGGG/0qx8x0oL/embed/result,js,html,css/"></script>
-
-
-<h2 id="上拉效果"><a href="#上拉效果" class="headerlink" title="上拉效果"></a>上拉效果</h2>
-<script async src="//jsfiddle.net/godtreeGGG/qtbdsqfx/embed/result,html,css/"></script>
-
-
-<h2 id="echarts"><a href="#echarts" class="headerlink" title="echarts"></a>echarts</h2><h3 id="仪表盘"><a href="#仪表盘" class="headerlink" title="仪表盘"></a>仪表盘</h3>
-<script async src="//jsfiddle.net/godtreeGGG/waf66rgp/embed/result,js,html/"></script>
-
-
-<h3 id="折线图"><a href="#折线图" class="headerlink" title="折线图"></a>折线图</h3>
-<script async src="//jsfiddle.net/godtreeGGG/xjta89wp/embed/result,js,html/"></script>
-
-
-<h3 id="折线图2"><a href="#折线图2" class="headerlink" title="折线图2"></a>折线图2</h3>
-<script async src="//jsfiddle.net/godtreeGGG/jkewbx66/embed/result,js,html/"></script>
-
-
-<h3 id="折线图3"><a href="#折线图3" class="headerlink" title="折线图3"></a>折线图3</h3>
-<script async src="//jsfiddle.net/godtreeGGG/cme8uhc3/embed/result,js,html/"></script>
-
-
-<h3 id="折线图-条形图"><a href="#折线图-条形图" class="headerlink" title="折线图&amp;条形图"></a>折线图&amp;条形图</h3>
-<script async src="//jsfiddle.net/godtreeGGG/orja0d4r/embed/result,js,html/"></script>
-
-
-<h3 id="扇形图"><a href="#扇形图" class="headerlink" title="扇形图"></a>扇形图</h3>
-<script async src="//jsfiddle.net/godtreeGGG/w7e62xdf/embed/result,js,html/"></script>
-
-
-<h3 id="柱状图"><a href="#柱状图" class="headerlink" title="柱状图"></a>柱状图</h3>
-<script async src="//jsfiddle.net/godtreeGGG/vh7bjzaw/embed/result,js,html/"></script>
-
-
-<h3 id="横向柱状图"><a href="#横向柱状图" class="headerlink" title="横向柱状图"></a>横向柱状图</h3>
-<script async src="//jsfiddle.net/godtreeGGG/ejt7gs9c/embed/result,js,html/"></script>
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
-      <tags>
-        <tag>前端开发</tag>
       </tags>
   </entry>
 </search>
