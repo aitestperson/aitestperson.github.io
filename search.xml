@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java IO框架</title>
+    <url>/article/12425.html</url>
+    <content><![CDATA[<h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>java IO框架是java开发中最常用到的,通常用于读取,写入文件.</p>
+<h2 id="关于编码"><a href="#关于编码" class="headerlink" title="关于编码"></a>关于编码</h2><p>jvm使用无编码的Unicode字符存储字符串于内存中</p>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>说起使用方法之前,这里先给两张思维导图,认识下java IO的各个类的关系:</p>
+<p><img src="/uploads/IO%E6%A1%86%E6%9E%B6%E5%A4%A7%E7%9A%84%E4%BD%93%E7%B3%BB.png" alt="IO框架大的体系图"></p>
+<p><img src="/uploads/IO%E6%A1%86%E6%9E%B6%E5%B0%8F%E7%9A%84%E4%BD%93%E7%B3%BB.png" alt="IO框架小的体系图"></p>
+<h3 id="文件编码跟系统的编码不一致"><a href="#文件编码跟系统的编码不一致" class="headerlink" title="文件编码跟系统的编码不一致"></a>文件编码跟系统的编码不一致</h3><p>这个时候就要进行转换(假设文件的编码是UTF8,而系统的编码是GBK):<br>File–&gt;(转换成字节)FileInputStream–&gt;(对字节进行UTF8读取,转换成Reader字符)InputStreamReader–&gt;(加个缓冲,这个缓冲有read和readLine方法)BufferedReader.</p>
+<p>例子如下:<br><img src="/uploads/%E4%BE%8B%E5%AD%901.png" alt="例子1.png"></p>
+<h3 id="文件的编码跟系统的编码一致"><a href="#文件的编码跟系统的编码一致" class="headerlink" title="文件的编码跟系统的编码一致"></a>文件的编码跟系统的编码一致</h3><p>Reader类其实是可以直接接收File作为参数的,这个时候会转换成字节,然后对字节按照系统的编码进行读取,例子如下:<br><img src="/uploads/%E4%BE%8B%E5%AD%902.png" alt="例子2.png"></p>
+<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><h3 id="read与readLine的区别"><a href="#read与readLine的区别" class="headerlink" title="read与readLine的区别"></a>read与readLine的区别</h3><p>read如果结束了返回-1,如果没结束返回char类型(一个中文算一个字符);<br>readLine如果结束了返回null,如果没结束返回String类型.</p>
+<h3 id="bufferedInputStream与dataInputStream的区别"><a href="#bufferedInputStream与dataInputStream的区别" class="headerlink" title="bufferedInputStream与dataInputStream的区别"></a>bufferedInputStream与dataInputStream的区别</h3><p>dataInputStream(bufferedInputStream),包裹层…<br>如果您正在做一些特别的尝试将类的字段序列化到文件中，那么您可以使用DataInput &#x2F; OutputStream，因为它可以在二进制级别更好地控制数据。</p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+      <tags>
+        <tag>JavaIO框架</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ClassLoader详解</title>
     <url>/article/2135.html</url>
     <content><![CDATA[<h2 id="了解ClassLoader的好处"><a href="#了解ClassLoader的好处" class="headerlink" title="了解ClassLoader的好处"></a>了解ClassLoader的好处</h2><p>有助于了解java类的加载机制,了解web应用服务器是怎么加载进war包并怎么工作的</p>
@@ -31,24 +49,6 @@
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
       <tags>
         <tag>ClassLoader</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java IO框架</title>
-    <url>/article/12425.html</url>
-    <content><![CDATA[<h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>java IO框架是java开发中最常用到的,通常用于读取,写入文件.</p>
-<h2 id="关于编码"><a href="#关于编码" class="headerlink" title="关于编码"></a>关于编码</h2><p>jvm使用无编码的Unicode字符存储字符串于内存中</p>
-<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>说起使用方法之前,这里先给两张思维导图,认识下java IO的各个类的关系:</p>
-<p><img src="/uploads/IO%E6%A1%86%E6%9E%B6%E5%A4%A7%E7%9A%84%E4%BD%93%E7%B3%BB.png" alt="IO框架大的体系图"></p>
-<p><img src="/uploads/IO%E6%A1%86%E6%9E%B6%E5%B0%8F%E7%9A%84%E4%BD%93%E7%B3%BB.png" alt="IO框架小的体系图"></p>
-<h3 id="文件编码跟系统的编码不一致"><a href="#文件编码跟系统的编码不一致" class="headerlink" title="文件编码跟系统的编码不一致"></a>文件编码跟系统的编码不一致</h3><p>这个时候就要进行转换(假设文件的编码是UTF8,而系统的编码是GBK):<br>File–&gt;(转换成字节)FileInputStream–&gt;(对字节进行UTF8读取,转换成Reader字符)InputStreamReader–&gt;(加个缓冲,这个缓冲有read和readLine方法)BufferedReader.</p>
-<p>例子如下:<br><img src="/uploads/%E4%BE%8B%E5%AD%901.png" alt="例子1.png"></p>
-<h3 id="文件的编码跟系统的编码一致"><a href="#文件的编码跟系统的编码一致" class="headerlink" title="文件的编码跟系统的编码一致"></a>文件的编码跟系统的编码一致</h3><p>Reader类其实是可以直接接收File作为参数的,这个时候会转换成字节,然后对字节按照系统的编码进行读取,例子如下:<br><img src="/uploads/%E4%BE%8B%E5%AD%902.png" alt="例子2.png"></p>
-<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><h3 id="read与readLine的区别"><a href="#read与readLine的区别" class="headerlink" title="read与readLine的区别"></a>read与readLine的区别</h3><p>read如果结束了返回-1,如果没结束返回char类型(一个中文算一个字符);<br>readLine如果结束了返回null,如果没结束返回String类型.</p>
-<h3 id="bufferedInputStream与dataInputStream的区别"><a href="#bufferedInputStream与dataInputStream的区别" class="headerlink" title="bufferedInputStream与dataInputStream的区别"></a>bufferedInputStream与dataInputStream的区别</h3><p>dataInputStream(bufferedInputStream),包裹层…<br>如果您正在做一些特别的尝试将类的字段序列化到文件中，那么您可以使用DataInput &#x2F; OutputStream，因为它可以在二进制级别更好地控制数据。</p>
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
-      <tags>
-        <tag>JavaIO框架</tag>
       </tags>
   </entry>
   <entry>
@@ -152,173 +152,15 @@
 <li>Error和RuntimeException及其子类成为未检查异常（unchecked），其它异常成为已检查异常（checked）。</li>
 </ol>
 <p><img src="/uploads/%E5%BC%82%E5%B8%B8%E7%B1%BB%E7%9A%84%E5%85%B3%E8%81%94.png" alt="异常类的关联"></p>
-<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><img src="http://yikun.github.io/2015/04/06/Java-TreeMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/"></p>
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
-      <tags>
-        <tag>Java基础</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MySQL开发实战笔记</title>
-    <url>/article/11695.html</url>
-    <content><![CDATA[<blockquote>
-<p>本文记录了 MySQL 开发中常见的问题与解决方案，包括索引优化、事务处理、死锁分析等实战经验。</p>
-</blockquote>
-<h2 id="SQL-优化技巧"><a href="#SQL-优化技巧" class="headerlink" title="SQL 优化技巧"></a>SQL 优化技巧</h2><h3 id="查询优化"><a href="#查询优化" class="headerlink" title="查询优化"></a>查询优化</h3><ol>
-<li><strong>尽量用 JOIN 查询</strong>，左表是小表去 LEFT JOIN</li>
-<li>效率低的场景：能用 EXISTS（小表）就不用 IN（大表）</li>
-<li>用 <code>SQL_NO_CACHE</code> 查看执行计划，排除缓存干扰</li>
-</ol>
-<h3 id="索引优化"><a href="#索引优化" class="headerlink" title="索引优化"></a>索引优化</h3><ol>
-<li><strong>组合索引</strong> <code>(a,b,c)</code> 查询只要带上 <code>a</code> 就走索引</li>
-<li>组合索引 <code>(a,b,c)</code> 和 <code>(a,c,d)</code> 可以合并为 <code>(a,b,c,d)</code></li>
-<li>唯一组合索引跟普通组合索引用法一样，只是多了唯一约束</li>
-<li>如果一个字段包含很多重复值，走索引意义不大，几乎是全表扫描</li>
-</ol>
-<h3 id="大数据量操作"><a href="#大数据量操作" class="headerlink" title="大数据量操作"></a>大数据量操作</h3><p>当需要 UPDATE&#x2F;DELETE 大量数据时，为避免大事务问题：</p>
-<ol>
-<li><strong>方案一</strong>：把匹配条件的记录 ID 查询出来，放入 Redis，用游标分批处理</li>
-<li><strong>方案二</strong>：查询出最大 ID 和最小 ID，分段处理</li>
-</ol>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 示例：分段删除</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> <span class="keyword">table</span> <span class="keyword">WHERE</span> id <span class="keyword">BETWEEN</span> ? <span class="keyword">AND</span> ? <span class="keyword">AND</span> <span class="keyword">condition</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="开发规范"><a href="#开发规范" class="headerlink" title="开发规范"></a>开发规范</h3><p>开发时需要防止没有带条件查询所有记录，导致内存溢出。</p>
-<hr>
-<h2 id="DDL-与-DML"><a href="#DDL-与-DML" class="headerlink" title="DDL 与 DML"></a>DDL 与 DML</h2><table>
-<thead>
-<tr>
-<th>类型</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>DDL</td>
-<td>数据定义语言，如 CREATE、ALTER、DROP 等，会超时</td>
-</tr>
-<tr>
-<td>DML</td>
-<td>数据操作语言，如 SELECT、INSERT、UPDATE、DELETE，会阻塞直到执行完成</td>
-</tr>
-</tbody></table>
-<hr>
-<h2 id="事务与并发问题"><a href="#事务与并发问题" class="headerlink" title="事务与并发问题"></a>事务与并发问题</h2><h3 id="事务未提交导致查询不到数据"><a href="#事务未提交导致查询不到数据" class="headerlink" title="事务未提交导致查询不到数据"></a>事务未提交导致查询不到数据</h3><p><strong>问题场景</strong>：流程落地后需要推送数据到核算系统，但推送线程查询不到刚落地数据。</p>
-<p><strong>原因</strong>：启动线程太快，事务还未完全提交就开始查询。</p>
-<p><strong>解决方案</strong>：使用 <code>TransactionSynchronizationManager</code> 在事务提交后执行：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">TransactionSynchronizationManager.registerSynchronization(</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">TransactionSynchronizationAdapter</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterCommit</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="comment">// 事务提交后执行推送逻辑</span></span><br><span class="line">            calculateStandardService.createIncreaseCalculateLedgerWithThread(ledgerList);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="性能问题排查"><a href="#性能问题排查" class="headerlink" title="性能问题排查"></a>性能问题排查</h2><h3 id="使用-jvisualvm-查看"><a href="#使用-jvisualvm-查看" class="headerlink" title="使用 jvisualvm 查看"></a>使用 jvisualvm 查看</h3><p>先用 <code>jvisualvm.exe</code> 查看内存和线程情况：</p>
+<h2 id="性能问题排查"><a href="#性能问题排查" class="headerlink" title="性能问题排查"></a>性能问题排查</h2><p>先用 <code>jvisualvm.exe</code> 查看内存和线程情况：</p>
 <ol>
 <li><strong>内存问题</strong>：如果内存太高，右键 dump 出 hprof 文件，用 MAT 分析</li>
 <li><strong>线程问题</strong>：如果线程数太多，规范线程池名称，打印堆栈，检查有无死锁</li>
 </ol>
-<hr>
-<h2 id="MySQL-死锁问题"><a href="#MySQL-死锁问题" class="headerlink" title="MySQL 死锁问题"></a>MySQL 死锁问题</h2><h3 id="死锁产生原因"><a href="#死锁产生原因" class="headerlink" title="死锁产生原因"></a>死锁产生原因</h3><p>锁只有在竞争一个以上的资源时才会产生，MySQL 死锁都是基于索引的。</p>
-<h3 id="典型死锁场景"><a href="#典型死锁场景" class="headerlink" title="典型死锁场景"></a>典型死锁场景</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 事务A</span></span><br><span class="line"><span class="keyword">INSERT INTO</span> a <span class="keyword">VALUES</span> (...);</span><br><span class="line"><span class="keyword">INSERT INTO</span> b <span class="keyword">VALUES</span> (...);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 事务B</span></span><br><span class="line"><span class="keyword">INSERT INTO</span> b <span class="keyword">VALUES</span> (...);</span><br><span class="line"><span class="keyword">INSERT INTO</span> a <span class="keyword">VALUES</span> (...);</span><br></pre></td></tr></table></figure>
-
-<p>因为表里建了唯一索引，INSERT 之前会锁住索引页，两个事务没提交时会互相死锁。</p>
-<h3 id="死锁日志分析"><a href="#死锁日志分析" class="headerlink" title="死锁日志分析"></a>死锁日志分析</h3><p>从 INNODB TRX 信息可以看到：</p>
-<ul>
-<li><code>lock_mode X</code>：排他锁</li>
-<li><code>lock_mode S</code>：共享锁</li>
-<li><code>lock_mode X insert intention</code>：插入意向锁</li>
-<li><code>WAITING FOR THIS LOCK TO BE GRANTED</code>：等待锁</li>
-<li><code>HOLDS THE LOCK(S)</code>：持有锁</li>
-</ul>
-<hr>
-<h2 id="MySQL-基础架构"><a href="#MySQL-基础架构" class="headerlink" title="MySQL 基础架构"></a>MySQL 基础架构</h2><h3 id="Server-层-vs-存储引擎层"><a href="#Server-层-vs-存储引擎层" class="headerlink" title="Server 层 vs 存储引擎层"></a>Server 层 vs 存储引擎层</h3><p>MySQL 整体分为两层：</p>
-<ul>
-<li><strong>Server 层</strong>：连接器、查询缓存、分析器、优化器、执行器</li>
-<li><strong>存储引擎层</strong>：负责数据的存储和提取（插件式，支持 InnoDB、MyISAM 等）</li>
-</ul>
-<h3 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">客户端 → 连接器 → 查询缓存 → 分析器 → 优化器 → 执行器 → 存储引擎</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li><strong>连接器</strong>：管理连接权限，定期断开长连接</li>
-<li><strong>查询缓存</strong>：表更新会导致缓存失效，建议关闭</li>
-<li><strong>分析器</strong>：词法分析和语法分析</li>
-<li><strong>优化器</strong>：决定使用哪个索引、多表连接顺序</li>
-<li><strong>执行器</strong>：权限检查，调用存储引擎接口</li>
-</ol>
-<hr>
-<h2 id="日志系统"><a href="#日志系统" class="headerlink" title="日志系统"></a>日志系统</h2><h3 id="redo-log（重做日志）"><a href="#redo-log（重做日志）" class="headerlink" title="redo log（重做日志）"></a>redo log（重做日志）</h3><p><strong>作用</strong>：InnoDB 特有，保证 crash-safe 能力</p>
-<p><strong>特点</strong>：</p>
-<ul>
-<li>物理日志，记录”在某个数据页上做了什么修改”</li>
-<li>循环写，空间固定</li>
-<li>固定大小（如 4 个 1GB 文件）</li>
-</ul>
-<p><strong>原理</strong>：相当于”粉板”，write pos 记录当前位置，checkpoint 记录擦除位置。</p>
-<h3 id="binlog（归档日志）"><a href="#binlog（归档日志）" class="headerlink" title="binlog（归档日志）"></a>binlog（归档日志）</h3><p><strong>作用</strong>：Server 层日志，用于数据恢复和主从复制</p>
-<p><strong>特点</strong>：</p>
-<ul>
-<li>逻辑日志，记录原始逻辑（如”给 ID&#x3D;2 加 1”）</li>
-<li>追加写，不会覆盖</li>
-<li>可用于数据恢复</li>
-</ul>
-<h3 id="两阶段提交"><a href="#两阶段提交" class="headerlink" title="两阶段提交"></a>两阶段提交</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">更新语句 → 执行器 → 存储引擎</span><br><span class="line">              ↓</span><br><span class="line">         写 redo log (prepare 状态)</span><br><span class="line">              ↓</span><br><span class="line">         写 binlog</span><br><span class="line">              ↓</span><br><span class="line">         提交事务 (redo log commit)</span><br></pre></td></tr></table></figure>
-
-<p>这样能保证两个日志一致，崩溃恢复时可以根据状态恢复数据。</p>
-<hr>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
-<li><strong>查询优化</strong>：多用 JOIN，合理使用索引，避免全表扫描</li>
-<li><strong>大事务</strong>：分批处理，避免长时间锁表</li>
-<li><strong>并发问题</strong>：注意事务提交时机，避免查询不到刚写入的数据</li>
-<li><strong>死锁分析</strong>：基于索引产生，分析锁等待关系</li>
-<li><strong>日志理解</strong>：redo log 保证持久化，binlog 用于恢复和复制</li>
-</ol>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><img src="http://yikun.github.io/2015/04/06/Java-TreeMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/"></p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
       <tags>
-        <tag>MySQL</tag>
-        <tag>数据库</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>前端常用图表框架</title>
-    <url>/article/36228.html</url>
-    <content><![CDATA[<blockquote class="blockquote-center">
-<p>友情提示:此页面延迟大,自备梯子,效果更佳~~~ </p>
-
-</blockquote>
-
-
-<h2 id="d3"><a href="#d3" class="headerlink" title="d3"></a>d3</h2><h3 id="柱状图"><a href="#柱状图" class="headerlink" title="柱状图"></a>柱状图</h3>
-<script async src="//jsfiddle.net/godtreeGGG/0qx8x0oL/embed/result,js,html,css/"></script>
-
-
-<h2 id="echarts"><a href="#echarts" class="headerlink" title="echarts"></a>echarts</h2><h3 id="仪表盘"><a href="#仪表盘" class="headerlink" title="仪表盘"></a>仪表盘</h3>
-<script async src="//jsfiddle.net/godtreeGGG/waf66rgp/embed/result,js,html/"></script>
-
-
-<h3 id="折线图"><a href="#折线图" class="headerlink" title="折线图"></a>折线图</h3>
-<script async src="//jsfiddle.net/godtreeGGG/xjta89wp/embed/result,js,html/"></script>
-
-
-<h3 id="折线图2"><a href="#折线图2" class="headerlink" title="折线图2"></a>折线图2</h3>
-<script async src="//jsfiddle.net/godtreeGGG/jkewbx66/embed/result,js,html/"></script>
-
-
-<h3 id="折线图3"><a href="#折线图3" class="headerlink" title="折线图3"></a>折线图3</h3>
-<script async src="//jsfiddle.net/godtreeGGG/cme8uhc3/embed/result,js,html/"></script>
-
-
-<h3 id="折线图-条形图"><a href="#折线图-条形图" class="headerlink" title="折线图&amp;条形图"></a>折线图&amp;条形图</h3>
-<script async src="//jsfiddle.net/godtreeGGG/orja0d4r/embed/result,js,html/"></script>
-
-
-<h3 id="扇形图"><a href="#扇形图" class="headerlink" title="扇形图"></a>扇形图</h3>
-<script async src="//jsfiddle.net/godtreeGGG/w7e62xdf/embed/result,js,html/"></script>
-
-
-<h3 id="柱状图-1"><a href="#柱状图-1" class="headerlink" title="柱状图"></a>柱状图</h3>
-<script async src="//jsfiddle.net/godtreeGGG/vh7bjzaw/embed/result,js,html/"></script>
-
-
-<h3 id="横向柱状图"><a href="#横向柱状图" class="headerlink" title="横向柱状图"></a>横向柱状图</h3>
-<script async src="//jsfiddle.net/godtreeGGG/ejt7gs9c/embed/result,js,html/"></script>
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
-      <tags>
-        <tag>前端开发</tag>
+        <tag>Java基础</tag>
       </tags>
   </entry>
   <entry>
@@ -527,154 +369,51 @@
       </tags>
   </entry>
   <entry>
-    <title>正则表达式笔记</title>
-    <url>/article/37573.html</url>
-    <content><![CDATA[<h1 id="正则的用途"><a href="#正则的用途" class="headerlink" title="正则的用途"></a>正则的用途</h1><p>在很多地方都会用到正则表达式,如果熟练掌握正则,在爬虫,一些渗透实验中会占有优势</p>
-<h1 id="正则的发展历程"><a href="#正则的发展历程" class="headerlink" title="正则的发展历程"></a>正则的发展历程</h1><p>看了一些总结正则发展历程的文章,我想大概总结下正则的几种标准:</p>
-<p>从一开始的grep,再到egrep( 这里的e表示extended，加强版的意思,支持了+、|与?这三个元符号，并且可以在分组中使用*，分组可以直接写成(…)，同时用\1,\2…来引用分组。 )诞生,再到一系列类似sed,awk类的程序产生,这是时候是正则发展的混乱期,因为始终都没有一个标准.</p>
-<blockquote>
-<p>这种混乱度情况一直持续到了1986年。在1986年，POSIX（Portable Operating System Interface）标准公诸于世，POSIX制定了不同的操作系统都需要遵守的一套规则，当然，正则表达式也包括其中。</p>
-<p>当然，除了POSIX标准外，还有一个Perl分支，也就是我们现在熟知的PCRE，随着Perl语言的发展，Perl语言中的正则表达式功能越来越强悍，为了把Perl语言中正则的功能移植到其他语言中，PCRE就诞生了。现在的编程语言中的正则表达式，大部分都属于PCRE这个分支。</p>
+    <title>前端常用图表框架</title>
+    <url>/article/36228.html</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+<p>友情提示:此页面延迟大,自备梯子,效果更佳~~~ </p>
+
 </blockquote>
-<h1 id="正则标准分类"><a href="#正则标准分类" class="headerlink" title="正则标准分类"></a>正则标准分类</h1><h2 id="POSIX标准"><a href="#POSIX标准" class="headerlink" title="POSIX标准"></a>POSIX标准</h2><p>POSIX把正则表达式分为两种（favor）：BRE（Basic Regular Expressions）与ERE（Extended Regular Expressions ）。所有的POSIX程序可以选择支持其中的一种。具体对比引用别人的图,如下表：<br>![BRE和ERE的区别](uploads&#x2F;2017-09-28 10-21-40.png)</p>
-<p>翻译过来就是:</p>
-<p>|正则功能|BREs|EREs|<br>|–|–|<br>|<code>.,^,$,[...],[!...]</code>这四种用法|支持|支持|<br>|用<code>*</code>代表任意数量的字符匹配|支持|支持|<br>|用<code>+,?</code>分别代表一个以上和任意多个的字符匹配||支持|<br>|范围确定|写法例子为\{1,10\}|写法例子为{1,10}|<br>|分组|写法例子为\(…\)|写法例子为(…)|<br>|在括号分组后面指定分组出现次数|支持|支持|<br>|反向引用|写法例子为<code>\1</code>||<br>|用竖线表示多种情况匹配||支持|</p>
-<p>我们现在使用的linux发行版，都是集成GNU套件的，GNU是Gnu’s Not Unix的缩写，GNU在实现了POXIS标准的同时，做了一定的扩展，所以上面空白栏中的功能也能使用。下面一一讲解：</p>
-<ol>
-<li>BRE如何使用<code>+</code>、<code>?</code>呢？需要用<code>\+</code>、<code>\?</code></li>
-<li>BRE如何使用<code>|</code>呢？需要用<code>\|</code></li>
-<li>ERE如何使用<code>\1</code>、<code>\2</code>等这样的反引用？和BRE一样，就是<code>\1</code>、<code>\2</code>等等</li>
-</ol>
-<p>－ **(默认)**使用BRE语法的命令有：grep、ed、sed、vim<br>－ **(默认)**使用ERE语法的命令有：egrep、awk、emacs</p>
-<p>注意上面说的是默认情况下,比如 <code>sed</code> 通过 <code>-r</code> 选项就可以使用ERE了，大家到时自己man一下就可以了。</p>
-<p>POSIX还定义了一些shorthand，具体如下：</p>
-<ul>
-<li>[:alnum:]</li>
-<li>[:alpha:]</li>
-<li>[:cntrl:]</li>
-<li>[:digit:]</li>
-<li>[:graph:]</li>
-<li>[:lower:]</li>
-<li>[:print:]</li>
-<li>[:punct:]</li>
-<li>[:space:]</li>
-<li>[:upper:]</li>
-<li>[:xdigit:]</li>
-</ul>
-<p>在使用这些shorthand时有一个约束：必须在[]中使用，也就是说如果像匹配0-9的数字，需要这么写[[:alnum:]]，取反就是[^[:alnum:]]。shorhand 在BRE与EBE中的用法相同。</p>
-<p>如果用多了sed或者awk会发现,\w,\d这些用不了,因为POSIX规范根本没有定义这些shorthand,这些是在PCRE中定义的。</p>
-<h2 id="PCRE标准"><a href="#PCRE标准" class="headerlink" title="PCRE标准"></a>PCRE标准</h2><p>前面说到,以前随着Perl的不断发展，其支持的正则表达式的功能也越来越强大。Perl比较显诸特征之一是与sed与awk兼容，这造就了Perl成为第一个通用性脚本语言。</p>
-<p>Perl语言应用是如此广泛，以至于其他语言开始移植Perl，最终Perl compatible（兼容）的PCRE诞生了，这其中包括了Tcl, Python, Microsoft’s .NET , Ruby, PHP, C&#x2F;C++, Java等等。</p>
-<p>shorthand在POSIX与PCRE是不同的，PCRE中我们常用的有如下这些：</p>
-<ul>
-<li><code>\w</code> 表示<code>[a-zA-Z]</code></li>
-<li><code>\W</code> 表示<code>[^a-zA-Z]</code></li>
-<li><code>\s</code> 表示<code>[\t\r\n\f]</code></li>
-<li><code>\S</code> 表示<code>[^\t\r\n\f]</code></li>
-<li><code>\d</code> 表示<code>[1-9]</code></li>
-<li><code>\D</code> 表示<code>[^1-9]</code></li>
-<li><code>\&lt;</code> 表示一个单词的起始</li>
-<li><code>\&gt;</code> 表示一个单词的结尾</li>
-<li><code>\b</code> 代表着单词的开头或结尾,也就是单词的分界处,它只匹配一个位置</li>
-</ul>
-<h1 id="正则使用时候的注意点"><a href="#正则使用时候的注意点" class="headerlink" title="正则使用时候的注意点"></a>正则使用时候的注意点</h1><h2 id="关于哪个工具用的哪个正则标准"><a href="#关于哪个工具用的哪个正则标准" class="headerlink" title="关于哪个工具用的哪个正则标准"></a>关于哪个工具用的哪个正则标准</h2><p>记住一点,在某个语言中,像 Java、Python等,这些语言的正则表达式都是基于PCRE标准的;而Linux下使用各种处理文本的命令，是继承自POSIX标准，不过是由GNU扩展后的而已。<br><strong>注意,因为平时在编程语言里面用正则的多些,所以下面的注意点都是以PCRE标准说的.等下不要说我怎么在awk中测试不通过就尴尬了^_^.</strong></p>
-<h2 id="正则的匹配方式"><a href="#正则的匹配方式" class="headerlink" title="正则的匹配方式"></a>正则的匹配方式</h2><p>正则是从左到右,依次匹配,如果匹配完了,作为第一个匹配结果,这个时候如果还没到字符串末尾,则再继续往后匹配,如果还能再匹配上,作为第二个匹配结果,直到遍历完该字符串,匹配结束,然后匹配结果会按照括号进行分组,分组从1下标开始,如果是0下标表示整个匹配到的字符串,下面有一个例子</p>
-<p>![匹配例子](uploads&#x2F;2017-09-28 11-48-39.png)</p>
-<h2 id="正则的处理选项"><a href="#正则的处理选项" class="headerlink" title="正则的处理选项"></a>正则的处理选项</h2><p><strong>单行模式和多行模式要特别注意下</strong></p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>IgnoreCase(忽略大小写)</td>
-<td>匹配时不区分大小写。</td>
-</tr>
-<tr>
-<td>Multiline(多行模式)</td>
-<td>更改^和$的含义，使它们分别在任意一行的行首和行尾匹配，而不仅仅在整个字符串的开头和结尾匹配。(<strong>在此模式下,$的精确含意是:匹配\n之前的位置以及字符串结束前的位置.</strong>)</td>
-</tr>
-<tr>
-<td>Singleline(单行模式)</td>
-<td>更改.的含义，使它与每一个字符匹配（<strong>包括换行符\n</strong>）。</td>
-</tr>
-<tr>
-<td>IgnorePatternWhitespace(忽略空白)</td>
-<td>忽略表达式中的非转义空白并启用由#标记的注释。</td>
-</tr>
-<tr>
-<td>ExplicitCapture(显式捕获)</td>
-<td>仅捕获已被显式命名的组。</td>
-</tr>
-</tbody></table>
-<h2 id="贪婪与懒惰"><a href="#贪婪与懒惰" class="headerlink" title="贪婪与懒惰"></a>贪婪与懒惰</h2><p><code>I already explained that the regex engine is eager .</code></p>
-<p>这话的意思很明显,说明正则默认情况下,都是很贪婪的,比如用<code>get|gettest</code>去匹配<code>gettest</code>,一匹配到get后,就认为已经匹配成功了该交替表达式,结束匹配,返回get.<br>再举个例子,比如用<code>\b(Get(Value)?|Set(Value)?)\b</code>去匹配<code>SetValue</code>,因为使用了交替表达式,到了<code>Set(Value)?</code>这步匹配,因为贪婪,所以尽量长的去匹配,所以最终匹配到的是<code>SetValue</code>.</p>
-<p>当正则表达式中包含能接受重复的限定符时，通常的行为是（在使整个表达式能得到匹配的前提下）匹配尽可能多的字符。以这个表达式为例<code>a.*b</code>，它将会匹配最长的以a开始，以b结束的字符串。如果用它来搜索<code>aabab</code>的话，它会匹配整个字符串<code>aabab</code>。这被称为贪婪匹配。</p>
-<p>有时，我们更需要懒惰匹配，也就是匹配尽可能少的字符。限定符可以把贪婪模式转化为懒惰匹配模式，只要在它后面加上一个问号?。这样.*?就意味着匹配任意数量的重复，但是在能使整个匹配成功的前提下使用最少的重复。现在看看懒惰版的例子吧：</p>
-<p><code>a.*?b</code>匹配最短的，以a开始，以b结束的字符串。如果把它应用于<code>aabab</code>的话，它会匹配aab（第一到第三个字符）和ab（第四到第五个字符）。</p>
-<p>懒惰限定符:</p>
-<table>
-<thead>
-<tr>
-<th>代码&#x2F;语法</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>*?</td>
-<td>重复任意次，但尽可能少重复</td>
-</tr>
-<tr>
-<td>+?</td>
-<td>重复1次或更多次，但尽可能少重复</td>
-</tr>
-<tr>
-<td>??</td>
-<td>重复0次或1次，但尽可能少重复</td>
-</tr>
-<tr>
-<td>{n,m}?</td>
-<td>重复n到m次，但尽可能少重复</td>
-</tr>
-<tr>
-<td>{n,}?</td>
-<td>重复n次以上，但尽可能少重复</td>
-</tr>
-</tbody></table>
-<h2 id="时刻记得转义的存在"><a href="#时刻记得转义的存在" class="headerlink" title="时刻记得转义的存在"></a>时刻记得转义的存在</h2><p>比如你要查找<code>*</code>字符,这个字符在正则里面有特殊的意义,所以你得写成<code>\*</code>才能真正匹配到<code>*</code>,就跟程序里面写字符串要进行转义一样.这里还有个注意点,比如你想找<code>|</code>,正则就得写成<code>\|</code>,但是到了程序里面,又得多一层转义用来转义<code>\</code>这个字符,所以程序里面得写成 <code>String regex=&quot;\\|&quot;</code></p>
-<h2 id="字符类的否定（negation）"><a href="#字符类的否定（negation）" class="headerlink" title="字符类的否定（negation）"></a>字符类的否定（negation）</h2><p>你可以通过在最开始的位置使用插入符号（译者注：^）来_否定_一个字符类。</p>
-<p>[^a]表示“匹配除了a的任意字符”。<br>[^a-zA-Z0-9]表示“找到一个非字母数字字符”。<br>[^abc]表示“找到一个插入符或者a或者b或者c”。<br>[^^]表示“找到除了插入符外的任意字符”。（呕！）</p>
-<h2 id="分组的使用"><a href="#分组的使用" class="headerlink" title="分组的使用"></a>分组的使用</h2><p>分组的使用这里我遇到几种情况:</p>
-<ol>
-<li>分组命名</li>
-<li>忽略分组</li>
-<li>嵌套分组</li>
-<li>反向引用分组</li>
-</ol>
-<p>关于嵌套分组的有总结得比较好的,就不解释了:<br>![嵌套分组](uploads&#x2F;2017-09-28 15-50-57.png)</p>
-<p>剩下的直接上例子最好说明了:<br>![使用分组](uploads&#x2F;2017-09-28 11-24-11.png)<br>![使用分组命名并引用相应命名的分组](uploads&#x2F;2017-09-28 15-30-36.png)<br>![忽略分组](uploads&#x2F;2017-09-28 15-35-36.png)<br>![使用分组并反向引用分组](uploads&#x2F;2017-09-28 11-24-57.png)</p>
-<h2 id="零宽断言和负向零宽断言"><a href="#零宽断言和负向零宽断言" class="headerlink" title="零宽断言和负向零宽断言"></a>零宽断言和负向零宽断言</h2><h3 id="零宽断言"><a href="#零宽断言" class="headerlink" title="零宽断言"></a>零宽断言</h3><p>通俗点讲,就是限制需要匹配的字符串前后能有什么,不能有什么.</p>
-<p><code>(?=exp)</code>也叫零宽度正预测先行断言，它断言自身出现的位置的后面能匹配表达式exp。比如<code>\b\w+(?=ing\b)</code>，匹配以ing结尾的单词的前面部分(除了ing以外的部分)，如查找<code>I&#39;m singing while you&#39;re dancing.</code>时，它会匹配<code>sing</code>和<code>danc</code>。</p>
-<p><code>(?&lt;=exp)</code>也叫零宽度正回顾后发断言，它断言自身出现的位置的前面能匹配表达式exp。比如<code>(?&lt;=\bre)\w+\b</code>会匹配以re开头的单词的后半部分(除了re以外的部分)，例如在查找<code>reading a book</code>时，它匹配<code>ading</code>。</p>
-<p>下面这个例子同时使用了这两种断言<code>(?&lt;=\s)\d+(?=\s)</code>匹配以空白符间隔的数字(再次强调，不包括这些空白符)。</p>
-<h3 id="负向零宽断言"><a href="#负向零宽断言" class="headerlink" title="负向零宽断言"></a>负向零宽断言</h3><p>那有了这个<strong>零宽断言</strong>,为什么还要有另外一个<strong>负向零宽断言</strong>呢?</p>
-<p>看下下面的例子(引用,因为这个例子已经足够好说明了):</p>
-<p>![匹配包含p但是后面不要带有u的单词](uploads&#x2F;2017-09-28 15-12-03.png)</p>
-<p><code>(?!exp)</code>，断言此位置的后面不能匹配表达式exp。它只匹配一个位置，并不消费任何字符。<br><code>(?&lt;!exp)</code>，断言此位置的前面不能匹配表达式exp。它只匹配一个位置，并不消费任何字符。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>总算写完了这篇文章,参考了许多资料,一开始接触awk,sed程序发现,跟java里面用的正则又不太一样,才有了后面去探索为什么有这些区别,顺便翻了下正则的发展史,总的来说正则的使用思路才清晰了些.这里只是把一些常用的用法在这里做了下汇总和总结,有错误的地方欢迎指正.</p>
-<p>在java中,用<code>Pattern.compile(String inputString)</code>来产生一个<code>Pattern</code>类,<code>Pattern</code>类通过<code>Pattern.matcher(String regexString)</code>产生一个<code>Matcher</code>类,该<code>Matcher</code>类有group(用来获取分组)方法,start 和 end 方法,matches 和 lookingAt 方法,replaceFirst 和 replaceAll 方法,appendReplacement 和 appendTail 方法,具体使用详情请看: <a href="http://www.runoob.com/java/java-regular-expressions.html">菜鸟教程</a> ;快速测试java代码,可以在线使用 <a href="http://www.javarepl.com/term.html">Java Repl</a> 检验下.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">在js中,正则表达式中/i,/g,/ig,/gi,/m的区别和含义</span><br><span class="line">/i (忽略大小写)</span><br><span class="line">/g (全文查找出现的所有匹配字符)</span><br><span class="line">/m (多行查找)</span><br><span class="line">/gi(全文查找、忽略大小写)</span><br><span class="line">/ig(全文查找、忽略大小写)</span><br><span class="line">参考文献:http://deerchao.net/tutorials/regex/regex.htm</span><br></pre></td></tr></table></figure>
-
-<p>而有关正则的原理,则涉及到状态机,回溯那些东西,有机会再写下自己的理解^_^</p>
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">参考资料: </span><br><span class="line">正则表达式的详细说明(英文版):</span><br><span class="line">https://www.regular-expressions.info/tutorial.html</span><br><span class="line"></span><br><span class="line">正则标准详细说明:</span><br><span class="line">http://liujiacai.net/blog/2014/12/07/regexp-favors/</span><br><span class="line">http://www.infoq.com/cn/news/2011/07/regular-expressions-6-POSIX</span><br><span class="line"></span><br><span class="line">PCRE标准的可以看:</span><br><span class="line">http://www.cnblogs.com/deerchao/archive/2006/08/24/zhengzhe30fengzhongjiaocheng.html</span><br><span class="line"></span><br><span class="line">关于正则分组的使用(有程序例子):</span><br><span class="line">https://segmentfault.com/a/1190000004429477</span><br><span class="line"></span><br><span class="line">sed的教程:</span><br><span class="line">http://coolshell.cn/articles/9104.html</span><br></pre></td></tr></table></figure>
 
 
+<h2 id="d3"><a href="#d3" class="headerlink" title="d3"></a>d3</h2><h3 id="柱状图"><a href="#柱状图" class="headerlink" title="柱状图"></a>柱状图</h3>
+<script async src="//jsfiddle.net/godtreeGGG/0qx8x0oL/embed/result,js,html,css/"></script>
 
+
+<h2 id="echarts"><a href="#echarts" class="headerlink" title="echarts"></a>echarts</h2><h3 id="仪表盘"><a href="#仪表盘" class="headerlink" title="仪表盘"></a>仪表盘</h3>
+<script async src="//jsfiddle.net/godtreeGGG/waf66rgp/embed/result,js,html/"></script>
+
+
+<h3 id="折线图"><a href="#折线图" class="headerlink" title="折线图"></a>折线图</h3>
+<script async src="//jsfiddle.net/godtreeGGG/xjta89wp/embed/result,js,html/"></script>
+
+
+<h3 id="折线图2"><a href="#折线图2" class="headerlink" title="折线图2"></a>折线图2</h3>
+<script async src="//jsfiddle.net/godtreeGGG/jkewbx66/embed/result,js,html/"></script>
+
+
+<h3 id="折线图3"><a href="#折线图3" class="headerlink" title="折线图3"></a>折线图3</h3>
+<script async src="//jsfiddle.net/godtreeGGG/cme8uhc3/embed/result,js,html/"></script>
+
+
+<h3 id="折线图-条形图"><a href="#折线图-条形图" class="headerlink" title="折线图&amp;条形图"></a>折线图&amp;条形图</h3>
+<script async src="//jsfiddle.net/godtreeGGG/orja0d4r/embed/result,js,html/"></script>
+
+
+<h3 id="扇形图"><a href="#扇形图" class="headerlink" title="扇形图"></a>扇形图</h3>
+<script async src="//jsfiddle.net/godtreeGGG/w7e62xdf/embed/result,js,html/"></script>
+
+
+<h3 id="柱状图-1"><a href="#柱状图-1" class="headerlink" title="柱状图"></a>柱状图</h3>
+<script async src="//jsfiddle.net/godtreeGGG/vh7bjzaw/embed/result,js,html/"></script>
+
+
+<h3 id="横向柱状图"><a href="#横向柱状图" class="headerlink" title="横向柱状图"></a>横向柱状图</h3>
+<script async src="//jsfiddle.net/godtreeGGG/ejt7gs9c/embed/result,js,html/"></script>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
       <tags>
-        <tag>正则表达式</tag>
+        <tag>前端开发</tag>
       </tags>
   </entry>
   <entry>
@@ -846,6 +585,220 @@
       </tags>
   </entry>
   <entry>
+    <title>MySQL开发实战笔记</title>
+    <url>/article/11695.html</url>
+    <content><![CDATA[<blockquote>
+<p>本文记录了 MySQL 开发中常见的问题与解决方案，包括索引优化、事务处理、死锁分析等实战经验。</p>
+</blockquote>
+<h2 id="DDL-与-DML"><a href="#DDL-与-DML" class="headerlink" title="DDL 与 DML"></a>DDL 与 DML</h2><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DDL</td>
+<td>数据定义语言，如 CREATE、ALTER、DROP 等，会超时</td>
+</tr>
+<tr>
+<td>DML</td>
+<td>数据操作语言，如 SELECT、INSERT、UPDATE、DELETE，会阻塞直到执行完成</td>
+</tr>
+</tbody></table>
+<h2 id="优化技巧"><a href="#优化技巧" class="headerlink" title="优化技巧"></a>优化技巧</h2><h3 id="查询语句优化"><a href="#查询语句优化" class="headerlink" title="查询语句优化"></a>查询语句优化</h3><ol>
+<li><strong>尽量用 JOIN 查询</strong>，左表是小表去 LEFT JOIN</li>
+<li>效率低的场景：能用 EXISTS（小表）就不用 IN（大表）</li>
+<li>用 <code>SQL_NO_CACHE</code> 查看执行计划，排除缓存干扰</li>
+</ol>
+<h3 id="索引优化"><a href="#索引优化" class="headerlink" title="索引优化"></a>索引优化</h3><ol>
+<li><strong>组合索引</strong> <code>(a,b,c)</code> 查询只要带上 <code>a</code> 就走索引</li>
+<li>组合索引 <code>(a,b,c)</code> 和 <code>(a,c,d)</code> 可以合并为 <code>(a,b,c,d)</code></li>
+<li>唯一组合索引跟普通组合索引用法一样，只是多了唯一约束</li>
+<li>如果一个字段包含很多重复值，走索引意义不大，几乎是全表扫描</li>
+</ol>
+<h3 id="大数据量操作"><a href="#大数据量操作" class="headerlink" title="大数据量操作"></a>大数据量操作</h3><p>当需要 UPDATE&#x2F;DELETE 大量数据时，为避免大事务问题：</p>
+<ol>
+<li><strong>方案一</strong>：把匹配条件的记录 ID 查询出来，放入 Redis，用游标分批处理</li>
+<li><strong>方案二</strong>：查询出最大 ID 和最小 ID，分段处理</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 示例：分段删除</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> <span class="keyword">table</span> <span class="keyword">WHERE</span> id <span class="keyword">BETWEEN</span> ? <span class="keyword">AND</span> ? <span class="keyword">AND</span> <span class="keyword">condition</span>;</span><br></pre></td></tr></table></figure>
+
+<p>当需要SELECT时需要防止没有带条件查询所有记录，导致内存溢出。</p>
+<h2 id="事务与并发问题"><a href="#事务与并发问题" class="headerlink" title="事务与并发问题"></a>事务与并发问题</h2><h3 id="事务未提交导致查询不到数据"><a href="#事务未提交导致查询不到数据" class="headerlink" title="事务未提交导致查询不到数据"></a>事务未提交导致查询不到数据</h3><p><strong>问题场景</strong>：流程落地后需要推送数据到核算系统，但推送线程查询不到刚落地数据。</p>
+<p><strong>原因</strong>：启动线程太快，事务还未完全提交就开始查询。</p>
+<p><strong>解决方案</strong>：使用 <code>TransactionSynchronizationManager</code> 在事务提交后执行：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">TransactionSynchronizationManager.registerSynchronization(</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">TransactionSynchronizationAdapter</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterCommit</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="comment">// 事务提交后执行推送逻辑</span></span><br><span class="line">            calculateStandardService.createIncreaseCalculateLedgerWithThread(ledgerList);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h2 id="死锁问题"><a href="#死锁问题" class="headerlink" title="死锁问题"></a>死锁问题</h2><h3 id="死锁产生原因"><a href="#死锁产生原因" class="headerlink" title="死锁产生原因"></a>死锁产生原因</h3><p>锁只有在竞争一个以上的资源时才会产生，MySQL 死锁都是基于索引的。</p>
+<h3 id="典型死锁场景"><a href="#典型死锁场景" class="headerlink" title="典型死锁场景"></a>典型死锁场景</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 事务A</span></span><br><span class="line"><span class="keyword">INSERT INTO</span> a <span class="keyword">VALUES</span> (...);</span><br><span class="line"><span class="keyword">INSERT INTO</span> b <span class="keyword">VALUES</span> (...);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 事务B</span></span><br><span class="line"><span class="keyword">INSERT INTO</span> b <span class="keyword">VALUES</span> (...);</span><br><span class="line"><span class="keyword">INSERT INTO</span> a <span class="keyword">VALUES</span> (...);</span><br></pre></td></tr></table></figure>
+
+<p>因为表里建了唯一索引，INSERT 之前会锁住索引页，两个事务没提交时会互相死锁。</p>
+<h3 id="死锁日志分析"><a href="#死锁日志分析" class="headerlink" title="死锁日志分析"></a>死锁日志分析</h3><h4 id="如何找到死锁日志"><a href="#如何找到死锁日志" class="headerlink" title="如何找到死锁日志"></a>如何找到死锁日志</h4><p>MySQL 发生死锁时，会自动检测并回滚其中一个事务，同时在错误日志中记录死锁信息。</p>
+<p>查看方式：<br>方法一：查看最近一次死锁信息<br>SHOW ENGINE INNODB STATUS;</p>
+<p>方法二：查看历史死锁日志<br>在 MySQL 配置文件中添加：<br>innodb_print_all_deadlocks &#x3D; 1<br>在MySQL中看错误日志的位置：<br>SHOW VARIABLES LIKE ‘log_error’;<br>找到错误日志并查看 MySQL 错误日志文件:<br>cat error.log</p>
+<h4 id="死锁日志结构"><a href="#死锁日志结构" class="headerlink" title="死锁日志结构"></a>死锁日志结构</h4><p>死锁日志通常包含以下部分：</p>
+<ol>
+<li><strong>TRANSACTION 信息</strong>：每个事务的信息，包括事务ID、活跃时间、SQL语句</li>
+<li><strong>WAITING FOR THIS LOCK TO BE GRANTED</strong>：事务正在等待的锁</li>
+<li><strong>HOLDS THE LOCK(S)</strong>：事务持有的锁</li>
+<li><strong>WE ROLL BACK TRANSACTION</strong>：回滚的事务</li>
+</ol>
+<h4 id="常见锁类型及含义"><a href="#常见锁类型及含义" class="headerlink" title="常见锁类型及含义"></a>常见锁类型及含义</h4><table>
+<thead>
+<tr>
+<th>锁类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>lock_mode X</code></td>
+<td>排他锁（Exclusive Lock），阻止其他事务读写</td>
+</tr>
+<tr>
+<td><code>lock_mode S</code></td>
+<td>共享锁（Shared Lock），允许其他事务读但不能写</td>
+</tr>
+<tr>
+<td><code>lock_mode X locks rec but not gap</code></td>
+<td>记录锁，锁住具体行记录</td>
+</tr>
+<tr>
+<td><code>lock_mode X locks gap before rec</code></td>
+<td>间隙锁（Gap Lock），锁住记录之间的间隙</td>
+</tr>
+<tr>
+<td><code>lock_mode X insert intention</code></td>
+<td>插入意向锁，INSERT 操作前获取</td>
+</tr>
+<tr>
+<td><code>RECORD LOCKS</code></td>
+<td>行级锁，锁住具体的行记录</td>
+</tr>
+<tr>
+<td><code>lock_struct(s)</code></td>
+<td>锁结构的数量</td>
+</tr>
+<tr>
+<td><code>row lock(s)</code></td>
+<td>行锁的数量</td>
+</tr>
+<tr>
+<td><code>undo log entries</code></td>
+<td>undo 日志条目数</td>
+</tr>
+</tbody></table>
+<h4 id="死锁日志示例"><a href="#死锁日志示例" class="headerlink" title="死锁日志示例"></a>死锁日志示例</h4><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> (<span class="number">1</span>) TRANSACTION:</span><br><span class="line">TRANSACTION <span class="number">125647805</span>, ACTIVE <span class="number">0</span> sec inserting</span><br><span class="line">mysql tables <span class="keyword">in</span> use <span class="number">1</span>, locked <span class="number">1</span></span><br><span class="line">LOCK WAIT <span class="number">12</span> lock struct(s), heap size <span class="number">2936</span>, <span class="number">12</span> <span class="type">row</span> lock(s), undo log entries <span class="number">214</span></span><br><span class="line">MySQL thread id <span class="number">2288831</span>, query id <span class="number">88578026</span> updating</span><br><span class="line"><span class="keyword">INSERT INTO</span> t_cnb_calculation_standard (...) <span class="keyword">VALUES</span> (...)</span><br><span class="line"></span><br><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> (<span class="number">1</span>) WAITING <span class="keyword">FOR</span> THIS LOCK <span class="keyword">TO</span> BE GRANTED:</span><br><span class="line">RECORD LOCKS space id <span class="number">1335</span> page <span class="keyword">no</span> <span class="number">393786</span> n bits <span class="number">200</span></span><br><span class="line">index `Index_calculation_standard_unique_edc` <span class="keyword">of</span> <span class="keyword">table</span> `ihr_pro_salary`.`t_cnb_calculation_standard`</span><br><span class="line">trx id <span class="number">125647805</span> lock_mode X <span class="keyword">insert</span> intention waiting</span><br><span class="line"></span><br><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> (<span class="number">2</span>) TRANSACTION:</span><br><span class="line">TRANSACTION <span class="number">125647804</span>, ACTIVE <span class="number">0</span> sec inserting</span><br><span class="line">mysql tables <span class="keyword">in</span> use <span class="number">1</span>, locked <span class="number">1</span></span><br><span class="line"><span class="number">39</span> lock struct(s), heap size <span class="number">6544</span>, <span class="number">45</span> <span class="type">row</span> lock(s), undo log entries <span class="number">573</span></span><br><span class="line"></span><br><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> (<span class="number">2</span>) HOLDS THE LOCK(S):</span><br><span class="line">RECORD LOCKS space id <span class="number">1335</span> page <span class="keyword">no</span> <span class="number">393786</span> n bits <span class="number">200</span></span><br><span class="line">index `Index_calculation_standard_unique_edc` <span class="keyword">of</span> <span class="keyword">table</span> `ihr_pro_salary`.`t_cnb_calculation_standard`</span><br><span class="line">trx id <span class="number">125647804</span> lock mode S</span><br><span class="line"></span><br><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> (<span class="number">2</span>) WAITING <span class="keyword">FOR</span> THIS LOCK <span class="keyword">TO</span> BE GRANTED:</span><br><span class="line">RECORD LOCKS space id <span class="number">1335</span> page <span class="keyword">no</span> <span class="number">38913</span> n bits <span class="number">280</span></span><br><span class="line">index `Index_calculation_standard_unique_edc` trx id <span class="number">125647804</span> lock_mode S waiting</span><br><span class="line"></span><br><span class="line"><span class="operator">*</span><span class="operator">*</span><span class="operator">*</span> WE ROLL BACK TRANSACTION (<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>日志解读：</strong></p>
+<ul>
+<li>事务1 正在执行 INSERT，正在等待获取<strong>插入意向锁</strong></li>
+<li>事务2 持有<strong>共享锁（S锁）</strong>，同时在等待另一个位置的共享锁</li>
+<li>事务1 和 事务2 形成循环等待，MySQL 检测到死锁，回滚了事务1</li>
+</ul>
+<h2 id="MySQL-基础架构"><a href="#MySQL-基础架构" class="headerlink" title="MySQL 基础架构"></a>MySQL 基础架构</h2><h3 id="Server-层-vs-存储引擎层"><a href="#Server-层-vs-存储引擎层" class="headerlink" title="Server 层 vs 存储引擎层"></a>Server 层 vs 存储引擎层</h3><p><img src="/uploads/MySQL%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84.png" alt="MySQL的基本架构"></p>
+<p>MySQL 整体分为两层：</p>
+<ul>
+<li><strong>Server 层</strong>：连接器、查询缓存、分析器、优化器、执行器</li>
+<li><strong>存储引擎层</strong>：负责数据的存储和提取（插件式，支持 InnoDB、MyISAM 等）</li>
+</ul>
+<h3 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">客户端 → 连接器 → 查询缓存 → 分析器 → 优化器 → 执行器 → 存储引擎</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>连接器</strong>：管理连接权限，定期断开长连接</li>
+<li><strong>查询缓存</strong>：表更新会导致缓存失效，建议关闭</li>
+<li><strong>分析器</strong>：词法分析和语法分析</li>
+<li><strong>优化器</strong>：决定使用哪个索引、多表连接顺序</li>
+<li><strong>执行器</strong>：表权限检查，调用存储引擎接口</li>
+</ol>
+<h3 id="日志系统"><a href="#日志系统" class="headerlink" title="日志系统"></a>日志系统</h3><h4 id="redo-log（重放日志）"><a href="#redo-log（重放日志）" class="headerlink" title="redo log（重放日志）"></a>redo log（重放日志）</h4><p><strong>作用</strong>：InnoDB 特有，保证 crash-safe 能力</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>物理日志，记录”在某个数据页上做了什么修改”</li>
+<li>循环写，空间固定</li>
+<li>固定大小（如 4 个 1GB 文件）</li>
+</ul>
+<p><strong>原理</strong>：相当于”粉板”，write pos 记录当前位置，checkpoint 记录擦除位置。</p>
+<p>InnoDB 的 redo log 是固定大小的，比如可以配置为一组 4 个文件，每个文件的大小是 1GB，那么这块“粉板”总共就可以记录 4GB 的操作。从头开始写，写到末尾就又回到开头循环写，如下面这个图所示:<br><img src="/uploads/redo_log%E6%97%A5%E5%BF%97%E5%8E%9F%E7%90%86.png" alt="redo_log日志原理"></p>
+<p>write pos 是当前记录的位置，一边写一边后移，写到第 3 号文件末尾后就回到 0 号文件开头。checkpoint 是当前要擦除的位置，也是往后推移并且循环的，擦除记录前要把记录更新到数据文件。</p>
+<p>write pos 和 checkpoint 之间的是“粉板”上还空着的部分，可以用来记录新的操作。如果 write pos 追上 checkpoint，表示“粉板”满了，这时候不能再执行新的更新，得停下来先擦掉一些记录，把 checkpoint 推进一下。</p>
+<h4 id="binlog（归档日志）"><a href="#binlog（归档日志）" class="headerlink" title="binlog（归档日志）"></a>binlog（归档日志）</h4><p><strong>作用</strong>：Server 层日志，用于数据恢复和主从复制</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>逻辑日志，记录原始逻辑（如”给 ID&#x3D;2 加 1”）</li>
+<li>追加写，不会覆盖</li>
+<li>可用于数据恢复</li>
+</ul>
+<h4 id="两阶段提交"><a href="#两阶段提交" class="headerlink" title="两阶段提交"></a>两阶段提交</h4><p>简单流程图：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">更新语句 → 执行器 → 存储引擎</span><br><span class="line">                    ↓</span><br><span class="line">                 写 redo log (prepare 状态)</span><br><span class="line">            ↓</span><br><span class="line">         写 binlog</span><br><span class="line">                    ↓</span><br><span class="line">         提交事务 (redo log commit)</span><br></pre></td></tr></table></figure>
+
+<p>这样能保证两个日志一致，崩溃恢复时可以根据状态恢复数据。</p>
+<p>包含数据写入的完整流程图：</p>
+<pre><code class="highlight mermaid">sequenceDiagram
+    participant 执行器 as Server层 (执行器)
+    participant InnoDB as InnoDB 存储引擎
+    participant BP as Buffer Pool (内存)
+    participant redo as Redo Log (磁盘)
+    participant binlog as Binlog (磁盘)
+    participant disk as 数据文件(磁盘)
+
+    Note over 执行器,disk: 事务执行阶段（提交前）
+    执行器-&gt;&gt;InnoDB: 1. 执行 INSERT/UPDATE/DELETE
+    InnoDB-&gt;&gt;BP: 2. 查找需要的数据页
+    alt 数据页已在 Buffer Pool 中
+        BP--&gt;&gt;InnoDB: 返回内存页地址
+    else 数据页不在 Buffer Pool
+        InnoDB-&gt;&gt;disk: 3. 从磁盘读取数据页
+        disk--&gt;&gt;InnoDB: 返回数据页
+        InnoDB-&gt;&gt;BP: 4. 将数据页加载到 Buffer Pool
+    end
+    InnoDB-&gt;&gt;BP: 5. 在内存中修改数据页（产生脏页）&lt;br/&gt;同时生成 redo log buffer
+    BP--&gt;&gt;InnoDB: 修改完成
+    InnoDB--&gt;&gt;执行器: 6. 返回修改完成
+
+    Note over 执行器,disk: 事务提交阶段（两阶段提交）
+    执行器-&gt;&gt;InnoDB: 7. 准备提交 (prepare)
+    InnoDB-&gt;&gt;redo: 8. 将 redo log buffer 刷盘&lt;br/&gt;（状态为 prepare）
+    InnoDB--&gt;&gt;执行器: 准备完成
+
+    执行器-&gt;&gt;binlog: 9. 写入 binlog 并刷盘
+    binlog--&gt;&gt;执行器: binlog 写入完成
+
+    执行器-&gt;&gt;InnoDB: 10. 提交事务 (commit)
+    InnoDB-&gt;&gt;redo: 11. 将 redo log 状态改为 commit&lt;br/&gt;（并刷盘）
+    InnoDB--&gt;&gt;执行器: 提交完成
+
+    Note over 执行器,disk: 异步刷盘（后台线程）
+    InnoDB-&gt;&gt;disk: 12. 后续将脏页写回数据文件
+
+    Note over 执行器,disk: 崩溃恢复流程（数据库重启时）
+    rect rgb(240, 240, 240)
+        Note left of redo: 扫描 redo log 中所有 prepare 状态的事务
+        alt 该事务在 binlog 中存在完整记录
+            Note over InnoDB: 恢复时认为该事务已提交&lt;br/&gt;重放 redo log 中的修改
+            InnoDB-&gt;&gt;redo: 将事务状态改为 commit
+            InnoDB-&gt;&gt;BP: 必要时将修改应用到 Buffer Pool
+        else 该事务在 binlog 中无记录或不完整
+            Note over InnoDB: 恢复时回滚该事务
+            InnoDB-&gt;&gt;redo: 不提交，后续清理
+        end
+    end</code></pre>
+
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li><strong>查询优化</strong>：多用 JOIN，合理使用索引，避免全表扫描</li>
+<li><strong>大事务</strong>：分批处理，避免长时间锁表</li>
+<li><strong>并发问题</strong>：注意事务提交时机，避免查询不到刚写入的数据</li>
+<li><strong>死锁分析</strong>：基于索引产生，分析锁等待关系</li>
+<li><strong>日志理解</strong>：redo log 保证持久化，binlog 用于恢复和复制</li>
+</ol>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+      <tags>
+        <tag>MySQL</tag>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>开发工具技巧</title>
     <url>/article/4352.html</url>
     <content><![CDATA[<h2 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h2><p>最基本的复制是 y，粘贴是 p，剪切是 d。<br>复制和剪切的命令后面都可以接一个移动命令，表示将光标移动区间内的文本复制过来。<br>粘贴时 p 与 P 的区别是贴到光标前后的区别。<br>如果是在插入模式下想粘贴，也可以不退回普通模式，用 <code>ctrl+r再输入*</code> 来粘贴。</p>
@@ -892,6 +845,201 @@
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
       <tags>
         <tag>开发工具技巧</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>正则表达式笔记</title>
+    <url>/article/37573.html</url>
+    <content><![CDATA[<h1 id="正则的用途"><a href="#正则的用途" class="headerlink" title="正则的用途"></a>正则的用途</h1><p>在很多地方都会用到正则表达式,如果熟练掌握正则,在爬虫,一些渗透实验中会占有优势</p>
+<h1 id="正则的发展历程"><a href="#正则的发展历程" class="headerlink" title="正则的发展历程"></a>正则的发展历程</h1><p>看了一些总结正则发展历程的文章,我想大概总结下正则的几种标准:</p>
+<p>从一开始的grep,再到egrep( 这里的e表示extended，加强版的意思,支持了+、|与?这三个元符号，并且可以在分组中使用*，分组可以直接写成(…)，同时用\1,\2…来引用分组。 )诞生,再到一系列类似sed,awk类的程序产生,这是时候是正则发展的混乱期,因为始终都没有一个标准.</p>
+<blockquote>
+<p>这种混乱度情况一直持续到了1986年。在1986年，POSIX（Portable Operating System Interface）标准公诸于世，POSIX制定了不同的操作系统都需要遵守的一套规则，当然，正则表达式也包括其中。<br>当然，除了POSIX标准外，还有一个Perl分支，也就是我们现在熟知的PCRE，随着Perl语言的发展，Perl语言中的正则表达式功能越来越强悍，为了把Perl语言中正则的功能移植到其他语言中，PCRE就诞生了。现在的编程语言中的正则表达式，大部分都属于PCRE这个分支。</p>
+</blockquote>
+<h1 id="正则标准分类"><a href="#正则标准分类" class="headerlink" title="正则标准分类"></a>正则标准分类</h1><h2 id="POSIX标准"><a href="#POSIX标准" class="headerlink" title="POSIX标准"></a>POSIX标准</h2><p>POSIX把正则表达式分为两种（favor）：BRE（Basic Regular Expressions）与ERE（Extended Regular Expressions ）。所有的POSIX程序可以选择支持其中的一种。具体对比引用别人的图,如下表：<br><img src="/uploads/2017-09-28_10-21-40.png" alt="BRE和ERE的区别"></p>
+<p>翻译过来就是:</p>
+<table>
+<thead>
+<tr>
+<th>正则功能</th>
+<th>BREs</th>
+<th>EREs</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.,^,$,[...],[!...]</code>这四种用法</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>用<code>*</code>代表任意数量的字符匹配</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>用<code>+,?</code>分别代表一个以上和任意多个的字符匹配</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>范围确定</td>
+<td>写法例子为\{1,10\}</td>
+<td>写法例子为{1,10}</td>
+</tr>
+<tr>
+<td>分组</td>
+<td>写法例子为\(…\)</td>
+<td>写法例子为(…)</td>
+</tr>
+<tr>
+<td>在括号分组后面指定分组出现次数</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>反向引用</td>
+<td>写法例子为<code>\1</code></td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>用竖线表示多种情况匹配</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+</tbody></table>
+<p>我们现在使用的linux发行版，都是集成GNU套件的，GNU是Gnu’s Not Unix的缩写，GNU在实现了POXIS标准的同时，做了一定的扩展，所以上面空白栏中的功能也能使用。下面一一讲解：</p>
+<ol>
+<li>BRE如何使用<code>+</code>、<code>?</code>呢？需要用<code>\+</code>、<code>\?</code></li>
+<li>BRE如何使用<code>|</code>呢？需要用<code>\|</code></li>
+<li>ERE如何使用<code>\1</code>、<code>\2</code>等这样的反引用？和BRE一样，就是<code>\1</code>、<code>\2</code>等等</li>
+</ol>
+<p>－ **(默认)**使用BRE语法的命令有：grep、ed、sed、vim<br>－ **(默认)**使用ERE语法的命令有：egrep、awk、emacs</p>
+<p>注意上面说的是默认情况下,比如 <code>sed</code> 通过 <code>-r</code> 选项就可以使用ERE了，大家到时自己man一下就可以了。</p>
+<p>POSIX还定义了一些shorthand，具体如下：</p>
+<ul>
+<li>[:alnum:]</li>
+<li>[:alpha:]</li>
+<li>[:cntrl:]</li>
+<li>[:digit:]</li>
+<li>[:graph:]</li>
+<li>[:lower:]</li>
+<li>[:print:]</li>
+<li>[:punct:]</li>
+<li>[:space:]</li>
+<li>[:upper:]</li>
+<li>[:xdigit:]</li>
+</ul>
+<p>在使用这些shorthand时有一个约束：必须在[]中使用，也就是说如果像匹配0-9的数字，需要这么写[[:alnum:]]，取反就是[^[:alnum:]]。shorhand 在BRE与EBE中的用法相同。</p>
+<p>如果用多了sed或者awk会发现,\w,\d这些用不了,因为POSIX规范根本没有定义这些shorthand,这些是在PCRE中定义的。</p>
+<h2 id="PCRE标准"><a href="#PCRE标准" class="headerlink" title="PCRE标准"></a>PCRE标准</h2><p>前面说到,以前随着Perl的不断发展，其支持的正则表达式的功能也越来越强大。Perl比较显诸特征之一是与sed与awk兼容，这造就了Perl成为第一个通用性脚本语言。</p>
+<p>Perl语言应用是如此广泛，以至于其他语言开始移植Perl，最终Perl compatible（兼容）的PCRE诞生了，这其中包括了Tcl, Python, Microsoft’s .NET , Ruby, PHP, C&#x2F;C++, Java等等。</p>
+<p>shorthand在POSIX与PCRE是不同的，PCRE中我们常用的有如下这些：</p>
+<ul>
+<li><code>\w</code> 表示<code>[a-zA-Z]</code></li>
+<li><code>\W</code> 表示<code>[^a-zA-Z]</code></li>
+<li><code>\s</code> 表示<code>[\t\r\n\f]</code></li>
+<li><code>\S</code> 表示<code>[^\t\r\n\f]</code></li>
+<li><code>\d</code> 表示<code>[1-9]</code></li>
+<li><code>\D</code> 表示<code>[^1-9]</code></li>
+<li><code>\&lt;</code> 表示一个单词的起始</li>
+<li><code>\&gt;</code> 表示一个单词的结尾</li>
+<li><code>\b</code> 代表着单词的开头或结尾,也就是单词的分界处,它只匹配一个位置</li>
+</ul>
+<h1 id="正则使用时候的注意点"><a href="#正则使用时候的注意点" class="headerlink" title="正则使用时候的注意点"></a>正则使用时候的注意点</h1><h2 id="关于哪个工具用的哪个正则标准"><a href="#关于哪个工具用的哪个正则标准" class="headerlink" title="关于哪个工具用的哪个正则标准"></a>关于哪个工具用的哪个正则标准</h2><p>记住一点,在某个语言中,像 Java、Python等,这些语言的正则表达式都是基于PCRE标准的;而Linux下使用各种处理文本的命令，是继承自POSIX标准，不过是由GNU扩展后的而已。<br><strong>注意,因为平时在编程语言里面用正则的多些,所以下面的注意点都是以PCRE标准说的.等下不要说我怎么在awk中测试不通过就尴尬了^_^.</strong></p>
+<h2 id="正则的匹配方式"><a href="#正则的匹配方式" class="headerlink" title="正则的匹配方式"></a>正则的匹配方式</h2><p>正则是从左到右,依次匹配,如果匹配完了,作为第一个匹配结果,这个时候如果还没到字符串末尾,则再继续往后匹配,如果还能再匹配上,作为第二个匹配结果,直到遍历完该字符串,匹配结束,然后匹配结果会按照括号进行分组,分组从1下标开始,如果是0下标表示整个匹配到的字符串,下面有一个例子</p>
+<p><img src="/uploads/2017-09-28_11-48-39.png" alt="匹配例子"></p>
+<h2 id="正则的处理选项"><a href="#正则的处理选项" class="headerlink" title="正则的处理选项"></a>正则的处理选项</h2><p><strong>单行模式和多行模式要特别注意下</strong></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IgnoreCase(忽略大小写)</td>
+<td>匹配时不区分大小写。</td>
+</tr>
+<tr>
+<td>Multiline(多行模式)</td>
+<td>更改^和$的含义，使它们分别在任意一行的行首和行尾匹配，而不仅仅在整个字符串的开头和结尾匹配。(<strong>在此模式下,$的精确含意是:匹配\n之前的位置以及字符串结束前的位置.</strong>)</td>
+</tr>
+<tr>
+<td>Singleline(单行模式)</td>
+<td>更改.的含义，使它与每一个字符匹配（<strong>包括换行符\n</strong>）。</td>
+</tr>
+<tr>
+<td>IgnorePatternWhitespace(忽略空白)</td>
+<td>忽略表达式中的非转义空白并启用由#标记的注释。</td>
+</tr>
+<tr>
+<td>ExplicitCapture(显式捕获)</td>
+<td>仅捕获已被显式命名的组。</td>
+</tr>
+</tbody></table>
+<h2 id="贪婪与懒惰"><a href="#贪婪与懒惰" class="headerlink" title="贪婪与懒惰"></a>贪婪与懒惰</h2><p><code>I already explained that the regex engine is eager .</code></p>
+<p>这话的意思很明显,说明正则默认情况下,都是很贪婪的,比如用<code>get|gettest</code>去匹配<code>gettest</code>,一匹配到get后,就认为已经匹配成功了该交替表达式,结束匹配,返回get.<br>再举个例子,比如用<code>\b(Get(Value)?|Set(Value)?)\b</code>去匹配<code>SetValue</code>,因为使用了交替表达式,到了<code>Set(Value)?</code>这步匹配,因为贪婪,所以尽量长的去匹配,所以最终匹配到的是<code>SetValue</code>.</p>
+<p>当正则表达式中包含能接受重复的限定符时，通常的行为是（在使整个表达式能得到匹配的前提下）匹配尽可能多的字符。以这个表达式为例<code>a.*b</code>，它将会匹配最长的以a开始，以b结束的字符串。如果用它来搜索<code>aabab</code>的话，它会匹配整个字符串<code>aabab</code>。这被称为贪婪匹配。</p>
+<p>有时，我们更需要懒惰匹配，也就是匹配尽可能少的字符。限定符可以把贪婪模式转化为懒惰匹配模式，只要在它后面加上一个问号?。这样.*?就意味着匹配任意数量的重复，但是在能使整个匹配成功的前提下使用最少的重复。现在看看懒惰版的例子吧：</p>
+<p><code>a.*?b</code>匹配最短的，以a开始，以b结束的字符串。如果把它应用于<code>aabab</code>的话，它会匹配aab（第一到第三个字符）和ab（第四到第五个字符）。</p>
+<p>懒惰限定符:</p>
+<table>
+<thead>
+<tr>
+<th>代码&#x2F;语法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>*?</td>
+<td>重复任意次，但尽可能少重复</td>
+</tr>
+<tr>
+<td>+?</td>
+<td>重复1次或更多次，但尽可能少重复</td>
+</tr>
+<tr>
+<td>??</td>
+<td>重复0次或1次，但尽可能少重复</td>
+</tr>
+<tr>
+<td>{n,m}?</td>
+<td>重复n到m次，但尽可能少重复</td>
+</tr>
+<tr>
+<td>{n,}?</td>
+<td>重复n次以上，但尽可能少重复</td>
+</tr>
+</tbody></table>
+<h2 id="时刻记得转义的存在"><a href="#时刻记得转义的存在" class="headerlink" title="时刻记得转义的存在"></a>时刻记得转义的存在</h2><p>比如你要查找<code>*</code>字符,这个字符在正则里面有特殊的意义,所以你得写成<code>\*</code>才能真正匹配到<code>*</code>,就跟程序里面写字符串要进行转义一样.这里还有个注意点,比如你想找<code>|</code>,正则就得写成<code>\|</code>,但是到了程序里面,又得多一层转义用来转义<code>\</code>这个字符,所以程序里面得写成 <code>String regex=&quot;\\|&quot;</code></p>
+<h2 id="字符类的否定（negation）"><a href="#字符类的否定（negation）" class="headerlink" title="字符类的否定（negation）"></a>字符类的否定（negation）</h2><p>你可以通过在最开始的位置使用插入符号（译者注：^）来_否定_一个字符类。</p>
+<p>[^a]表示“匹配除了a的任意字符”。<br>[^a-zA-Z0-9]表示“找到一个非字母数字字符”。<br>[^abc]表示“找到一个插入符或者a或者b或者c”。<br>[^^]表示“找到除了插入符外的任意字符”。（呕！）</p>
+<h2 id="分组的使用"><a href="#分组的使用" class="headerlink" title="分组的使用"></a>分组的使用</h2><p>分组的使用这里我遇到几种情况:</p>
+<ol>
+<li>分组命名</li>
+<li>忽略分组</li>
+<li>嵌套分组</li>
+<li>反向引用分组</li>
+</ol>
+<p>关于嵌套分组的有总结得比较好的,就不解释了:<br><img src="/uploads/2017-09-28_15-50-57.png" alt="嵌套分组"></p>
+<p>剩下的直接上例子最好说明了:<br><img src="/uploads/2017-09-28_11-24-11.png" alt="使用分组"><br><img src="/uploads/2017-09-28_15-30-36.png" alt="使用分组命名并引用相应命名的分组"><br><img src="/uploads/2017-09-28_15-35-36.png" alt="忽略分组"><br><img src="/uploads/2017-09-28_11-24-57.png" alt="使用分组并反向引用分组"></p>
+<h2 id="零宽断言和负向零宽断言"><a href="#零宽断言和负向零宽断言" class="headerlink" title="零宽断言和负向零宽断言"></a>零宽断言和负向零宽断言</h2><h3 id="零宽断言"><a href="#零宽断言" class="headerlink" title="零宽断言"></a>零宽断言</h3><p>通俗点讲,就是限制需要匹配的字符串前后能有什么,不能有什么.</p>
+<p><code>(?=exp)</code>也叫零宽度正预测先行断言，它断言自身出现的位置的后面能匹配表达式exp。比如<code>\b\w+(?=ing\b)</code>，匹配以ing结尾的单词的前面部分(除了ing以外的部分)，如查找<code>I&#39;m singing while you&#39;re dancing.</code>时，它会匹配<code>sing</code>和<code>danc</code>。</p>
+<p><code>(?&lt;=exp)</code>也叫零宽度正回顾后发断言，它断言自身出现的位置的前面能匹配表达式exp。比如<code>(?&lt;=\bre)\w+\b</code>会匹配以re开头的单词的后半部分(除了re以外的部分)，例如在查找<code>reading a book</code>时，它匹配<code>ading</code>。</p>
+<p>下面这个例子同时使用了这两种断言<code>(?&lt;=\s)\d+(?=\s)</code>匹配以空白符间隔的数字(再次强调，不包括这些空白符)。</p>
+<h3 id="负向零宽断言"><a href="#负向零宽断言" class="headerlink" title="负向零宽断言"></a>负向零宽断言</h3><p>那有了这个<strong>零宽断言</strong>,为什么还要有另外一个<strong>负向零宽断言</strong>呢?</p>
+<p>看下下面的例子(引用,因为这个例子已经足够好说明了):</p>
+<p><img src="/uploads/2017-09-28_15-12-03.png" alt="匹配包含p但是后面不要带有u的单词"></p>
+<p><code>(?!exp)</code>，断言此位置的后面不能匹配表达式exp。它只匹配一个位置，并不消费任何字符。<br><code>(?&lt;!exp)</code>，断言此位置的前面不能匹配表达式exp。它只匹配一个位置，并不消费任何字符。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>总算写完了这篇文章,参考了许多资料,一开始接触awk,sed程序发现,跟java里面用的正则又不太一样,才有了后面去探索为什么有这些区别,顺便翻了下正则的发展史,总的来说正则的使用思路才清晰了些.这里只是把一些常用的用法在这里做了下汇总和总结,有错误的地方欢迎指正.</p>
+<p>在java中,用<code>Pattern.compile(String inputString)</code>来产生一个<code>Pattern</code>类,<code>Pattern</code>类通过<code>Pattern.matcher(String regexString)</code>产生一个<code>Matcher</code>类,该<code>Matcher</code>类有group(用来获取分组)方法,start 和 end 方法,matches 和 lookingAt 方法,replaceFirst 和 replaceAll 方法,appendReplacement 和 appendTail 方法,具体使用详情请看: <a href="http://www.runoob.com/java/java-regular-expressions.html">菜鸟教程</a> ;快速测试java代码,可以在线使用 <a href="http://www.javarepl.com/term.html">Java Repl</a> 检验下.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">在js中,正则表达式中/i,/g,/ig,/gi,/m的区别和含义</span><br><span class="line">/i (忽略大小写)</span><br><span class="line">/g (全文查找出现的所有匹配字符)</span><br><span class="line">/m (多行查找)</span><br><span class="line">/gi(全文查找、忽略大小写)</span><br><span class="line">/ig(全文查找、忽略大小写)</span><br><span class="line">参考文献:http://deerchao.net/tutorials/regex/regex.htm</span><br></pre></td></tr></table></figure>
+
+<p>而有关正则的原理,则涉及到状态机,回溯那些东西,有机会再写下自己的理解^_^</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><img src="https://www.regular-expressions.info/tutorial.html" alt="正则表达式的详细说明(英文版)"><br><img src="http://liujiacai.net/blog/2014/12/07/regexp-favors/" alt="正则标准详细说明1"><br><img src="http://www.infoq.com/cn/news/2011/07/regular-expressions-6-POSIX" alt="正则标准详细说明2"><br><img src="http://www.cnblogs.com/deerchao/archive/2006/08/24/zhengzhe30fengzhongjiaocheng.html" alt="PCRE标准"><br><img src="https://segmentfault.com/a/1190000004429477" alt="关于正则分组的使用(有程序例子)"><br><img src="http://coolshell.cn/articles/9104.html" alt="sed的教程"></p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+      <tags>
+        <tag>正则表达式</tag>
       </tags>
   </entry>
 </search>
