@@ -8,9 +8,9 @@ https://aitestperson.github.io/article/12425.html
 https://aitestperson.github.io/article/37573.html
 https://aitestperson.github.io/tags/index.html
 https://aitestperson.github.io/
-https://aitestperson.github.io/tags/Java%E5%9F%BA%E7%A1%80/
 https://aitestperson.github.io/tags/ClassLoader/
 https://aitestperson.github.io/tags/JavaIO%E6%A1%86%E6%9E%B6/
+https://aitestperson.github.io/tags/Java%E5%9F%BA%E7%A1%80/
 https://aitestperson.github.io/tags/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/
 https://aitestperson.github.io/tags/hexo/
 https://aitestperson.github.io/tags/GithubPages/

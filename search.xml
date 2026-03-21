@@ -1,6 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>ClassLoader详解</title>
+    <url>/article/2135.html</url>
+    <content><![CDATA[<h2 id="了解ClassLoader的好处"><a href="#了解ClassLoader的好处" class="headerlink" title="了解ClassLoader的好处"></a>了解ClassLoader的好处</h2><p>有助于了解java类的加载机制,了解web应用服务器是怎么加载进war包并怎么工作的</p>
+<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><ol>
+<li>相信很多人都会在各种文章中见到<code>AppClassloader</code>和<code>SystemClassloader</code>,其实这两个是指同一个东西,只是叫法不同.</li>
+<li><code>ClassLoader.getSystemResourceAsStream(name);</code>类似这种,ClassLoader有且仅有提供了几个方法跟systemloader有关的方法.</li>
+<li>Bootstrap是爷爷、ExtClassLoader是爸爸、AppClassLoader是孩子（孙子）。但由于爸爸ExtClassLoader太忙了，所以照顾孩子AppClassLoader的责任就有爷爷Bootstrap来处理了(意思是，虽然ExtClassLoader是AppClassLoader老爸，但却是由爷爷Bootstrap加载的AppClassLoader。该情况与中国国情完全一样)。</li>
+<li>项目的配置文件的覆盖顺序为：根类加载器 &gt; 扩展类加载器 &gt; 应用中的资源文件 &gt; 应用所依赖的第三方jar</li>
+</ol>
+<h2 id="各个ClassLoader的关联"><a href="#各个ClassLoader的关联" class="headerlink" title="各个ClassLoader的关联"></a>各个ClassLoader的关联</h2><p>普通java项目:<br><code>AppClassLoader</code>&gt;&gt;<code>ExtClassLoader</code>&gt;&gt;<code>bootstrapLoader</code><br>glassfish web项目:<br><code>WebappClassLoader</code>&gt;&gt;<code>DelegatingClassLoader</code>&gt;&gt;<code>URLClassLoader</code>&gt;&gt;<code>APIClassLoader</code>&gt;&gt;<code>ExtClassLoader</code>&gt;&gt;<code>bootstrapLoader</code></p>
+<h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p>有一次我在编写一个sdk,打算把它打包成jar,给另外的web应用使用,姑且叫该项目为B工程;<br>A工程(web项目)依赖B工程,在B工程中的classpath下有个配置文件plugins.xml,同时在A工程的classpath下也有一个同名的配置文件,那么<strong>A工程下的配置文件则会覆盖B下的文件,同样包路径的class文件也会覆盖</strong>。</p>
+<p>所以,如果我在A工程下写一个配置文件<code>plugins.xml</code>,那么它打包成war文件的时候会覆盖B工程jar包里面的配置文件<code>plugins.xml</code>,然后在glassfish上运行war包的时候会被<br>WebAppClassLoader加载(如果是java项目则会被AppClassloader获取到)</p>
+<p>下面是项目中用到的部分代码:<br><img src="/uploads/ClassLoader1.png" alt="读取配置文件"></p>
+<p><img src="/uploads/ClassLoader2.png" alt="深挖代码1"></p>
+<p>这里解释下,因为BootstrapLoader是jvm底层实现,没有具体实现的Class类,所以如果获取到的ClassLoader为null,则表示是由BootstrapLoader加载的;<br>所以这里的逻辑为:如果是bootstraploader,但是因为bootstraploader下肯定没有资源文件,就获取systemloader下的资源文件<br>如果不是bootstraploader,就直接取得classloader然后调用getResourceAsStream方法</p>
+<p><img src="/uploads/ClassLoader3.png" alt="深挖代码2"></p>
+<p><img src="/uploads/ClassLoader4.png" alt="深挖代码3"></p>
+<p>这里的findResource是每个继承了ClassLoader的类可以自行实现的方法,是为了自定义自己独特的加载方法.</p>
+<p>getResource方法,是委托模型,先遍历到最顶部的ClassLoader(即bootstrapClassLoader),如果找到直接返回url,如果找不到,就找extClassLoader,这样逐渐遍历.</p>
+<p>逻辑是这样的,从WebappClassLoader开始找,儿子让父亲去找,父亲让自己的父亲去找…到了bootstrapClassLoader了,自己都是祖先了,没有父亲可以找了,所以调用自己的getBootstrapResource方法找,找不到,再继续调用自己独特的方法findResource找,还是找不到,只能返回null给儿子,儿子说”父亲找不到,只能自己找了”,所以调用自己独特的方法findResource去找,结果也找不到,再继续交给儿子…直到后面WebappClassLoader自己找到了…你说为什么WebappClassLoader一开始不自己找呢,这就是所谓的委托模型…</p>
+<blockquote>
+<p>依次遍历的顺序如下:<br>org.glassfish.web.loader.WebappClassLoader<br>org.glassfish.internal.api.DelegatingClassLoader<br>java.net.URLClassLoader<br>APIClassLoader<br>ExtClassLoader——ext下的jar里面<br>bootstrapLoader——–jre&#x2F;classes下</p>
+</blockquote>
+<p>看下图可能更理解点,我把配置文件放在classpath的包里面,然后最外层的项目没有配置文件:<br><img src="/uploads/ClassLoader5.png" alt="深挖代码4"></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><blockquote>
+<p><a href="http://blog.csdn.net/lyjshen/article/details/52421554">http://blog.csdn.net/lyjshen/article/details/52421554</a></p>
+</blockquote>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+      <tags>
+        <tag>ClassLoader</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java IO框架</title>
+    <url>/article/12425.html</url>
+    <content><![CDATA[<h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>java IO框架是java开发中最常用到的,通常用于读取,写入文件.</p>
+<h2 id="关于编码"><a href="#关于编码" class="headerlink" title="关于编码"></a>关于编码</h2><p>jvm使用无编码的Unicode字符存储字符串于内存中</p>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>说起使用方法之前,这里先给两张思维导图,认识下java IO的各个类的关系:</p>
+<p><img src="/uploads/IO%E6%A1%86%E6%9E%B6%E5%A4%A7%E7%9A%84%E4%BD%93%E7%B3%BB.png" alt="IO框架大的体系图"></p>
+<p><img src="/uploads/IO%E6%A1%86%E6%9E%B6%E5%B0%8F%E7%9A%84%E4%BD%93%E7%B3%BB.png" alt="IO框架小的体系图"></p>
+<h3 id="文件编码跟系统的编码不一致"><a href="#文件编码跟系统的编码不一致" class="headerlink" title="文件编码跟系统的编码不一致"></a>文件编码跟系统的编码不一致</h3><p>这个时候就要进行转换(假设文件的编码是UTF8,而系统的编码是GBK):<br>File–&gt;(转换成字节)FileInputStream–&gt;(对字节进行UTF8读取,转换成Reader字符)InputStreamReader–&gt;(加个缓冲,这个缓冲有read和readLine方法)BufferedReader.</p>
+<p>例子如下:<br><img src="/uploads/%E4%BE%8B%E5%AD%901.png" alt="例子1.png"></p>
+<h3 id="文件的编码跟系统的编码一致"><a href="#文件的编码跟系统的编码一致" class="headerlink" title="文件的编码跟系统的编码一致"></a>文件的编码跟系统的编码一致</h3><p>Reader类其实是可以直接接收File作为参数的,这个时候会转换成字节,然后对字节按照系统的编码进行读取,例子如下:<br><img src="/uploads/%E4%BE%8B%E5%AD%902.png" alt="例子2.png"></p>
+<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><h3 id="read与readLine的区别"><a href="#read与readLine的区别" class="headerlink" title="read与readLine的区别"></a>read与readLine的区别</h3><p>read如果结束了返回-1,如果没结束返回char类型(一个中文算一个字符);<br>readLine如果结束了返回null,如果没结束返回String类型.</p>
+<h3 id="bufferedInputStream与dataInputStream的区别"><a href="#bufferedInputStream与dataInputStream的区别" class="headerlink" title="bufferedInputStream与dataInputStream的区别"></a>bufferedInputStream与dataInputStream的区别</h3><p>dataInputStream(bufferedInputStream),包裹层…<br>如果您正在做一些特别的尝试将类的字段序列化到文件中，那么您可以使用DataInput &#x2F; OutputStream，因为它可以在二进制级别更好地控制数据。</p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+      <tags>
+        <tag>JavaIO框架</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java基础</title>
     <url>/article/45792.html</url>
     <content><![CDATA[<h2 id="public-private-protected-及不写时的区别"><a href="#public-private-protected-及不写时的区别" class="headerlink" title="public ,private ,protected 及不写时的区别"></a>public ,private ,protected 及不写时的区别</h2><p><code>注意:不写时默认为friendly</code><br>各个作用域所起的作用如下:</p>
@@ -108,57 +159,6 @@
       </tags>
   </entry>
   <entry>
-    <title>ClassLoader详解</title>
-    <url>/article/2135.html</url>
-    <content><![CDATA[<h2 id="了解ClassLoader的好处"><a href="#了解ClassLoader的好处" class="headerlink" title="了解ClassLoader的好处"></a>了解ClassLoader的好处</h2><p>有助于了解java类的加载机制,了解web应用服务器是怎么加载进war包并怎么工作的</p>
-<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><ol>
-<li>相信很多人都会在各种文章中见到<code>AppClassloader</code>和<code>SystemClassloader</code>,其实这两个是指同一个东西,只是叫法不同.</li>
-<li><code>ClassLoader.getSystemResourceAsStream(name);</code>类似这种,ClassLoader有且仅有提供了几个方法跟systemloader有关的方法.</li>
-<li>Bootstrap是爷爷、ExtClassLoader是爸爸、AppClassLoader是孩子（孙子）。但由于爸爸ExtClassLoader太忙了，所以照顾孩子AppClassLoader的责任就有爷爷Bootstrap来处理了(意思是，虽然ExtClassLoader是AppClassLoader老爸，但却是由爷爷Bootstrap加载的AppClassLoader。该情况与中国国情完全一样)。</li>
-<li>项目的配置文件的覆盖顺序为：根类加载器 &gt; 扩展类加载器 &gt; 应用中的资源文件 &gt; 应用所依赖的第三方jar</li>
-</ol>
-<h2 id="各个ClassLoader的关联"><a href="#各个ClassLoader的关联" class="headerlink" title="各个ClassLoader的关联"></a>各个ClassLoader的关联</h2><p>普通java项目:<br><code>AppClassLoader</code>&gt;&gt;<code>ExtClassLoader</code>&gt;&gt;<code>bootstrapLoader</code><br>glassfish web项目:<br><code>WebappClassLoader</code>&gt;&gt;<code>DelegatingClassLoader</code>&gt;&gt;<code>URLClassLoader</code>&gt;&gt;<code>APIClassLoader</code>&gt;&gt;<code>ExtClassLoader</code>&gt;&gt;<code>bootstrapLoader</code></p>
-<h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p>有一次我在编写一个sdk,打算把它打包成jar,给另外的web应用使用,姑且叫该项目为B工程;<br>A工程(web项目)依赖B工程,在B工程中的classpath下有个配置文件plugins.xml,同时在A工程的classpath下也有一个同名的配置文件,那么<strong>A工程下的配置文件则会覆盖B下的文件,同样包路径的class文件也会覆盖</strong>。</p>
-<p>所以,如果我在A工程下写一个配置文件<code>plugins.xml</code>,那么它打包成war文件的时候会覆盖B工程jar包里面的配置文件<code>plugins.xml</code>,然后在glassfish上运行war包的时候会被<br>WebAppClassLoader加载(如果是java项目则会被AppClassloader获取到)</p>
-<p>下面是项目中用到的部分代码:<br><img src="/uploads/ClassLoader1.png" alt="读取配置文件"></p>
-<p><img src="/uploads/ClassLoader2.png" alt="深挖代码1"></p>
-<p>这里解释下,因为BootstrapLoader是jvm底层实现,没有具体实现的Class类,所以如果获取到的ClassLoader为null,则表示是由BootstrapLoader加载的;<br>所以这里的逻辑为:如果是bootstraploader,但是因为bootstraploader下肯定没有资源文件,就获取systemloader下的资源文件<br>如果不是bootstraploader,就直接取得classloader然后调用getResourceAsStream方法</p>
-<p><img src="/uploads/ClassLoader3.png" alt="深挖代码2"></p>
-<p><img src="/uploads/ClassLoader4.png" alt="深挖代码3"></p>
-<p>这里的findResource是每个继承了ClassLoader的类可以自行实现的方法,是为了自定义自己独特的加载方法.</p>
-<p>getResource方法,是委托模型,先遍历到最顶部的ClassLoader(即bootstrapClassLoader),如果找到直接返回url,如果找不到,就找extClassLoader,这样逐渐遍历.</p>
-<p>逻辑是这样的,从WebappClassLoader开始找,儿子让父亲去找,父亲让自己的父亲去找…到了bootstrapClassLoader了,自己都是祖先了,没有父亲可以找了,所以调用自己的getBootstrapResource方法找,找不到,再继续调用自己独特的方法findResource找,还是找不到,只能返回null给儿子,儿子说”父亲找不到,只能自己找了”,所以调用自己独特的方法findResource去找,结果也找不到,再继续交给儿子…直到后面WebappClassLoader自己找到了…你说为什么WebappClassLoader一开始不自己找呢,这就是所谓的委托模型…</p>
-<blockquote>
-<p>依次遍历的顺序如下:<br>org.glassfish.web.loader.WebappClassLoader<br>org.glassfish.internal.api.DelegatingClassLoader<br>java.net.URLClassLoader<br>APIClassLoader<br>ExtClassLoader——ext下的jar里面<br>bootstrapLoader——–jre&#x2F;classes下</p>
-</blockquote>
-<p>看下图可能更理解点,我把配置文件放在classpath的包里面,然后最外层的项目没有配置文件:<br><img src="/uploads/ClassLoader5.png" alt="深挖代码4"></p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><blockquote>
-<p><a href="http://blog.csdn.net/lyjshen/article/details/52421554">http://blog.csdn.net/lyjshen/article/details/52421554</a></p>
-</blockquote>
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
-      <tags>
-        <tag>ClassLoader</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java IO框架</title>
-    <url>/article/12425.html</url>
-    <content><![CDATA[<h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>java IO框架是java开发中最常用到的,通常用于读取,写入文件.</p>
-<h2 id="关于编码"><a href="#关于编码" class="headerlink" title="关于编码"></a>关于编码</h2><p>jvm使用无编码的Unicode字符存储字符串于内存中</p>
-<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>说起使用方法之前,这里先给两张思维导图,认识下java IO的各个类的关系:</p>
-<p><img src="/uploads/IO%E6%A1%86%E6%9E%B6%E5%A4%A7%E7%9A%84%E4%BD%93%E7%B3%BB.png" alt="IO框架大的体系图"></p>
-<p><img src="/uploads/IO%E6%A1%86%E6%9E%B6%E5%B0%8F%E7%9A%84%E4%BD%93%E7%B3%BB.png" alt="IO框架小的体系图"></p>
-<h3 id="文件编码跟系统的编码不一致"><a href="#文件编码跟系统的编码不一致" class="headerlink" title="文件编码跟系统的编码不一致"></a>文件编码跟系统的编码不一致</h3><p>这个时候就要进行转换(假设文件的编码是UTF8,而系统的编码是GBK):<br>File–&gt;(转换成字节)FileInputStream–&gt;(对字节进行UTF8读取,转换成Reader字符)InputStreamReader–&gt;(加个缓冲,这个缓冲有read和readLine方法)BufferedReader.</p>
-<p>例子如下:<br><img src="/uploads/%E4%BE%8B%E5%AD%901.png" alt="例子1.png"></p>
-<h3 id="文件的编码跟系统的编码一致"><a href="#文件的编码跟系统的编码一致" class="headerlink" title="文件的编码跟系统的编码一致"></a>文件的编码跟系统的编码一致</h3><p>Reader类其实是可以直接接收File作为参数的,这个时候会转换成字节,然后对字节按照系统的编码进行读取,例子如下:<br><img src="/uploads/%E4%BE%8B%E5%AD%902.png" alt="例子2.png"></p>
-<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><h3 id="read与readLine的区别"><a href="#read与readLine的区别" class="headerlink" title="read与readLine的区别"></a>read与readLine的区别</h3><p>read如果结束了返回-1,如果没结束返回char类型(一个中文算一个字符);<br>readLine如果结束了返回null,如果没结束返回String类型.</p>
-<h3 id="bufferedInputStream与dataInputStream的区别"><a href="#bufferedInputStream与dataInputStream的区别" class="headerlink" title="bufferedInputStream与dataInputStream的区别"></a>bufferedInputStream与dataInputStream的区别</h3><p>dataInputStream(bufferedInputStream),包裹层…<br>如果您正在做一些特别的尝试将类的字段序列化到文件中，那么您可以使用DataInput &#x2F; OutputStream，因为它可以在二进制级别更好地控制数据。</p>
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
-      <tags>
-        <tag>JavaIO框架</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>前端常用图表框架</title>
     <url>/article/36228.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -204,213 +204,6 @@
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
       <tags>
         <tag>前端开发</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hexo博客搭建与插件改造完全指南</title>
-    <url>/article/18588.html</url>
-    <content><![CDATA[<blockquote>
-<p>经过多次尝试，终于搭建好了自己的博客！本文记录了完整的搭建过程和后期插件改造，让博客更加好用。</p>
-</blockquote>
-<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=4154720&auto=0&height=66"></iframe>
-
-<h2 id="一、为什么选择-Hexo"><a href="#一、为什么选择-Hexo" class="headerlink" title="一、为什么选择 Hexo"></a>一、为什么选择 Hexo</h2><p>以前用过 WordPress，折腾各种主题和插件，还要维护服务器，后来发现很多技术大牛都把博客放在 GitHub Pages 上——静态博客，无需管理后台，用 Markdown 写文章，简直是程序员的最佳选择！</p>
-<h2 id="二、搭建及改造流程概览"><a href="#二、搭建及改造流程概览" class="headerlink" title="二、搭建及改造流程概览"></a>二、搭建及改造流程概览</h2><p>只需要 5 步就能完成搭建：</p>
-<ol>
-<li><strong>安装 Node.js</strong> - Hexo 基于 Node.js，需要先安装</li>
-<li><strong>安装 Hexo</strong> - 用 npm 安装 Hexo 博客框架</li>
-<li><strong>配置 SSH</strong> - 让部署时不需要每次输入密码</li>
-<li><strong>部署上线</strong> - 推送到 GitHub Pages</li>
-<li><strong>插件改造</strong> - 选择符合自己使用习惯的插件安装并优化hexo博客</li>
-</ol>
-<h2 id="三、详细搭建步骤"><a href="#三、详细搭建步骤" class="headerlink" title="三、详细搭建步骤"></a>三、详细搭建步骤</h2><h3 id="3-1-安装-Node-js"><a href="#3-1-安装-Node-js" class="headerlink" title="3.1 安装 Node.js"></a>3.1 安装 Node.js</h3><p>Hexo 需要 Node.js 环境。直接去 <a href="https://nodejs.org/">Node.js 官网</a> 下载安装包，安装完成后自带 npm 包管理器。</p>
-<h3 id="3-2-安装-Hexo"><a href="#3-2-安装-Hexo" class="headerlink" title="3.2 安装 Hexo"></a>3.2 安装 Hexo</h3><p>npm 默认源比较慢，建议换成阿里镜像：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装 Hexo 命令行工具（全局安装）</span></span><br><span class="line">npm --registry https://registry.npm.taobao.org install hexo-cli -g</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化博客项目</span></span><br><span class="line">hexo init my-blog</span><br><span class="line"><span class="built_in">cd</span> my-blog</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装项目依赖</span></span><br><span class="line">npm --registry https://registry.npm.taobao.org install</span><br></pre></td></tr></table></figure>
-
-<p>安装完成后，启动本地服务器预览：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo server</span><br></pre></td></tr></table></figure>
-
-<p>打开浏览器访问 <code>http://localhost:4000</code>，就能看到博客效果了！</p>
-<h3 id="3-3-配置-Git-SSH-密钥"><a href="#3-3-配置-Git-SSH-密钥" class="headerlink" title="3.3 配置 Git SSH 密钥"></a>3.3 配置 Git SSH 密钥</h3><p>为了让 Hexo 部署时不需要每次输入密码，需要配置 SSH 密钥。</p>
-<p><strong>第一步：配置 Git 用户信息</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.email <span class="string">&quot;你的邮箱&quot;</span></span><br><span class="line">git config --global user.name <span class="string">&quot;你的昵称&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>第二步：生成 SSH 密钥</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -f ~/.ssh/id_rsa.github -C <span class="string">&quot;你的邮箱&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>一路回车，会在 <code>~/.ssh</code> 目录下生成两个文件：</p>
-<ul>
-<li><code>id_rsa.github</code> - 私钥（自己保管）</li>
-<li><code>id_rsa.github.pub</code> - 公钥（放到 GitHub）</li>
-</ul>
-<p><strong>第三步：添加到 GitHub</strong></p>
-<ol>
-<li>复制公钥内容：<code>cat ~/.ssh/id_rsa.github.pub</code></li>
-<li>打开 GitHub → Settings → SSH and GPG keys → New SSH key</li>
-<li>粘贴公钥，保存</li>
-</ol>
-<p><strong>第四步：创建 SSH 配置文件</strong></p>
-<p>在 <code>~/.ssh</code> 目录下新建 <code>config</code> 文件：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Host github.com</span><br><span class="line">    IdentityFile ~/.ssh/id_rsa.github</span><br><span class="line">    User your-username</span><br></pre></td></tr></table></figure>
-
-<p><strong>第五步：测试连接</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-
-<p>看到 <code>You&#39;ve successfully authenticated</code> 就成功了！</p>
-<h3 id="3-4-部署到-GitHub-Pages"><a href="#3-4-部署到-GitHub-Pages" class="headerlink" title="3.4 部署到 GitHub Pages"></a>3.4 部署到 GitHub Pages</h3><p><strong>第一步：创建 GitHub 仓库</strong></p>
-<p>仓库名格式：<code>你的用户名.github.io</code><br>例如：<code>aitestperson.github.io</code></p>
-<p><strong>第二步：配置 Hexo 部署</strong></p>
-<p>修改 <code>_config.yml</code>：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repository:</span> <span class="string">git@github.com:aitestperson/aitestperson.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>第三步：部署</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean      <span class="comment"># 清理缓存</span></span><br><span class="line">hexo generate   <span class="comment"># 生成静态页面</span></span><br><span class="line">hexo deploy     <span class="comment"># 部署到 GitHub</span></span><br></pre></td></tr></table></figure>
-
-<p>访问 <code>https://你的用户名.github.io</code> 就能看到博客了！</p>
-<h3 id="3-5-插件改造"><a href="#3-5-插件改造" class="headerlink" title="3.5 插件改造"></a>3.5 插件改造</h3><p>搭建完成后，我对博客进行了一系列插件改造，让它更加好用。</p>
-<h4 id="3-5-1-主题"><a href="#3-5-1-主题" class="headerlink" title="3.5.1 主题"></a>3.5.1 主题</h4><p>使用 <a href="https://theme-next.js.org/">Hexo Theme Next</a> 主题，简洁美观，功能丰富。</p>
-<h4 id="3-5-2-链接优化"><a href="#3-5-2-链接优化" class="headerlink" title="3.5.2 链接优化"></a>3.5.2 链接优化</h4><table>
-<thead>
-<tr>
-<th>插件</th>
-<th>作用</th>
-<th>效果</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>hexo-abbrlink</td>
-<td>简短永久链接</td>
-<td><code>article/1234abc.html</code></td>
-</tr>
-<tr>
-<td>hexo-filter-titlebased-link</td>
-<td>站内链接</td>
-<td><code>[[文章标题]]</code> 自动生成链接</td>
-</tr>
-<tr>
-<td>hexo-filter-image-link</td>
-<td>非图片链接转换</td>
-<td><code>![](file.pdf)</code> 转为 <code>&lt;a&gt;</code> 标签</td>
-</tr>
-</tbody></table>
-<p><strong>abbrlink 配置</strong></p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">permalink:</span> <span class="string">article/:abbrlink.html</span></span><br><span class="line"><span class="attr">abbrlink:</span></span><br><span class="line">  <span class="attr">alg:</span> <span class="string">crc32</span>    <span class="comment"># 算法：crc16 或 crc32</span></span><br><span class="line">  <span class="attr">rep:</span> <span class="string">hex</span>      <span class="comment"># 进制：dec 或 hex</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>站内链接使用</strong></p>
-<p>安装 <code>hexo-filter-titlebased-link</code> 后，可以这样引用文章：</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">这是 [[另一篇文章]] 的链接</span><br></pre></td></tr></table></figure>
-
-<p><strong>非图片链接转换</strong></p>
-<p>自研插件，处理 Markdown 图片语法中的非图片链接：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">image_link_filter:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">imageExtensions:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">jpg</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">png</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">gif</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">webp</span></span><br><span class="line">  <span class="attr">action:</span> <span class="string">convert</span></span><br></pre></td></tr></table></figure>
-
-<p>效果：</p>
-<ul>
-<li><code>![图片](a.png)</code> → 保持为 <code>&lt;img&gt;</code> 标签</li>
-<li><code>![文档](b.pdf)</code> → 转为 <code>&lt;a href=&quot;b.pdf&quot;&gt;文档&lt;/a&gt;</code></li>
-</ul>
-<h4 id="3-5-3-SEO-优化"><a href="#3-5-3-SEO-优化" class="headerlink" title="3.5.3 SEO 优化"></a>3.5.3 SEO 优化</h4><table>
-<thead>
-<tr>
-<th>插件</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>hexo-generator-sitemap</td>
-<td>生成 sitemap.xml（谷歌、必应等）</td>
-</tr>
-<tr>
-<td>hexo-generator-baidu-sitemap</td>
-<td>生成百度专用站点地图</td>
-</tr>
-</tbody></table>
-<h4 id="3-5-4-分类与标签"><a href="#3-5-4-分类与标签" class="headerlink" title="3.5.4 分类与标签"></a>3.5.4 分类与标签</h4><table>
-<thead>
-<tr>
-<th>插件</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>hexo-auto-category</td>
-<td>自动生成分类</td>
-</tr>
-</tbody></table>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">auto_category:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span>  <span class="comment"># 根据文章目录自动生成分类</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="3-5-5-搜索功能"><a href="#3-5-5-搜索功能" class="headerlink" title="3.5.5 搜索功能"></a>3.5.5 搜索功能</h4><table>
-<thead>
-<tr>
-<th>插件</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>hexo-generator-searchdb</td>
-<td>本地搜索</td>
-</tr>
-</tbody></table>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">search:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">search.xml</span></span><br><span class="line">  <span class="attr">field:</span> <span class="string">post</span></span><br><span class="line">  <span class="attr">format:</span> <span class="string">html</span></span><br><span class="line">  <span class="attr">limit:</span> <span class="number">10000</span></span><br></pre></td></tr></table></figure>
-
-<p>配合主题配置，可以在博客中实现即时搜索。</p>
-<hr>
-<h2 id="四、插件汇总"><a href="#四、插件汇总" class="headerlink" title="四、插件汇总"></a>四、插件汇总</h2><table>
-<thead>
-<tr>
-<th>插件</th>
-<th>版本</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>hexo-abbrlink</td>
-<td>^2.2.1</td>
-<td>生成简短永久链接</td>
-</tr>
-<tr>
-<td>hexo-auto-category</td>
-<td>^0.2.2</td>
-<td>自动生成分类</td>
-</tr>
-<tr>
-<td>hexo-filter-image-link</td>
-<td>github:aitestperson&#x2F;hexo-filter-image-link</td>
-<td>非图片链接转a标签</td>
-</tr>
-<tr>
-<td>hexo-filter-titlebased-link</td>
-<td>^0.2.7</td>
-<td>站内链接支持</td>
-</tr>
-<tr>
-<td>hexo-generator-sitemap</td>
-<td>^3.0.1</td>
-<td>站点地图</td>
-</tr>
-<tr>
-<td>hexo-generator-baidu-sitemap</td>
-<td>^0.1.9</td>
-<td>百度站点地图</td>
-</tr>
-<tr>
-<td>hexo-generator-searchdb</td>
-<td>^1.5.0</td>
-<td>本地搜索</td>
-</tr>
-<tr>
-<td>hexo-theme-next</td>
-<td>^8.27.0</td>
-<td>博客主题</td>
-</tr>
-</tbody></table>
-<hr>
-<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>配合这些插件改造后，博客功能更加完善，写作体验也更好。快来试试吧！</p>
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
-      <tags>
-        <tag>hexo</tag>
-        <tag>GithubPages</tag>
-        <tag>博客搭建</tag>
       </tags>
   </entry>
   <entry>
@@ -579,6 +372,213 @@
 </blockquote><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
       <tags>
         <tag>Java基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hexo博客搭建与插件改造完全指南</title>
+    <url>/article/18588.html</url>
+    <content><![CDATA[<blockquote>
+<p>经过多次尝试，终于搭建好了自己的博客！本文记录了完整的搭建过程和后期插件改造，让博客更加好用。</p>
+</blockquote>
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=4154720&auto=0&height=66"></iframe>
+
+<h2 id="为什么选择-Hexo"><a href="#为什么选择-Hexo" class="headerlink" title="为什么选择 Hexo"></a>为什么选择 Hexo</h2><p>以前用过 WordPress，折腾各种主题和插件，还要维护服务器，后来发现很多技术大牛都把博客放在 GitHub Pages 上——静态博客，无需管理后台，用 Markdown 写文章，简直是程序员的最佳选择！</p>
+<h2 id="搭建及改造流程概览"><a href="#搭建及改造流程概览" class="headerlink" title="搭建及改造流程概览"></a>搭建及改造流程概览</h2><p>只需要 5 步就能完成搭建：</p>
+<ol>
+<li><strong>安装 Node.js</strong> - Hexo 基于 Node.js，需要先安装</li>
+<li><strong>安装 Hexo</strong> - 用 npm 安装 Hexo 博客框架</li>
+<li><strong>配置 SSH</strong> - 让部署时不需要每次输入密码</li>
+<li><strong>部署上线</strong> - 推送到 GitHub Pages</li>
+<li><strong>插件改造</strong> - 选择符合自己使用习惯的插件安装并优化hexo博客</li>
+</ol>
+<h2 id="详细搭建步骤"><a href="#详细搭建步骤" class="headerlink" title="详细搭建步骤"></a>详细搭建步骤</h2><h3 id="安装-Node-js"><a href="#安装-Node-js" class="headerlink" title="安装 Node.js"></a>安装 Node.js</h3><p>Hexo 需要 Node.js 环境。直接去 <a href="https://nodejs.org/">Node.js 官网</a> 下载安装包，安装完成后自带 npm 包管理器。</p>
+<h3 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="安装 Hexo"></a>安装 Hexo</h3><p>npm 默认源比较慢，建议换成阿里镜像：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装 Hexo 命令行工具（全局安装）</span></span><br><span class="line">npm --registry https://registry.npm.taobao.org install hexo-cli -g</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化博客项目</span></span><br><span class="line">hexo init my-blog</span><br><span class="line"><span class="built_in">cd</span> my-blog</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装项目依赖</span></span><br><span class="line">npm --registry https://registry.npm.taobao.org install</span><br></pre></td></tr></table></figure>
+
+<p>安装完成后，启动本地服务器预览：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo server</span><br></pre></td></tr></table></figure>
+
+<p>打开浏览器访问 <code>http://localhost:4000</code>，就能看到博客效果了！</p>
+<h3 id="配置-Git-SSH-密钥"><a href="#配置-Git-SSH-密钥" class="headerlink" title="配置 Git SSH 密钥"></a>配置 Git SSH 密钥</h3><p>为了让 Hexo 部署时不需要每次输入密码，需要配置 SSH 密钥。</p>
+<p><strong>第一步：配置 Git 用户信息</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global user.email <span class="string">&quot;你的邮箱&quot;</span></span><br><span class="line">git config --global user.name <span class="string">&quot;你的昵称&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>第二步：生成 SSH 密钥</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -f ~/.ssh/id_rsa.github -C <span class="string">&quot;你的邮箱&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>一路回车，会在 <code>~/.ssh</code> 目录下生成两个文件：</p>
+<ul>
+<li><code>id_rsa.github</code> - 私钥（自己保管）</li>
+<li><code>id_rsa.github.pub</code> - 公钥（放到 GitHub）</li>
+</ul>
+<p><strong>第三步：添加到 GitHub</strong></p>
+<ol>
+<li>复制公钥内容：<code>cat ~/.ssh/id_rsa.github.pub</code></li>
+<li>打开 GitHub → Settings → SSH and GPG keys → New SSH key</li>
+<li>粘贴公钥，保存</li>
+</ol>
+<p><strong>第四步：创建 SSH 配置文件</strong></p>
+<p>在 <code>~/.ssh</code> 目录下新建 <code>config</code> 文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Host github.com</span><br><span class="line">    IdentityFile ~/.ssh/id_rsa.github</span><br><span class="line">    User your-username</span><br></pre></td></tr></table></figure>
+
+<p><strong>第五步：测试连接</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+
+<p>看到 <code>You&#39;ve successfully authenticated</code> 就成功了！</p>
+<h3 id="部署到-GitHub-Pages"><a href="#部署到-GitHub-Pages" class="headerlink" title="部署到 GitHub Pages"></a>部署到 GitHub Pages</h3><p><strong>第一步：创建 GitHub 仓库</strong></p>
+<p>仓库名格式：<code>你的用户名.github.io</code><br>例如：<code>aitestperson.github.io</code></p>
+<p><strong>第二步：配置 Hexo 部署</strong></p>
+<p>修改 <code>_config.yml</code>：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repository:</span> <span class="string">git@github.com:aitestperson/aitestperson.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>第三步：部署</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean      <span class="comment"># 清理缓存</span></span><br><span class="line">hexo generate   <span class="comment"># 生成静态页面</span></span><br><span class="line">hexo deploy     <span class="comment"># 部署到 GitHub</span></span><br></pre></td></tr></table></figure>
+
+<p>访问 <code>https://你的用户名.github.io</code> 就能看到博客了！</p>
+<h3 id="插件改造"><a href="#插件改造" class="headerlink" title="插件改造"></a>插件改造</h3><p>搭建完成后，我对博客进行了一系列插件改造，让它更加好用。</p>
+<h4 id="主题"><a href="#主题" class="headerlink" title="主题"></a>主题</h4><p>使用 <a href="https://theme-next.js.org/">Hexo Theme Next</a> 主题，简洁美观，功能丰富。</p>
+<h4 id="链接优化"><a href="#链接优化" class="headerlink" title="链接优化"></a>链接优化</h4><table>
+<thead>
+<tr>
+<th>插件</th>
+<th>作用</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>hexo-abbrlink</td>
+<td>简短永久链接</td>
+<td><code>article/1234abc.html</code></td>
+</tr>
+<tr>
+<td>hexo-filter-titlebased-link</td>
+<td>站内链接</td>
+<td><code>[[文章标题]]</code> 自动生成链接</td>
+</tr>
+<tr>
+<td>hexo-filter-image-link</td>
+<td>非图片链接转换</td>
+<td><code>![](file.pdf)</code> 转为 <code>&lt;a&gt;</code> 标签</td>
+</tr>
+</tbody></table>
+<p><strong>abbrlink 配置</strong></p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">permalink:</span> <span class="string">article/:abbrlink.html</span></span><br><span class="line"><span class="attr">abbrlink:</span></span><br><span class="line">  <span class="attr">alg:</span> <span class="string">crc32</span>    <span class="comment"># 算法：crc16 或 crc32</span></span><br><span class="line">  <span class="attr">rep:</span> <span class="string">hex</span>      <span class="comment"># 进制：dec 或 hex</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>站内链接使用</strong></p>
+<p>安装 <code>hexo-filter-titlebased-link</code> 后，可以这样引用文章：</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">这是 [[另一篇文章]] 的链接</span><br></pre></td></tr></table></figure>
+
+<p><strong>非图片链接转换</strong></p>
+<p>自研插件，处理 Markdown 图片语法中的非图片链接：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">image_link_filter:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">imageExtensions:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">jpg</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">png</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">gif</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">webp</span></span><br><span class="line">  <span class="attr">action:</span> <span class="string">convert</span></span><br></pre></td></tr></table></figure>
+
+<p>效果：</p>
+<ul>
+<li><code>![图片](a.png)</code> → 保持为 <code>&lt;img&gt;</code> 标签</li>
+<li><code>![文档](b.pdf)</code> → 转为 <code>&lt;a href=&quot;b.pdf&quot;&gt;文档&lt;/a&gt;</code></li>
+</ul>
+<h4 id="SEO-优化"><a href="#SEO-优化" class="headerlink" title="SEO 优化"></a>SEO 优化</h4><table>
+<thead>
+<tr>
+<th>插件</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>hexo-generator-sitemap</td>
+<td>生成 sitemap.xml（谷歌、必应等）</td>
+</tr>
+<tr>
+<td>hexo-generator-baidu-sitemap</td>
+<td>生成百度专用站点地图</td>
+</tr>
+</tbody></table>
+<h4 id="分类与标签"><a href="#分类与标签" class="headerlink" title="分类与标签"></a>分类与标签</h4><table>
+<thead>
+<tr>
+<th>插件</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>hexo-auto-category</td>
+<td>自动生成分类</td>
+</tr>
+</tbody></table>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">auto_category:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span>  <span class="comment"># 根据文章目录自动生成分类</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="搜索功能"><a href="#搜索功能" class="headerlink" title="搜索功能"></a>搜索功能</h4><table>
+<thead>
+<tr>
+<th>插件</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>hexo-generator-searchdb</td>
+<td>本地搜索</td>
+</tr>
+</tbody></table>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">search:</span></span><br><span class="line">  <span class="attr">path:</span> <span class="string">search.xml</span></span><br><span class="line">  <span class="attr">field:</span> <span class="string">post</span></span><br><span class="line">  <span class="attr">format:</span> <span class="string">html</span></span><br><span class="line">  <span class="attr">limit:</span> <span class="number">10000</span></span><br></pre></td></tr></table></figure>
+
+<p>配合主题配置，可以在博客中实现即时搜索。</p>
+<hr>
+<h2 id="插件汇总"><a href="#插件汇总" class="headerlink" title="插件汇总"></a>插件汇总</h2><table>
+<thead>
+<tr>
+<th>插件</th>
+<th>版本</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>hexo-abbrlink</td>
+<td>^2.2.1</td>
+<td>生成简短永久链接</td>
+</tr>
+<tr>
+<td>hexo-auto-category</td>
+<td>^0.2.2</td>
+<td>自动生成分类</td>
+</tr>
+<tr>
+<td>hexo-filter-image-link</td>
+<td>github:aitestperson&#x2F;hexo-filter-image-link</td>
+<td>非图片链接转a标签</td>
+</tr>
+<tr>
+<td>hexo-filter-titlebased-link</td>
+<td>^0.2.7</td>
+<td>站内链接支持</td>
+</tr>
+<tr>
+<td>hexo-generator-sitemap</td>
+<td>^3.0.1</td>
+<td>站点地图</td>
+</tr>
+<tr>
+<td>hexo-generator-baidu-sitemap</td>
+<td>^0.1.9</td>
+<td>百度站点地图</td>
+</tr>
+<tr>
+<td>hexo-generator-searchdb</td>
+<td>^1.5.0</td>
+<td>本地搜索</td>
+</tr>
+<tr>
+<td>hexo-theme-next</td>
+<td>^8.27.0</td>
+<td>博客主题</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>配合这些插件改造后，博客功能更加完善，写作体验也更好。快来试试吧！</p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+      <tags>
+        <tag>hexo</tag>
+        <tag>GithubPages</tag>
+        <tag>博客搭建</tag>
       </tags>
   </entry>
   <entry>
