@@ -159,6 +159,121 @@
       </tags>
   </entry>
   <entry>
+    <title>MySQL开发实战笔记</title>
+    <url>/article/11695.html</url>
+    <content><![CDATA[<blockquote>
+<p>本文记录了 MySQL 开发中常见的问题与解决方案，包括索引优化、事务处理、死锁分析等实战经验。</p>
+</blockquote>
+<h2 id="SQL-优化技巧"><a href="#SQL-优化技巧" class="headerlink" title="SQL 优化技巧"></a>SQL 优化技巧</h2><h3 id="查询优化"><a href="#查询优化" class="headerlink" title="查询优化"></a>查询优化</h3><ol>
+<li><strong>尽量用 JOIN 查询</strong>，左表是小表去 LEFT JOIN</li>
+<li>效率低的场景：能用 EXISTS（小表）就不用 IN（大表）</li>
+<li>用 <code>SQL_NO_CACHE</code> 查看执行计划，排除缓存干扰</li>
+</ol>
+<h3 id="索引优化"><a href="#索引优化" class="headerlink" title="索引优化"></a>索引优化</h3><ol>
+<li><strong>组合索引</strong> <code>(a,b,c)</code> 查询只要带上 <code>a</code> 就走索引</li>
+<li>组合索引 <code>(a,b,c)</code> 和 <code>(a,c,d)</code> 可以合并为 <code>(a,b,c,d)</code></li>
+<li>唯一组合索引跟普通组合索引用法一样，只是多了唯一约束</li>
+<li>如果一个字段包含很多重复值，走索引意义不大，几乎是全表扫描</li>
+</ol>
+<h3 id="大数据量操作"><a href="#大数据量操作" class="headerlink" title="大数据量操作"></a>大数据量操作</h3><p>当需要 UPDATE&#x2F;DELETE 大量数据时，为避免大事务问题：</p>
+<ol>
+<li><strong>方案一</strong>：把匹配条件的记录 ID 查询出来，放入 Redis，用游标分批处理</li>
+<li><strong>方案二</strong>：查询出最大 ID 和最小 ID，分段处理</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 示例：分段删除</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> <span class="keyword">table</span> <span class="keyword">WHERE</span> id <span class="keyword">BETWEEN</span> ? <span class="keyword">AND</span> ? <span class="keyword">AND</span> <span class="keyword">condition</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="开发规范"><a href="#开发规范" class="headerlink" title="开发规范"></a>开发规范</h3><p>开发时需要防止没有带条件查询所有记录，导致内存溢出。</p>
+<hr>
+<h2 id="DDL-与-DML"><a href="#DDL-与-DML" class="headerlink" title="DDL 与 DML"></a>DDL 与 DML</h2><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DDL</td>
+<td>数据定义语言，如 CREATE、ALTER、DROP 等，会超时</td>
+</tr>
+<tr>
+<td>DML</td>
+<td>数据操作语言，如 SELECT、INSERT、UPDATE、DELETE，会阻塞直到执行完成</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="事务与并发问题"><a href="#事务与并发问题" class="headerlink" title="事务与并发问题"></a>事务与并发问题</h2><h3 id="事务未提交导致查询不到数据"><a href="#事务未提交导致查询不到数据" class="headerlink" title="事务未提交导致查询不到数据"></a>事务未提交导致查询不到数据</h3><p><strong>问题场景</strong>：流程落地后需要推送数据到核算系统，但推送线程查询不到刚落地数据。</p>
+<p><strong>原因</strong>：启动线程太快，事务还未完全提交就开始查询。</p>
+<p><strong>解决方案</strong>：使用 <code>TransactionSynchronizationManager</code> 在事务提交后执行：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">TransactionSynchronizationManager.registerSynchronization(</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">TransactionSynchronizationAdapter</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterCommit</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="comment">// 事务提交后执行推送逻辑</span></span><br><span class="line">            calculateStandardService.createIncreaseCalculateLedgerWithThread(ledgerList);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="性能问题排查"><a href="#性能问题排查" class="headerlink" title="性能问题排查"></a>性能问题排查</h2><h3 id="使用-jvisualvm-查看"><a href="#使用-jvisualvm-查看" class="headerlink" title="使用 jvisualvm 查看"></a>使用 jvisualvm 查看</h3><p>先用 <code>jvisualvm.exe</code> 查看内存和线程情况：</p>
+<ol>
+<li><strong>内存问题</strong>：如果内存太高，右键 dump 出 hprof 文件，用 MAT 分析</li>
+<li><strong>线程问题</strong>：如果线程数太多，规范线程池名称，打印堆栈，检查有无死锁</li>
+</ol>
+<hr>
+<h2 id="MySQL-死锁问题"><a href="#MySQL-死锁问题" class="headerlink" title="MySQL 死锁问题"></a>MySQL 死锁问题</h2><h3 id="死锁产生原因"><a href="#死锁产生原因" class="headerlink" title="死锁产生原因"></a>死锁产生原因</h3><p>锁只有在竞争一个以上的资源时才会产生，MySQL 死锁都是基于索引的。</p>
+<h3 id="典型死锁场景"><a href="#典型死锁场景" class="headerlink" title="典型死锁场景"></a>典型死锁场景</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 事务A</span></span><br><span class="line"><span class="keyword">INSERT INTO</span> a <span class="keyword">VALUES</span> (...);</span><br><span class="line"><span class="keyword">INSERT INTO</span> b <span class="keyword">VALUES</span> (...);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 事务B</span></span><br><span class="line"><span class="keyword">INSERT INTO</span> b <span class="keyword">VALUES</span> (...);</span><br><span class="line"><span class="keyword">INSERT INTO</span> a <span class="keyword">VALUES</span> (...);</span><br></pre></td></tr></table></figure>
+
+<p>因为表里建了唯一索引，INSERT 之前会锁住索引页，两个事务没提交时会互相死锁。</p>
+<h3 id="死锁日志分析"><a href="#死锁日志分析" class="headerlink" title="死锁日志分析"></a>死锁日志分析</h3><p>从 INNODB TRX 信息可以看到：</p>
+<ul>
+<li><code>lock_mode X</code>：排他锁</li>
+<li><code>lock_mode S</code>：共享锁</li>
+<li><code>lock_mode X insert intention</code>：插入意向锁</li>
+<li><code>WAITING FOR THIS LOCK TO BE GRANTED</code>：等待锁</li>
+<li><code>HOLDS THE LOCK(S)</code>：持有锁</li>
+</ul>
+<hr>
+<h2 id="MySQL-基础架构"><a href="#MySQL-基础架构" class="headerlink" title="MySQL 基础架构"></a>MySQL 基础架构</h2><h3 id="Server-层-vs-存储引擎层"><a href="#Server-层-vs-存储引擎层" class="headerlink" title="Server 层 vs 存储引擎层"></a>Server 层 vs 存储引擎层</h3><p>MySQL 整体分为两层：</p>
+<ul>
+<li><strong>Server 层</strong>：连接器、查询缓存、分析器、优化器、执行器</li>
+<li><strong>存储引擎层</strong>：负责数据的存储和提取（插件式，支持 InnoDB、MyISAM 等）</li>
+</ul>
+<h3 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">客户端 → 连接器 → 查询缓存 → 分析器 → 优化器 → 执行器 → 存储引擎</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>连接器</strong>：管理连接权限，定期断开长连接</li>
+<li><strong>查询缓存</strong>：表更新会导致缓存失效，建议关闭</li>
+<li><strong>分析器</strong>：词法分析和语法分析</li>
+<li><strong>优化器</strong>：决定使用哪个索引、多表连接顺序</li>
+<li><strong>执行器</strong>：权限检查，调用存储引擎接口</li>
+</ol>
+<hr>
+<h2 id="日志系统"><a href="#日志系统" class="headerlink" title="日志系统"></a>日志系统</h2><h3 id="redo-log（重做日志）"><a href="#redo-log（重做日志）" class="headerlink" title="redo log（重做日志）"></a>redo log（重做日志）</h3><p><strong>作用</strong>：InnoDB 特有，保证 crash-safe 能力</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>物理日志，记录”在某个数据页上做了什么修改”</li>
+<li>循环写，空间固定</li>
+<li>固定大小（如 4 个 1GB 文件）</li>
+</ul>
+<p><strong>原理</strong>：相当于”粉板”，write pos 记录当前位置，checkpoint 记录擦除位置。</p>
+<h3 id="binlog（归档日志）"><a href="#binlog（归档日志）" class="headerlink" title="binlog（归档日志）"></a>binlog（归档日志）</h3><p><strong>作用</strong>：Server 层日志，用于数据恢复和主从复制</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>逻辑日志，记录原始逻辑（如”给 ID&#x3D;2 加 1”）</li>
+<li>追加写，不会覆盖</li>
+<li>可用于数据恢复</li>
+</ul>
+<h3 id="两阶段提交"><a href="#两阶段提交" class="headerlink" title="两阶段提交"></a>两阶段提交</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">更新语句 → 执行器 → 存储引擎</span><br><span class="line">              ↓</span><br><span class="line">         写 redo log (prepare 状态)</span><br><span class="line">              ↓</span><br><span class="line">         写 binlog</span><br><span class="line">              ↓</span><br><span class="line">         提交事务 (redo log commit)</span><br></pre></td></tr></table></figure>
+
+<p>这样能保证两个日志一致，崩溃恢复时可以根据状态恢复数据。</p>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li><strong>查询优化</strong>：多用 JOIN，合理使用索引，避免全表扫描</li>
+<li><strong>大事务</strong>：分批处理，避免长时间锁表</li>
+<li><strong>并发问题</strong>：注意事务提交时机，避免查询不到刚写入的数据</li>
+<li><strong>死锁分析</strong>：基于索引产生，分析锁等待关系</li>
+<li><strong>日志理解</strong>：redo log 保证持久化，binlog 用于恢复和复制</li>
+</ol>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+      <tags>
+        <tag>MySQL</tag>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>前端常用图表框架</title>
     <url>/article/36228.html</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -207,181 +322,11 @@
       </tags>
   </entry>
   <entry>
-    <title>后端知识体系</title>
-    <url>/article/90001.html</url>
-    <content><![CDATA[<h1 id="个人后端知识体系整理（完善中）"><a href="#个人后端知识体系整理（完善中）" class="headerlink" title="个人后端知识体系整理（完善中）"></a>个人后端知识体系整理（完善中）</h1><blockquote class="pullquote mindmap mindmap-md"><ul>
-<li>中心节点<ul>
-<li>数据结构与算法<ul>
-<li><a href="https://mp.weixin.qq.com/s?__biz=MzI5ODI5NDkxMw==&mid=2247490825&idx=2&sn=5c26af13d00976295786c65d41f768a6&chksm=eca956e7dbdedff127be68312e384d4c3ff671feb8e4b0867902bbd2b2398291dad80dcf6362&mpshare=1&scene=1&srcid=0630IutraEvQosrBFR6EloKH&sharer_sharetime=1593508521706&sharer_shareid=f433210a053adb795a013ded9465017f&key=69fdb5ac5982b1743f42e86e4d74ca614d6af9885ffa4f960b0a60322c9cdcbf33d4a61e4ff57bbb3a86bed118741c19b63779c95229e4469e22b33626eb69025d0902fe4b23ad66d7a1bcb48127adb1&ascene=1&uin=Mjg5MDEzNzIwNA==&devicetype=Windows+10+x64&version=62090070&lang=zh_CN&exportkey=Axq9aPV8CLjRvbHvh5zppDo=&pass_ticket=3DrEaHrX3hmWfS7vcYGmWF/6kyksnJeIjhsv7+8Azo1X0N8xSy0+Hx8leRIlpnn9">排序算法</a><ul>
-<li>比较类排序<ul>
-<li>交换排序<ul>
-<li>冒泡排序</li>
-<li>快速排序</li>
-</ul>
-</li>
-<li>插入排序<ul>
-<li>普通插入排序</li>
-<li><a href="https://blog.csdn.net/qq_39207948/article/details/80006224">希尔排序</a></li>
-</ul>
-</li>
-<li>选择排序<ul>
-<li>普通选择排序</li>
-<li>堆排序</li>
-</ul>
-</li>
-<li>归并排序<ul>
-<li>二路归并排序</li>
-<li>多路归并排序</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>非比较类排序<ul>
-<li>计数排序</li>
-<li>桶排序</li>
-<li><a href="https://blog.csdn.net/u011948899/article/details/78027838">基数排序</a><ul>
-<li>LSD</li>
-<li>MSD</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="https://mp.weixin.qq.com/s?__biz=MzI2NjA3NTc4Ng==&mid=2652083049&idx=1&sn=6ab60b065836ccbb960ac1c9fdf20771&chksm=f174988cc603119a59d141c9a2d8144f0d56d09112d8f68055adeb266f0aa9c526581f2650df&mpshare=1&scene=24&srcid=0625vppe7eiz8AETXmXfGEHg&sharer_sharetime=1593065345010&sharer_shareid=f433210a053adb795a013ded9465017f&key=82c238abbe3b82ba7cfad489ccf47c752ccc359c9faad1d518a2be1b48139aeb73df8cc6f08c6dc5fd19991354ecd39f36c5275ad3446e3d1f61e721576e4ddec9179911575742ae76285226bfae4bbf&ascene=14&uin=Mjg5MDEzNzIwNA==&devicetype=Windows+10+x64&version=62090070&lang=zh_CN&exportkey=A+Aajt567Hs2G6qP8RXDrZc=&pass_ticket=3DrEaHrX3hmWfS7vcYGmWF/6kyksnJeIjhsv7+8Azo1X0N8xSy0+Hx8leRIlpnn9&winzoom=1">树</a><ul>
-<li>多路搜索树<ul>
-<li>普通多路搜索树</li>
-<li>平衡多路搜索树<ul>
-<li>B树</li>
-<li>B+树</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>二叉搜索树<ul>
-<li>普通二叉搜索树<ul>
-<li>BST</li>
-</ul>
-</li>
-<li>平衡二叉搜索树<ul>
-<li>AVL</li>
-<li>Red-Black-Tree</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>图</li>
-</ul>
-</li>
-<li>计算机网络<ul>
-<li>tcp&#x2F;ip四层模型<ul>
-<li>tcp<ul>
-<li>三次握手,四次挥手</li>
-</ul>
-</li>
-<li>udp</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>java<ul>
-<li>java基础<ul>
-<li>多线程<ul>
-<li>wait notify</li>
-<li>线程池</li>
-<li>线程实现</li>
-</ul>
-</li>
-<li>JVM<ul>
-<li>判断能否gc<ul>
-<li>引用计数算法（Reference Counting）</li>
-<li>根搜索算法（GC Root Tracing）</li>
-</ul>
-</li>
-<li>gc类型<ul>
-<li>Minor GC</li>
-<li>Full GC（Major GC）</li>
-</ul>
-</li>
-<li><a href="https://www.cnblogs.com/aspirant/p/8662690.html">gc回收算法</a><ul>
-<li>标记清除（mark-sweep）</li>
-<li>标记复制（mark-copy）</li>
-<li>标记整理（mark-compact）</li>
-<li>分代收集（generational-collection）</li>
-</ul>
-</li>
-<li>内存结构<ul>
-<li>堆<ul>
-<li><a href="https://www.cnblogs.com/jswang/p/9056038.html">新生代</a><ul>
-<li>Eden</li>
-<li>S1（Survivor1）</li>
-<li>S2（Survivor2）</li>
-</ul>
-</li>
-<li>老年代</li>
-</ul>
-</li>
-<li>方法区</li>
-<li>栈</li>
-<li>程序计数器</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>框架源码解析<ul>
-<li>spring源码<ul>
-<li>aop</li>
-<li>ioc<ul>
-<li>循环依赖，三级缓存</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>jdk源码<ul>
-<li>hashmap<ul>
-<li>hashcode</li>
-<li>capity</li>
-<li>容积因子</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>mybatis-spring源码</li>
-</ul>
-</li>
-<li>开源组件<ul>
-<li>k8s<ul>
-<li>pod</li>
-<li>controller</li>
-<li>service</li>
-<li>integres</li>
-</ul>
-</li>
-<li>redis</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</blockquote><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
-      <tags>
-        <tag>Java基础</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Hexo博客搭建与插件改造完全指南</title>
     <url>/article/18588.html</url>
     <content><![CDATA[<blockquote>
 <p>经过多次尝试，终于搭建好了自己的博客！本文记录了完整的搭建过程和后期插件改造，让博客更加好用。</p>
 </blockquote>
-<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=4154720&auto=0&height=66"></iframe>
-
 <h2 id="为什么选择-Hexo"><a href="#为什么选择-Hexo" class="headerlink" title="为什么选择 Hexo"></a>为什么选择 Hexo</h2><p>以前用过 WordPress，折腾各种主题和插件，还要维护服务器，后来发现很多技术大牛都把博客放在 GitHub Pages 上——静态博客，无需管理后台，用 Markdown 写文章，简直是程序员的最佳选择！</p>
 <h2 id="搭建及改造流程概览"><a href="#搭建及改造流程概览" class="headerlink" title="搭建及改造流程概览"></a>搭建及改造流程概览</h2><p>只需要 5 步就能完成搭建：</p>
 <ol>
@@ -582,55 +527,6 @@
       </tags>
   </entry>
   <entry>
-    <title>开发工具技巧</title>
-    <url>/article/4352.html</url>
-    <content><![CDATA[<h2 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h2><p>最基本的复制是 y，粘贴是 p，剪切是 d。<br>复制和剪切的命令后面都可以接一个移动命令，表示将光标移动区间内的文本复制过来。<br>粘贴时 p 与 P 的区别是贴到光标前后的区别。<br>如果是在插入模式下想粘贴，也可以不退回普通模式，用 <code>ctrl+r再输入*</code> 来粘贴。</p>
-<p>在窗格间切换的方法:</p>
-<table>
-<thead>
-<tr>
-<th>快捷键或者命令</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>:bd+数字</code></td>
-<td>删除指定缓存区的文件</td>
-</tr>
-<tr>
-<td><code>Ctrl+w+方向键</code></td>
-<td>切换到前／下／上／后一个窗格</td>
-</tr>
-<tr>
-<td><code>Ctrl+w+h/j/k/l</code></td>
-<td>同上</td>
-</tr>
-<tr>
-<td><code>:noh</code></td>
-<td>取消高亮</td>
-</tr>
-</tbody></table>
-<h2 id="eclipse"><a href="#eclipse" class="headerlink" title="eclipse"></a>eclipse</h2><p>eclipse快捷键</p>
-<blockquote>
-<p>ctrl+shift+f快捷键，自动排版<br>ctrl+shift+o快捷键，自动引入包<br>Alt+&#x2F; 代码助手完成一些代码的插入 ，自动显示提示信息</p>
-</blockquote>
-<h2 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h2><p>Ctrl + Alt + Shift + E  盖印图层 盖印可见图层,即将下面所有图层合并,但各自原图层仍保留<br>Ctrl + Alt + Shift + T  重复上一次ctrl+T的操作(可以累积效果),并且同时结果会放在新的复制图层(ctrl+shift+T,只重复,不复制)</p>
-<h2 id="cmder"><a href="#cmder" class="headerlink" title="cmder"></a>cmder</h2><p>中文乱码问题:<br><code>win+ctrl+p</code>打开Settings<br>在Settings &gt; Startup &gt; Environment里添加：<code>set LANG=zh_CN.UTF8</code><br>PS：<br>这样修改过ls可以正确显示中文，但<code>ls |more</code>还是会出现乱码。<br>如果改为<code>set LANG=zh_CN.GBK</code>可以解决这个问题。</p>
-<p>因为cat命令读取文件的编码与此有关，如果改为GBK则cat一个UTF8文件会显示乱码，<br>如果改为UTF8则cat一个GBK文件会显示乱码，<br>具体设置还是看你环境中常用编码。</p>
-<h2 id="sublime"><a href="#sublime" class="headerlink" title="sublime"></a>sublime</h2><p>对于程序块缩进可用快捷键:<br>←左缩进ctrl+[<br>→右缩进ctrl+]，效果等同tab键<br>tab 往后缩，或者 shift+tab 往前缩</p>
-<h2 id="staruml"><a href="#staruml" class="headerlink" title="staruml"></a>staruml</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">下载:http://staruml.io/</span><br><span class="line">破解方法:http://blog.csdn.net/mergades/article/details/46662413</span><br></pre></td></tr></table></figure>
-<h2 id="Windows下带有空格的目录路径"><a href="#Windows下带有空格的目录路径" class="headerlink" title="Windows下带有空格的目录路径"></a>Windows下带有空格的目录路径</h2><p><code>set JAVA_HOME=C:\PROGRA~1\Java\jdk1.8.0_111</code><br>可以防止空格异常</p>
-<h2 id="直接读取远程服务器的文件作为参数给某个命令使用"><a href="#直接读取远程服务器的文件作为参数给某个命令使用" class="headerlink" title="直接读取远程服务器的文件作为参数给某个命令使用"></a>直接读取远程服务器的文件作为参数给某个命令使用</h2><p>先下载wget到cmder&#x2F;bin目录下:<br><a href="https://eternallybored.org/misc/wget/">https://eternallybored.org/misc/wget/</a><br>然后直接远程读取:<br><code>wget -O- -q http://algs4.cs.princeton.edu/32bst/tinyST.txt | cat</code></p>
-<h2 id="将-Markdown-转成漂亮的脑图"><a href="#将-Markdown-转成漂亮的脑图" class="headerlink" title="将 Markdown 转成漂亮的脑图"></a>将 Markdown 转成漂亮的脑图</h2><p>MarkRemap   有各个平台的版本，开源<br>还可以结合hexo的 <a href="https://github.com/HunterXuan/hexo-simple-mindmap">https://github.com/HunterXuan/hexo-simple-mindmap</a> 插件</p>
-<h2 id="其他实用工具"><a href="#其他实用工具" class="headerlink" title="其他实用工具"></a>其他实用工具</h2><blockquote>
-<p>U盘资料还原软件:badcopy<br>视频桌面软件:DreamScene<br>flash反编译:Sothink SWF Decompiler<br>cmd替代品:<a href="http://www.jianshu.com/p/b691b48bcee3">cmder</a><br>用文字画uml图:plantuml<br>保存剪切板里的图片到本地文件:Screenshot2Disk<br>截图工具:FastStone,Sharex<br>打开dll文件:Resource Hacker<br>windows下的软件包管理工具:Chocolatey<br>虚拟机管理工具:Vagrant(没用过,据说好用)<br>反编译jar:jd-gui<br>局域网会议软件:InletexEMC<br>excel插件:PyXLL(能直接执行python脚本)</p>
-</blockquote>
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
-      <tags>
-        <tag>开发工具技巧</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>正则表达式笔记</title>
     <url>/article/37573.html</url>
     <content><![CDATA[<h1 id="正则的用途"><a href="#正则的用途" class="headerlink" title="正则的用途"></a>正则的用途</h1><p>在很多地方都会用到正则表达式,如果熟练掌握正则,在爬虫,一些渗透实验中会占有优势</p>
@@ -779,6 +675,223 @@
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
       <tags>
         <tag>正则表达式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>后端知识体系</title>
+    <url>/article/90001.html</url>
+    <content><![CDATA[<h1 id="个人后端知识体系整理（完善中）"><a href="#个人后端知识体系整理（完善中）" class="headerlink" title="个人后端知识体系整理（完善中）"></a>个人后端知识体系整理（完善中）</h1><blockquote class="pullquote mindmap mindmap-md"><ul>
+<li>中心节点<ul>
+<li>数据结构与算法<ul>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzI5ODI5NDkxMw==&mid=2247490825&idx=2&sn=5c26af13d00976295786c65d41f768a6&chksm=eca956e7dbdedff127be68312e384d4c3ff671feb8e4b0867902bbd2b2398291dad80dcf6362&mpshare=1&scene=1&srcid=0630IutraEvQosrBFR6EloKH&sharer_sharetime=1593508521706&sharer_shareid=f433210a053adb795a013ded9465017f&key=69fdb5ac5982b1743f42e86e4d74ca614d6af9885ffa4f960b0a60322c9cdcbf33d4a61e4ff57bbb3a86bed118741c19b63779c95229e4469e22b33626eb69025d0902fe4b23ad66d7a1bcb48127adb1&ascene=1&uin=Mjg5MDEzNzIwNA==&devicetype=Windows+10+x64&version=62090070&lang=zh_CN&exportkey=Axq9aPV8CLjRvbHvh5zppDo=&pass_ticket=3DrEaHrX3hmWfS7vcYGmWF/6kyksnJeIjhsv7+8Azo1X0N8xSy0+Hx8leRIlpnn9">排序算法</a><ul>
+<li>比较类排序<ul>
+<li>交换排序<ul>
+<li>冒泡排序</li>
+<li>快速排序</li>
+</ul>
+</li>
+<li>插入排序<ul>
+<li>普通插入排序</li>
+<li><a href="https://blog.csdn.net/qq_39207948/article/details/80006224">希尔排序</a></li>
+</ul>
+</li>
+<li>选择排序<ul>
+<li>普通选择排序</li>
+<li>堆排序</li>
+</ul>
+</li>
+<li>归并排序<ul>
+<li>二路归并排序</li>
+<li>多路归并排序</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>非比较类排序<ul>
+<li>计数排序</li>
+<li>桶排序</li>
+<li><a href="https://blog.csdn.net/u011948899/article/details/78027838">基数排序</a><ul>
+<li>LSD</li>
+<li>MSD</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzI2NjA3NTc4Ng==&mid=2652083049&idx=1&sn=6ab60b065836ccbb960ac1c9fdf20771&chksm=f174988cc603119a59d141c9a2d8144f0d56d09112d8f68055adeb266f0aa9c526581f2650df&mpshare=1&scene=24&srcid=0625vppe7eiz8AETXmXfGEHg&sharer_sharetime=1593065345010&sharer_shareid=f433210a053adb795a013ded9465017f&key=82c238abbe3b82ba7cfad489ccf47c752ccc359c9faad1d518a2be1b48139aeb73df8cc6f08c6dc5fd19991354ecd39f36c5275ad3446e3d1f61e721576e4ddec9179911575742ae76285226bfae4bbf&ascene=14&uin=Mjg5MDEzNzIwNA==&devicetype=Windows+10+x64&version=62090070&lang=zh_CN&exportkey=A+Aajt567Hs2G6qP8RXDrZc=&pass_ticket=3DrEaHrX3hmWfS7vcYGmWF/6kyksnJeIjhsv7+8Azo1X0N8xSy0+Hx8leRIlpnn9&winzoom=1">树</a><ul>
+<li>多路搜索树<ul>
+<li>普通多路搜索树</li>
+<li>平衡多路搜索树<ul>
+<li>B树</li>
+<li>B+树</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>二叉搜索树<ul>
+<li>普通二叉搜索树<ul>
+<li>BST</li>
+</ul>
+</li>
+<li>平衡二叉搜索树<ul>
+<li>AVL</li>
+<li>Red-Black-Tree</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>图</li>
+</ul>
+</li>
+<li>计算机网络<ul>
+<li>tcp&#x2F;ip四层模型<ul>
+<li>tcp<ul>
+<li>三次握手,四次挥手</li>
+</ul>
+</li>
+<li>udp</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>java<ul>
+<li>java基础<ul>
+<li>多线程<ul>
+<li>wait notify</li>
+<li>线程池</li>
+<li>线程实现</li>
+</ul>
+</li>
+<li>JVM<ul>
+<li>判断能否gc<ul>
+<li>引用计数算法（Reference Counting）</li>
+<li>根搜索算法（GC Root Tracing）</li>
+</ul>
+</li>
+<li>gc类型<ul>
+<li>Minor GC</li>
+<li>Full GC（Major GC）</li>
+</ul>
+</li>
+<li><a href="https://www.cnblogs.com/aspirant/p/8662690.html">gc回收算法</a><ul>
+<li>标记清除（mark-sweep）</li>
+<li>标记复制（mark-copy）</li>
+<li>标记整理（mark-compact）</li>
+<li>分代收集（generational-collection）</li>
+</ul>
+</li>
+<li>内存结构<ul>
+<li>堆<ul>
+<li><a href="https://www.cnblogs.com/jswang/p/9056038.html">新生代</a><ul>
+<li>Eden</li>
+<li>S1（Survivor1）</li>
+<li>S2（Survivor2）</li>
+</ul>
+</li>
+<li>老年代</li>
+</ul>
+</li>
+<li>方法区</li>
+<li>栈</li>
+<li>程序计数器</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>框架源码解析<ul>
+<li>spring源码<ul>
+<li>aop</li>
+<li>ioc<ul>
+<li>循环依赖，三级缓存</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>jdk源码<ul>
+<li>hashmap<ul>
+<li>hashcode</li>
+<li>capity</li>
+<li>容积因子</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>mybatis-spring源码</li>
+</ul>
+</li>
+<li>开源组件<ul>
+<li>k8s<ul>
+<li>pod</li>
+<li>controller</li>
+<li>service</li>
+<li>integres</li>
+</ul>
+</li>
+<li>redis</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</blockquote><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+      <tags>
+        <tag>Java基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>开发工具技巧</title>
+    <url>/article/4352.html</url>
+    <content><![CDATA[<h2 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h2><p>最基本的复制是 y，粘贴是 p，剪切是 d。<br>复制和剪切的命令后面都可以接一个移动命令，表示将光标移动区间内的文本复制过来。<br>粘贴时 p 与 P 的区别是贴到光标前后的区别。<br>如果是在插入模式下想粘贴，也可以不退回普通模式，用 <code>ctrl+r再输入*</code> 来粘贴。</p>
+<p>在窗格间切换的方法:</p>
+<table>
+<thead>
+<tr>
+<th>快捷键或者命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>:bd+数字</code></td>
+<td>删除指定缓存区的文件</td>
+</tr>
+<tr>
+<td><code>Ctrl+w+方向键</code></td>
+<td>切换到前／下／上／后一个窗格</td>
+</tr>
+<tr>
+<td><code>Ctrl+w+h/j/k/l</code></td>
+<td>同上</td>
+</tr>
+<tr>
+<td><code>:noh</code></td>
+<td>取消高亮</td>
+</tr>
+</tbody></table>
+<h2 id="eclipse"><a href="#eclipse" class="headerlink" title="eclipse"></a>eclipse</h2><p>eclipse快捷键</p>
+<blockquote>
+<p>ctrl+shift+f快捷键，自动排版<br>ctrl+shift+o快捷键，自动引入包<br>Alt+&#x2F; 代码助手完成一些代码的插入 ，自动显示提示信息</p>
+</blockquote>
+<h2 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h2><p>Ctrl + Alt + Shift + E  盖印图层 盖印可见图层,即将下面所有图层合并,但各自原图层仍保留<br>Ctrl + Alt + Shift + T  重复上一次ctrl+T的操作(可以累积效果),并且同时结果会放在新的复制图层(ctrl+shift+T,只重复,不复制)</p>
+<h2 id="cmder"><a href="#cmder" class="headerlink" title="cmder"></a>cmder</h2><p>中文乱码问题:<br><code>win+ctrl+p</code>打开Settings<br>在Settings &gt; Startup &gt; Environment里添加：<code>set LANG=zh_CN.UTF8</code><br>PS：<br>这样修改过ls可以正确显示中文，但<code>ls |more</code>还是会出现乱码。<br>如果改为<code>set LANG=zh_CN.GBK</code>可以解决这个问题。</p>
+<p>因为cat命令读取文件的编码与此有关，如果改为GBK则cat一个UTF8文件会显示乱码，<br>如果改为UTF8则cat一个GBK文件会显示乱码，<br>具体设置还是看你环境中常用编码。</p>
+<h2 id="sublime"><a href="#sublime" class="headerlink" title="sublime"></a>sublime</h2><p>对于程序块缩进可用快捷键:<br>←左缩进ctrl+[<br>→右缩进ctrl+]，效果等同tab键<br>tab 往后缩，或者 shift+tab 往前缩</p>
+<h2 id="staruml"><a href="#staruml" class="headerlink" title="staruml"></a>staruml</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">下载:http://staruml.io/</span><br><span class="line">破解方法:http://blog.csdn.net/mergades/article/details/46662413</span><br></pre></td></tr></table></figure>
+<h2 id="Windows下带有空格的目录路径"><a href="#Windows下带有空格的目录路径" class="headerlink" title="Windows下带有空格的目录路径"></a>Windows下带有空格的目录路径</h2><p><code>set JAVA_HOME=C:\PROGRA~1\Java\jdk1.8.0_111</code><br>可以防止空格异常</p>
+<h2 id="直接读取远程服务器的文件作为参数给某个命令使用"><a href="#直接读取远程服务器的文件作为参数给某个命令使用" class="headerlink" title="直接读取远程服务器的文件作为参数给某个命令使用"></a>直接读取远程服务器的文件作为参数给某个命令使用</h2><p>先下载wget到cmder&#x2F;bin目录下:<br><a href="https://eternallybored.org/misc/wget/">https://eternallybored.org/misc/wget/</a><br>然后直接远程读取:<br><code>wget -O- -q http://algs4.cs.princeton.edu/32bst/tinyST.txt | cat</code></p>
+<h2 id="将-Markdown-转成漂亮的脑图"><a href="#将-Markdown-转成漂亮的脑图" class="headerlink" title="将 Markdown 转成漂亮的脑图"></a>将 Markdown 转成漂亮的脑图</h2><p>MarkRemap   有各个平台的版本，开源<br>还可以结合hexo的 <a href="https://github.com/HunterXuan/hexo-simple-mindmap">https://github.com/HunterXuan/hexo-simple-mindmap</a> 插件</p>
+<h2 id="其他实用工具"><a href="#其他实用工具" class="headerlink" title="其他实用工具"></a>其他实用工具</h2><blockquote>
+<p>U盘资料还原软件:badcopy<br>视频桌面软件:DreamScene<br>flash反编译:Sothink SWF Decompiler<br>cmd替代品:<a href="http://www.jianshu.com/p/b691b48bcee3">cmder</a><br>用文字画uml图:plantuml<br>保存剪切板里的图片到本地文件:Screenshot2Disk<br>截图工具:FastStone,Sharex<br>打开dll文件:Resource Hacker<br>windows下的软件包管理工具:Chocolatey<br>虚拟机管理工具:Vagrant(没用过,据说好用)<br>反编译jar:jd-gui<br>局域网会议软件:InletexEMC<br>excel插件:PyXLL(能直接执行python脚本)</p>
+</blockquote>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+      <tags>
+        <tag>开发工具技巧</tag>
       </tags>
   </entry>
 </search>
