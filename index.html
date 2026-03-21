@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"aitestperson.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aitestperson.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="AI测试员">
@@ -49,7 +49,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
 <script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -89,15 +91,46 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
 
 
 
+<nav class="site-nav">
+  <ul class="main-menu menu">
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -137,7 +170,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -181,7 +214,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/article/90001.html" class="post-title-link" itemprop="url">knowledgeMap</a>
+          <a href="/article/90001.html" class="post-title-link" itemprop="url">后端知识体系</a>
         </h2>
 
         <div class="post-meta-container">
@@ -199,7 +232,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-03-19 02:01:33" itemprop="dateModified" datetime="2026-03-19T02:01:33+08:00">2026-03-19</time>
+      <time title="修改时间：2026-03-21 12:21:39" itemprop="dateModified" datetime="2026-03-21T12:21:39+08:00">2026-03-21</time>
     </span>
 
   
@@ -264,7 +297,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/article/2135.html" class="post-title-link" itemprop="url">javaClassLoader</a>
+          <a href="/article/2135.html" class="post-title-link" itemprop="url">ClassLoader详解</a>
         </h2>
 
         <div class="post-meta-container">
@@ -282,7 +315,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-03-20 01:41:54" itemprop="dateModified" datetime="2026-03-20T01:41:54+08:00">2026-03-20</time>
+      <time title="修改时间：2026-03-21 12:21:04" itemprop="dateModified" datetime="2026-03-21T12:21:04+08:00">2026-03-21</time>
     </span>
 
   
@@ -347,7 +380,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/article/45792.html" class="post-title-link" itemprop="url">javaBase</a>
+          <a href="/article/45792.html" class="post-title-link" itemprop="url">Java基础</a>
         </h2>
 
         <div class="post-meta-container">
@@ -365,7 +398,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-03-20 02:25:49" itemprop="dateModified" datetime="2026-03-20T02:25:49+08:00">2026-03-20</time>
+      <time title="修改时间：2026-03-21 13:06:06" itemprop="dateModified" datetime="2026-03-21T13:06:06+08:00">2026-03-21</time>
     </span>
 
   
@@ -430,7 +463,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/article/12425.html" class="post-title-link" itemprop="url">javaIO</a>
+          <a href="/article/12425.html" class="post-title-link" itemprop="url">Java IO框架</a>
         </h2>
 
         <div class="post-meta-container">
@@ -448,7 +481,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-03-20 01:48:28" itemprop="dateModified" datetime="2026-03-20T01:48:28+08:00">2026-03-20</time>
+      <time title="修改时间：2026-03-21 12:20:33" itemprop="dateModified" datetime="2026-03-21T12:20:33+08:00">2026-03-21</time>
     </span>
 
   
@@ -513,7 +546,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/article/37573.html" class="post-title-link" itemprop="url">regexNote</a>
+          <a href="/article/37573.html" class="post-title-link" itemprop="url">正则表达式笔记</a>
         </h2>
 
         <div class="post-meta-container">
@@ -531,7 +564,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-03-20 01:53:31" itemprop="dateModified" datetime="2026-03-20T01:53:31+08:00">2026-03-20</time>
+      <time title="修改时间：2026-03-21 12:20:02" itemprop="dateModified" datetime="2026-03-21T12:20:02+08:00">2026-03-21</time>
     </span>
 
   
@@ -596,7 +629,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/article/36228.html" class="post-title-link" itemprop="url">myFrontEndWorks</a>
+          <a href="/article/36228.html" class="post-title-link" itemprop="url">前端常用图表框架</a>
         </h2>
 
         <div class="post-meta-container">
@@ -614,7 +647,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-03-19 02:02:19" itemprop="dateModified" datetime="2026-03-19T02:02:19+08:00">2026-03-19</time>
+      <time title="修改时间：2026-03-21 12:48:46" itemprop="dateModified" datetime="2026-03-21T12:48:46+08:00">2026-03-21</time>
     </span>
 
   
@@ -627,7 +660,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>展示我的前端作品</p>
+          <p>前端常用图表框架</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/article/36228.html">
@@ -679,7 +712,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/article/4352.html" class="post-title-link" itemprop="url">developToolsDescription</a>
+          <a href="/article/4352.html" class="post-title-link" itemprop="url">开发工具技巧</a>
         </h2>
 
         <div class="post-meta-container">
@@ -697,7 +730,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-03-19 02:00:37" itemprop="dateModified" datetime="2026-03-19T02:00:37+08:00">2026-03-19</time>
+      <time title="修改时间：2026-03-21 12:21:14" itemprop="dateModified" datetime="2026-03-21T12:21:14+08:00">2026-03-21</time>
     </span>
 
   
@@ -762,7 +795,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/article/18588.html" class="post-title-link" itemprop="url">initMyBlogDone</a>
+          <a href="/article/18588.html" class="post-title-link" itemprop="url">Hexo博客搭建与插件改造完全指南</a>
         </h2>
 
         <div class="post-meta-container">
@@ -780,7 +813,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-03-20 01:35:15" itemprop="dateModified" datetime="2026-03-20T01:35:15+08:00">2026-03-20</time>
+      <time title="修改时间：2026-03-21 13:19:31" itemprop="dateModified" datetime="2026-03-21T13:19:31+08:00">2026-03-21</time>
     </span>
 
   
@@ -793,7 +826,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>终于简单的搭建好自己的博客了</p>
+          <p>从零开始搭建Hexo静态博客，并记录所有插件改造过程</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/article/18588.html">
@@ -834,7 +867,7 @@
     </span>
     <span class="author" itemprop="copyrightHolder">AI测试员</span>
   </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
 
     </div>

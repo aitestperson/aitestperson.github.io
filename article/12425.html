@@ -18,11 +18,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"aitestperson.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aitestperson.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="整理下java io框架">
 <meta property="og:type" content="article">
-<meta property="og:title" content="javaIO">
+<meta property="og:title" content="Java IO框架">
 <meta property="og:url" content="https://aitestperson.github.io/article/12425.html">
 <meta property="og:site_name" content="AI测试员">
 <meta property="og:description" content="整理下java io框架">
@@ -32,9 +32,9 @@
 <meta property="og:image" content="https://aitestperson.github.io/uploads/%E4%BE%8B%E5%AD%901.png">
 <meta property="og:image" content="https://aitestperson.github.io/uploads/%E4%BE%8B%E5%AD%902.png">
 <meta property="article:published_time" content="2017-10-06T06:43:16.000Z">
-<meta property="article:modified_time" content="2026-03-19T17:48:28.899Z">
+<meta property="article:modified_time" content="2026-03-21T04:20:33.273Z">
 <meta property="article:author" content="AI测试员">
-<meta property="article:tag" content="java IO 框架">
+<meta property="article:tag" content="JavaIO框架">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://aitestperson.github.io/uploads/IO%E6%A1%86%E6%9E%B6%E5%A4%A7%E7%9A%84%E4%BD%93%E7%B3%BB.png">
 
@@ -42,10 +42,10 @@
 <link rel="canonical" href="https://aitestperson.github.io/article/12425.html">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aitestperson.github.io/article/12425.html","path":"article/12425.html","title":"javaIO"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aitestperson.github.io/article/12425.html","path":"article/12425.html","title":"Java IO框架"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>javaIO | AI测试员</title>
+<title>Java IO框架 | AI测试员</title>
   
 
 
@@ -59,7 +59,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
 <script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -99,15 +101,46 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
 
 
 
+<nav class="site-nav">
+  <ul class="main-menu menu">
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -148,7 +181,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -188,12 +221,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="javaIO | AI测试员">
+      <meta itemprop="name" content="Java IO框架 | AI测试员">
       <meta itemprop="description" content="整理下java io框架">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          javaIO
+          Java IO框架
         </h1>
 
         <div class="post-meta-container">
@@ -211,7 +244,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-03-20 01:48:28" itemprop="dateModified" datetime="2026-03-20T01:48:28+08:00">2026-03-20</time>
+      <time title="修改时间：2026-03-21 12:20:33" itemprop="dateModified" datetime="2026-03-21T12:20:33+08:00">2026-03-21</time>
     </span>
 
   
@@ -243,20 +276,20 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/java-IO-%E6%A1%86%E6%9E%B6/" rel="tag"># java IO 框架</a>
+              <a href="/tags/JavaIO%E6%A1%86%E6%9E%B6/" rel="tag"># JavaIO框架</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/article/37573.html" rel="prev" title="regexNote">
-                  <i class="fa fa-angle-left"></i> regexNote
+                <a href="/article/37573.html" rel="prev" title="正则表达式笔记">
+                  <i class="fa fa-angle-left"></i> 正则表达式笔记
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/article/45792.html" rel="next" title="javaBase">
-                  javaBase <i class="fa fa-angle-right"></i>
+                <a href="/article/45792.html" rel="next" title="Java基础">
+                  Java基础 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>
@@ -283,7 +316,7 @@
     </span>
     <span class="author" itemprop="copyrightHolder">AI测试员</span>
   </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
 
     </div>
