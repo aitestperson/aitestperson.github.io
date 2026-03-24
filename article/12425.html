@@ -20,19 +20,17 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"aitestperson.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="整理下java io框架">
+    <meta name="description" content="Java IO框架笔记">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java IO框架">
+<meta property="og:title" content="Java IO框架笔记">
 <meta property="og:url" content="https://aitestperson.github.io/article/12425.html">
 <meta property="og:site_name" content="AI测试员">
-<meta property="og:description" content="整理下java io框架">
+<meta property="og:description" content="Java IO框架笔记">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://aitestperson.github.io/uploads/IO%E6%A1%86%E6%9E%B6%E5%A4%A7%E7%9A%84%E4%BD%93%E7%B3%BB.png">
 <meta property="og:image" content="https://aitestperson.github.io/uploads/IO%E6%A1%86%E6%9E%B6%E5%B0%8F%E7%9A%84%E4%BD%93%E7%B3%BB.png">
-<meta property="og:image" content="https://aitestperson.github.io/uploads/%E4%BE%8B%E5%AD%901.png">
-<meta property="og:image" content="https://aitestperson.github.io/uploads/%E4%BE%8B%E5%AD%902.png">
 <meta property="article:published_time" content="2017-10-06T06:43:16.000Z">
-<meta property="article:modified_time" content="2026-03-21T04:20:33.273Z">
+<meta property="article:modified_time" content="2026-03-24T15:48:58.784Z">
 <meta property="article:author" content="AI测试员">
 <meta property="article:tag" content="JavaIO框架">
 <meta name="twitter:card" content="summary">
@@ -42,10 +40,10 @@
 <link rel="canonical" href="https://aitestperson.github.io/article/12425.html">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aitestperson.github.io/article/12425.html","path":"article/12425.html","title":"Java IO框架"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aitestperson.github.io/article/12425.html","path":"article/12425.html","title":"Java IO框架笔记"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Java IO框架 | AI测试员</title>
+<title>Java IO框架笔记 | AI测试员</title>
   
 
 
@@ -162,7 +160,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">简单介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E7%BC%96%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">关于编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%BC%96%E7%A0%81%E8%B7%9F%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%BC%96%E7%A0%81%E4%B8%8D%E4%B8%80%E8%87%B4"><span class="nav-number">3.1.</span> <span class="nav-text">文件编码跟系统的编码不一致</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%E8%B7%9F%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%BC%96%E7%A0%81%E4%B8%80%E8%87%B4"><span class="nav-number">3.2.</span> <span class="nav-text">文件的编码跟系统的编码一致</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="nav-number">4.</span> <span class="nav-text">注意点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#read%E4%B8%8EreadLine%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">4.1.</span> <span class="nav-text">read与readLine的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bufferedInputStream%E4%B8%8EdataInputStream%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">4.2.</span> <span class="nav-text">bufferedInputStream与dataInputStream的区别</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%EF%BC%9A%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F%E4%B8%8E%E6%B5%81%E7%9A%84%E8%AE%BE%E8%AE%A1%E5%93%B2%E5%AD%A6"><span class="nav-number">1.</span> <span class="nav-text">体系结构：装饰器模式与流的设计哲学</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E6%B5%81%E4%B8%8E%E5%AD%97%E7%AC%A6%E6%B5%81%E7%9A%84%E5%88%86%E5%B7%A5"><span class="nav-number">1.1.</span> <span class="nav-text">字节流与字符流的分工</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F%EF%BC%9A%E5%8A%A8%E6%80%81%E7%BB%84%E5%90%88%E5%8A%9F%E8%83%BD%E7%9A%84%E8%89%BA%E6%9C%AF"><span class="nav-number">1.2.</span> <span class="nav-text">装饰器模式：动态组合功能的艺术</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E4%B8%8E%E6%9C%BA%E5%88%B6%EF%BC%9A%E7%BC%93%E5%86%B2%E6%B5%81%E3%80%81readLine-%E9%9A%90%E6%82%A3"><span class="nav-number">2.</span> <span class="nav-text">性能与机制：缓冲流、readLine 隐患</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%93%E5%86%B2%E6%B5%81%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BF%AB"><span class="nav-number">2.1.</span> <span class="nav-text">缓冲流为什么快</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BufferedReader%E7%9A%84read-%E4%B8%8E-readLine-%E7%9A%84%E5%8C%BA%E5%88%AB%E5%8F%8A%E9%9A%90%E6%82%A3"><span class="nav-number">2.2.</span> <span class="nav-text">BufferedReader的read() 与 readLine() 的区别及隐患</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%EF%BC%9A%E7%BC%96%E7%A0%81%E8%BD%AC%E6%8D%A2%E3%80%81IO-%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%BC%94%E8%BF%9B%E3%80%81%E9%9B%B6%E6%8B%B7%E8%B4%9D"><span class="nav-number">3.</span> <span class="nav-text">底层原理：编码转换、IO 模型的演进、零拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E8%BD%AC%E6%8D%A2%E7%9A%84%E5%85%B7%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="nav-number">3.1.</span> <span class="nav-text">编码转换的具体过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8E-BIO-%E5%88%B0-NIO%EF%BC%9AIO-%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%BC%94%E8%BF%9B"><span class="nav-number">3.2.</span> <span class="nav-text">从 BIO 到 NIO：IO 模型的演进</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%B6%E6%8B%B7%E8%B4%9D%EF%BC%88Zero-Copy%EF%BC%89%E6%8A%80%E6%9C%AF"><span class="nav-number">3.3.</span> <span class="nav-text">零拷贝（Zero-Copy）技术</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -177,13 +175,13 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -223,12 +221,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Java IO框架 | AI测试员">
-      <meta itemprop="description" content="整理下java io框架">
+      <meta itemprop="name" content="Java IO框架笔记 | AI测试员">
+      <meta itemprop="description" content="Java IO框架笔记">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Java IO框架
+          Java IO框架笔记
         </h1>
 
         <div class="post-meta-container">
@@ -246,29 +244,116 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-03-21 12:20:33" itemprop="dateModified" datetime="2026-03-21T12:20:33+08:00">2026-03-21</time>
+      <time title="修改时间：2026-03-24 23:48:58" itemprop="dateModified" datetime="2026-03-24T23:48:58+08:00">2026-03-24</time>
     </span>
 
   
 </div>
 
-            <div class="post-description">整理下java io框架</div>
+            <div class="post-description">Java IO框架笔记</div>
         </div>
       </header>
 
     
     
     
-    <div class="post-body" itemprop="articleBody"><h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>java IO框架是java开发中最常用到的,通常用于读取,写入文件.</p>
-<h2 id="关于编码"><a href="#关于编码" class="headerlink" title="关于编码"></a>关于编码</h2><p>jvm使用无编码的Unicode字符存储字符串于内存中</p>
-<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>说起使用方法之前,这里先给两张思维导图,认识下java IO的各个类的关系:</p>
-<p><img src="/uploads/IO%E6%A1%86%E6%9E%B6%E5%A4%A7%E7%9A%84%E4%BD%93%E7%B3%BB.png" alt="IO框架大的体系图"></p>
-<p><img src="/uploads/IO%E6%A1%86%E6%9E%B6%E5%B0%8F%E7%9A%84%E4%BD%93%E7%B3%BB.png" alt="IO框架小的体系图"></p>
-<h3 id="文件编码跟系统的编码不一致"><a href="#文件编码跟系统的编码不一致" class="headerlink" title="文件编码跟系统的编码不一致"></a>文件编码跟系统的编码不一致</h3><p>这个时候就要进行转换(假设文件的编码是UTF8,而系统的编码是GBK):<br>File–&gt;(转换成字节)FileInputStream–&gt;(对字节进行UTF8读取,转换成Reader字符)InputStreamReader–&gt;(加个缓冲,这个缓冲有read和readLine方法)BufferedReader.</p>
-<p>例子如下:<br><img src="/uploads/%E4%BE%8B%E5%AD%901.png" alt="例子1.png"></p>
-<h3 id="文件的编码跟系统的编码一致"><a href="#文件的编码跟系统的编码一致" class="headerlink" title="文件的编码跟系统的编码一致"></a>文件的编码跟系统的编码一致</h3><p>Reader类其实是可以直接接收File作为参数的,这个时候会转换成字节,然后对字节按照系统的编码进行读取,例子如下:<br><img src="/uploads/%E4%BE%8B%E5%AD%902.png" alt="例子2.png"></p>
-<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><h3 id="read与readLine的区别"><a href="#read与readLine的区别" class="headerlink" title="read与readLine的区别"></a>read与readLine的区别</h3><p>read如果结束了返回-1,如果没结束返回char类型(一个中文算一个字符);<br>readLine如果结束了返回null,如果没结束返回String类型.</p>
-<h3 id="bufferedInputStream与dataInputStream的区别"><a href="#bufferedInputStream与dataInputStream的区别" class="headerlink" title="bufferedInputStream与dataInputStream的区别"></a>bufferedInputStream与dataInputStream的区别</h3><p>dataInputStream(bufferedInputStream),包裹层…<br>如果您正在做一些特别的尝试将类的字段序列化到文件中，那么您可以使用DataInput &#x2F; OutputStream，因为它可以在二进制级别更好地控制数据。</p>
+    <div class="post-body" itemprop="articleBody"><h3 id="体系结构：装饰器模式与流的设计哲学"><a href="#体系结构：装饰器模式与流的设计哲学" class="headerlink" title="体系结构：装饰器模式与流的设计哲学"></a>体系结构：装饰器模式与流的设计哲学</h3><h4 id="字节流与字符流的分工"><a href="#字节流与字符流的分工" class="headerlink" title="字节流与字符流的分工"></a>字节流与字符流的分工</h4><p>Java IO 框架包含两套独立的体系：<code>InputStream</code> &#x2F; <code>OutputStream</code>（字节流）和 <code>Reader</code> &#x2F; <code>Writer</code>（字符流）。字节流处理二进制数据（如图片、音频），字符流专门处理文本数据。</p>
+<p>两套体系之间的关系：字符流是对字节流的封装，内部通过 <strong><code>InputStreamReader</code></strong> 和 <strong><code>OutputStreamWriter</code></strong> 完成字节到字符的转换，而这个转换过程正是<strong>编码处理</strong>的核心。当文件编码与系统默认编码不一致时，必须显式使用这两个类指定字符集，否则就会出现乱码。</p>
+<p>这里先给两张思维导图,认识下java IO的各个类的关系:<br><img src="/uploads/IO%E6%A1%86%E6%9E%B6%E5%A4%A7%E7%9A%84%E4%BD%93%E7%B3%BB.png" alt="IO框架大的体系图"><br><img src="/uploads/IO%E6%A1%86%E6%9E%B6%E5%B0%8F%E7%9A%84%E4%BD%93%E7%B3%BB.png" alt="IO框架小的体系图"></p>
+<h4 id="装饰器模式：动态组合功能的艺术"><a href="#装饰器模式：动态组合功能的艺术" class="headerlink" title="装饰器模式：动态组合功能的艺术"></a>装饰器模式：动态组合功能的艺术</h4><p>观察 Java IO 的类图可以看到，<code>FilterInputStream</code> 派生出 <code>BufferedInputStream</code>、<code>DataInputStream</code> 等，它们都“包裹”着一个原始的 <code>InputStream</code>（如 <code>FileInputStream</code>）。这种结构正是<strong>装饰器模式</strong>的经典应用。<br>比方说dataInputStream(bufferedInputStream) 包裹层的这种组合体现了两种流的不同职责：</p>
+<ul>
+<li><strong><code>BufferedInputStream</code></strong>：负责<strong>传输效率</strong>，通过缓冲减少系统调用。</li>
+<li><strong><code>DataInputStream</code></strong>：负责<strong>数据解析</strong>，将字节解析为 <code>int</code>、<code>long</code>、UTF 字符串等 Java 基本类型。</li>
+</ul>
+<p><strong>优势</strong>：可以在运行时动态地为流叠加功能（如缓冲、数据解析），而无需为每一种功能组合创建大量子类。例如，<code>new DataInputStream(new BufferedInputStream(new FileInputStream(&quot;data.bin&quot;)))</code> 既获得了缓冲的性能提升，又能直接读取 Java 基本类型。</p>
+<hr>
+<h3 id="性能与机制：缓冲流、readLine-隐患"><a href="#性能与机制：缓冲流、readLine-隐患" class="headerlink" title="性能与机制：缓冲流、readLine 隐患"></a>性能与机制：缓冲流、readLine 隐患</h3><h4 id="缓冲流为什么快"><a href="#缓冲流为什么快" class="headerlink" title="缓冲流为什么快"></a>缓冲流为什么快</h4><p>没有缓冲的流（如 <code>FileInputStream</code>）每次调用 <code>read()</code> 都会直接触发操作系统的一次 <strong>系统调用</strong>（用户态切换到内核态），开销极大。而 <code>BufferedInputStream</code> 内部维护了一个字节数组作为缓冲区，当调用 <code>read()</code> 时，若缓冲区中有数据则直接返回；否则触发一次系统调用，将磁盘数据批量读入缓冲区，然后再返回第一个字节。</p>
+<table>
+<thead>
+<tr>
+<th>场景特征</th>
+<th>推荐方案</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>处理<strong>文本文件</strong>，需要按行读取</td>
+<td><code>BufferedReader</code> + <code>InputStreamReader</code> (更推荐) 或 <code>InputStreamReader</code> + <code>BufferedInputStream</code></td>
+</tr>
+<tr>
+<td>处理<strong>二进制文件</strong>或<strong>自定义格式</strong></td>
+<td><code>BufferedInputStream</code></td>
+</tr>
+<tr>
+<td>需要直接读取 Java 基本类型（int, long 等）</td>
+<td><code>DataInputStream</code> + <code>BufferedInputStream</code></td>
+</tr>
+<tr>
+<td>追求极简且无需按行解析</td>
+<td><code>Files.readAllBytes()</code>（小文件）或 <code>BufferedInputStream</code>（大文件）</td>
+</tr>
+</tbody></table>
+<p><strong>性能提升的本质</strong>：用空间换时间，将多次小批量 I&#x2F;O 合并为一次大批量 I&#x2F;O，大幅减少上下文切换次数。</p>
+<h4 id="BufferedReader的read-与-readLine-的区别及隐患"><a href="#BufferedReader的read-与-readLine-的区别及隐患" class="headerlink" title="BufferedReader的read() 与 readLine() 的区别及隐患"></a>BufferedReader的read() 与 readLine() 的区别及隐患</h4><p><code>read()</code> 返回 <code>-1</code> 表示结束，<code>readLine()</code> 返回 <code>null</code> 表示结束。</p>
+<ul>
+<li><strong><code>readLine()</code> 的隐患</strong>：<code>BufferedReader.readLine()</code> 内部会逐字节判断换行符，并动态构建 <code>String</code>。如果一行数据非常大（例如几 MB），就会创建一个大对象，频繁触发 Young GC，甚至导致内存溢出。因此，在处理超大行数据时，建议使用 <code>Scanner</code> 或手动解析 <code>char</code> 数组。</li>
+<li><strong><code>read(byte[] b)</code> 的效率优势</strong>：批量读取数据到自定义缓冲区，比逐字节 <code>read()</code> 或逐行 <code>readLine()</code> 更高效且可控。</li>
+</ul>
+<hr>
+<h3 id="底层原理：编码转换、IO-模型的演进、零拷贝"><a href="#底层原理：编码转换、IO-模型的演进、零拷贝" class="headerlink" title="底层原理：编码转换、IO 模型的演进、零拷贝"></a>底层原理：编码转换、IO 模型的演进、零拷贝</h3><h4 id="编码转换的具体过程"><a href="#编码转换的具体过程" class="headerlink" title="编码转换的具体过程"></a>编码转换的具体过程</h4><ul>
+<li>JVM 内部统一使用 <strong>UTF-16</strong>（即 Unicode）存储字符串。</li>
+<li>当从文件读取字节时，<code>InputStreamReader</code> 根据指定的字符集（如 UTF-8）将字节解码为 Unicode 字符，存入内存。</li>
+<li>当写入文件时，<code>OutputStreamWriter</code> 再将 Unicode 字符按目标字符集编码为字节。</li>
+<li>除了少部分生僻字占两个char外，其余的中英文都是占用一个char，也就是2个字节&#x3D;16位。需要<strong>避免逐 <code>char</code> 打印</strong>，使用行读取或字符数组批量读取</li>
+</ul>
+<p>常见的场景：<br>如果文件是 UTF-8 编码，但系统默认编码是 GBK，直接使用 <code>FileReader</code>（默认使用系统编码）会乱码，原因是<code>FileReader</code> 内部使用系统默认编码，此时会将 UTF-8 字节按 GBK 规则解码，导致乱码。必须显式使用 <code>InputStreamReader</code> 并指定 <code>StandardCharsets.UTF_8</code>。</p>
+<p>代码示例：<br>错误读取代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WrongFileReader</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 假设系统默认编码为 GBK，文件实际编码为 UTF-8</span></span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileReader</span> <span class="variable">reader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileReader</span>(<span class="string">&quot;F:\\\\desktop\\utf8.txt&quot;</span>)) &#123;</span><br><span class="line">            <span class="type">int</span> ch;</span><br><span class="line">            <span class="keyword">while</span> ((ch = reader.read()) != -<span class="number">1</span>) &#123;</span><br><span class="line">                System.out.print((<span class="type">char</span>) ch);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确读取代码1：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.nio.charset.StandardCharsets;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CorrectFileReader</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 明确指定 UTF-8 编码</span></span><br><span class="line">        <span class="keyword">try</span> (<span class="type">BufferedReader</span> <span class="variable">reader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(  </span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(<span class="string">&quot;F:\\\\desktop\\utf8.txt&quot;</span>),  </span><br><span class="line">        StandardCharsets.UTF_8))) &#123;</span><br><span class="line">            <span class="comment">// 不要逐char打印，以免遇到生僻字</span></span><br><span class="line">            <span class="comment">/**</span></span><br><span class="line"><span class="comment">            int ch;</span></span><br><span class="line"><span class="comment">            while ((ch = reader.read()) != -1) &#123;</span></span><br><span class="line"><span class="comment">                System.out.print((char) ch);</span></span><br><span class="line"><span class="comment">            &#125;</span></span><br><span class="line"><span class="comment">            **/</span></span><br><span class="line">            <span class="type">char</span>[] buf = <span class="keyword">new</span> <span class="title class_">char</span>[<span class="number">8192</span>];  </span><br><span class="line">            <span class="type">int</span> len;  </span><br><span class="line">            <span class="keyword">while</span> ((len = reader.read(buf)) != -<span class="number">1</span>) &#123;  </span><br><span class="line">                System.out.print(<span class="keyword">new</span> <span class="title class_">String</span>(buf, <span class="number">0</span>, len));  </span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确读取代码2：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.nio.charset.StandardCharsets;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ModernFileReader</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Path</span> <span class="variable">path</span> <span class="operator">=</span> Paths.get(<span class="string">&quot;F:\\\\desktop\\utf8.txt&quot;</span>);</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">BufferedReader</span> <span class="variable">reader</span> <span class="operator">=</span> Files.newBufferedReader(path, StandardCharsets.UTF_8)) &#123;</span><br><span class="line">            String line;</span><br><span class="line">            <span class="keyword">while</span> ((line = reader.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">                System.out.println(line);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="从-BIO-到-NIO：IO-模型的演进"><a href="#从-BIO-到-NIO：IO-模型的演进" class="headerlink" title="从 BIO 到 NIO：IO 模型的演进"></a>从 BIO 到 NIO：IO 模型的演进</h4><p>传统的 <code>FileInputStream</code> 属于 <strong>BIO（同步阻塞 I&#x2F;O）</strong>，每个连接对应一个线程，在高并发网络场景下会引发严重的线程资源消耗。Java 1.4 引入了 <strong>NIO（New I&#x2F;O）</strong>，核心组件是 <code>Channel</code>、<code>Buffer</code> 和 <code>Selector</code>（多路复用器）。</p>
+<ul>
+<li><strong>BIO 的问题</strong>：线程与连接数线性增长，上下文切换开销大，难以应对 C10K 问题。</li>
+<li><strong>NIO 的优势</strong>：一个线程通过 <code>Selector</code> 管理多个 <code>Channel</code>，只有当某个 Channel 有数据可读&#x2F;可写时才进行处理，实现了 <strong>I&#x2F;O 多路复用</strong>，极大地提升了并发能力。</li>
+</ul>
+<h4 id="零拷贝（Zero-Copy）技术"><a href="#零拷贝（Zero-Copy）技术" class="headerlink" title="零拷贝（Zero-Copy）技术"></a>零拷贝（Zero-Copy）技术</h4><p>在文件传输场景（如 Web 服务器发送静态文件）中经常用到零拷贝技术，有两个使用案例：</p>
+<ol>
+<li>在spring boot中用FileSystemResource返回文件内容，则Spring 底层会自动利用容器的零拷贝机制（如 Tomcat 的 <code>sendfile</code> 支持）</li>
+<li>NIO 的 <code>FileChannel.transferTo()</code> 方法正是利用操作系统的 <strong>零拷贝</strong> 特性（如 Linux 的 <code>sendfile</code> 系统调用），数据直接在<strong>内核空间</strong>完成传输，避免了用户态与内核态之间的 CPU 拷贝，显著降低 CPU 占用并提升吞吐量。</li>
+</ol>
+<p>以下为传统io跟零拷贝io的对比流程图：</p>
+<pre><code class="highlight mermaid">sequenceDiagram
+    participant App as 应用程序&lt;br/&gt;(用户空间)
+    participant Kernel as 内核空间
+    participant Disk as 磁盘
+
+    Note over App,Disk: 传统 I/O 方式 (read + write)
+    App-&gt;&gt;Kernel: read() 系统调用
+    Kernel-&gt;&gt;Disk: DMA 拷贝 (磁盘→内核缓冲区)
+    Disk--&gt;&gt;Kernel: 数据
+    Kernel-&gt;&gt;Kernel: CPU 拷贝 (内核缓冲区→用户缓冲区)
+    Kernel--&gt;&gt;App: 返回，数据在用户缓冲区
+    App-&gt;&gt;Kernel: write() 系统调用
+    Kernel-&gt;&gt;Kernel: CPU 拷贝 (用户缓冲区→socket 缓冲区)
+    Kernel-&gt;&gt;Disk: DMA 拷贝 (socket 缓冲区→网卡)
+    Disk--&gt;&gt;Kernel: 完成
+    Kernel--&gt;&gt;App: 返回
+    Note right of App: 4 次拷贝 (2 次 DMA + 2 次 CPU)&lt;br/&gt;4 次上下文切换
+
+    Note over App,Disk: 零拷贝方式 (sendfile)
+    App-&gt;&gt;Kernel: sendfile() 系统调用
+    Kernel-&gt;&gt;Disk: DMA 拷贝 (磁盘→内核缓冲区)
+    Disk--&gt;&gt;Kernel: 数据
+    Kernel-&gt;&gt;Kernel: CPU 拷贝 (内核缓冲区→socket 缓冲区)&lt;br/&gt;(或使用 scatter-gather 避免)
+    Kernel-&gt;&gt;Disk: DMA 拷贝 (socket 缓冲区→网卡)
+    Disk--&gt;&gt;Kernel: 完成
+    Kernel--&gt;&gt;App: 返回
+    Note right of App: 2~3 次拷贝 (2 次 DMA + 0~1 次 CPU)&lt;br/&gt;2 次上下文切换</code></pre>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
     </div>
 
