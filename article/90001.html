@@ -28,7 +28,7 @@
 <meta property="og:description" content="后端技术知识体系">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-06-30T06:09:00.000Z">
-<meta property="article:modified_time" content="2026-03-21T04:21:39.111Z">
+<meta property="article:modified_time" content="2026-05-11T03:42:53.202Z">
 <meta property="article:author" content="AI测试员">
 <meta property="article:tag" content="Java基础">
 <meta name="twitter:card" content="summary">
@@ -172,13 +172,17 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -241,7 +245,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-03-21 12:21:39" itemprop="dateModified" datetime="2026-03-21T12:21:39+08:00">2026-03-21</time>
+      <time title="修改时间：2026-05-11 11:42:53" itemprop="dateModified" datetime="2026-05-11T11:42:53+08:00">2026-05-11</time>
     </span>
 
   
@@ -255,7 +259,8 @@
     
     
     <div class="post-body" itemprop="articleBody"><h1 id="个人后端知识体系整理（完善中）"><a href="#个人后端知识体系整理（完善中）" class="headerlink" title="个人后端知识体系整理（完善中）"></a>个人后端知识体系整理（完善中）</h1><blockquote class="pullquote mindmap mindmap-md"><ul>
-<li>中心节点<ul>
+<li>后端知识体系<ul>
+<li>计算机基础<ul>
 <li>数据结构与算法<ul>
 <li><a href="https://mp.weixin.qq.com/s?__biz=MzI5ODI5NDkxMw==&mid=2247490825&idx=2&sn=5c26af13d00976295786c65d41f768a6&chksm=eca956e7dbdedff127be68312e384d4c3ff671feb8e4b0867902bbd2b2398291dad80dcf6362&mpshare=1&scene=1&srcid=0630IutraEvQosrBFR6EloKH&sharer_sharetime=1593508521706&sharer_shareid=f433210a053adb795a013ded9465017f&key=69fdb5ac5982b1743f42e86e4d74ca614d6af9885ffa4f960b0a60322c9cdcbf33d4a61e4ff57bbb3a86bed118741c19b63779c95229e4469e22b33626eb69025d0902fe4b23ad66d7a1bcb48127adb1&ascene=1&uin=Mjg5MDEzNzIwNA==&devicetype=Windows+10+x64&version=62090070&lang=zh_CN&exportkey=Axq9aPV8CLjRvbHvh5zppDo=&pass_ticket=3DrEaHrX3hmWfS7vcYGmWF/6kyksnJeIjhsv7+8Azo1X0N8xSy0+Hx8leRIlpnn9">排序算法</a><ul>
 <li>比较类排序<ul>
@@ -321,18 +326,29 @@
 </ul>
 </li>
 <li>计算机网络<ul>
-<li>tcp&#x2F;ip四层模型<ul>
-<li>tcp<ul>
-<li>三次握手,四次挥手</li>
+<li>TCP&#x2F;IP 四层模型<ul>
+<li>TCP<ul>
+<li>三次握手</li>
+<li>四次挥手</li>
 </ul>
 </li>
-<li>udp</li>
+<li>UDP</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>java<ul>
-<li>java基础<ul>
+<li>操作系统<ul>
+<li>进程与线程</li>
+<li>内存管理</li>
+<li>文件系统</li>
+<li>IO 模型</li>
+<li>Linux 常用命令</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Java<ul>
+<li>Java基础<ul>
 <li>多线程<ul>
 <li>wait notify</li>
 <li>线程池</li>
@@ -340,73 +356,82 @@
 </ul>
 </li>
 <li>JVM<ul>
-<li>判断能否gc<ul>
-<li>引用计数算法（Reference Counting）</li>
-<li>根搜索算法（GC Root Tracing）</li>
-</ul>
-</li>
-<li>gc类型<ul>
-<li>Minor GC</li>
-<li>Full GC（Major GC）</li>
-</ul>
-</li>
-<li><a href="https://www.cnblogs.com/aspirant/p/8662690.html">gc回收算法</a><ul>
-<li>标记清除（mark-sweep）</li>
-<li>标记复制（mark-copy）</li>
-<li>标记整理（mark-compact）</li>
-<li>分代收集（generational-collection）</li>
-</ul>
-</li>
-<li>内存结构<ul>
-<li>堆<ul>
-<li><a href="https://www.cnblogs.com/jswang/p/9056038.html">新生代</a><ul>
-<li>Eden</li>
-<li>S1（Survivor1）</li>
-<li>S2（Survivor2）</li>
-</ul>
-</li>
-<li>老年代</li>
-</ul>
-</li>
-<li>方法区</li>
-<li>栈</li>
-<li>程序计数器</li>
+<li><a href="/2026/05/11/JVM%E5%8E%9F%E7%90%86%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/">JVM原理深度解析</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li>设计思想<ul>
+<li><a href="/2026/05/11/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3%E4%B8%8E%E5%AE%9E%E8%B7%B5/">设计模式核心思想与实践</a></li>
 </ul>
 </li>
 <li>框架源码解析<ul>
-<li>spring源码<ul>
-<li>aop</li>
-<li>ioc<ul>
-<li>循环依赖，三级缓存</li>
+<li>Spring<ul>
+<li>AOP</li>
+<li>IOC</li>
+<li><a href="/2026/05/09/Spring-Bean%E5%88%9B%E5%BB%BA%E4%B8%8E%E8%8E%B7%E5%8F%96%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">Spring Bean创建与获取流程源码解析</a></li>
+</ul>
+</li>
+<li>JDK源码<ul>
+<li>HashMap<ul>
+<li>hashCode</li>
+<li>capacity</li>
+<li>负载因子</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>jdk源码<ul>
-<li>hashmap<ul>
-<li>hashcode</li>
-<li>capity</li>
-<li>容积因子</li>
+<li>MyBatis<ul>
+<li>MyBatis原理源码解析（草稿中）</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>mybatis-spring源码</li>
 </ul>
 </li>
-<li>开源组件<ul>
-<li>k8s<ul>
-<li>pod</li>
-<li>controller</li>
-<li>service</li>
-<li>integres</li>
+<li>基础设施<ul>
+<li>数据存储<ul>
+<li>MySQL<ul>
+<li>索引原理</li>
+<li>事务</li>
+<li>锁</li>
+<li>MVCC</li>
+<li>日志系统</li>
+<li>主从复制</li>
 </ul>
 </li>
-<li>redis</li>
+<li>Redis</li>
+<li>Elasticsearch</li>
+</ul>
+</li>
+<li>中间件<ul>
+<li>消息队列<ul>
+<li>消息队列设计原理与实践（草稿中）</li>
+</ul>
+</li>
+<li>RPC</li>
+<li>配置中心</li>
+<li>注册中心</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>架构设计<ul>
+<li>业务系统架构演进（草稿中）</li>
+<li>可观测性<ul>
+<li>日志</li>
+<li>监控</li>
+<li>链路追踪</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>工程化与部署<ul>
+<li>Kubernetes<ul>
+<li>Pod</li>
+<li>Controller</li>
+<li>Service</li>
+<li>Ingress</li>
 </ul>
 </li>
 </ul>
