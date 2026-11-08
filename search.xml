@@ -775,6 +775,128 @@
       </tags>
   </entry>
   <entry>
+    <title>Java基础</title>
+    <url>/article/45792.html</url>
+    <content><![CDATA[<h2 id="public-private-protected-及不写时的区别"><a href="#public-private-protected-及不写时的区别" class="headerlink" title="public ,private ,protected 及不写时的区别"></a>public ,private ,protected 及不写时的区别</h2><p><code>注意:不写时默认为friendly</code><br>各个作用域所起的作用如下:</p>
+<table>
+<thead>
+<tr>
+<th>作用域</th>
+<th>当前类</th>
+<th>同一package</th>
+<th>子孙类</th>
+<th>其他package</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>protected</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>×</td>
+</tr>
+<tr>
+<td>friendly</td>
+<td>√</td>
+<td>√</td>
+<td>×</td>
+<td>×</td>
+</tr>
+<tr>
+<td>private</td>
+<td>√</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+</tr>
+</tbody></table>
+<h2 id="为什么编译出的class的文件名有些带有-1-2这种"><a href="#为什么编译出的class的文件名有些带有-1-2这种" class="headerlink" title="为什么编译出的class的文件名有些带有$1,$2这种"></a>为什么编译出的class的文件名有些带有$1,$2这种</h2><p>Those are the <code>.class</code> files that hold the anonymous inner classes.<br>参考资料:<br><a href="https://stackoverflow.com/questions/1075207/what-are-the-1-in-class-file">https://stackoverflow.com/questions/1075207/what-are-the-1-in-class-file</a></p>
+<h2 id="Java不允许只有返回类型不同的方法重载"><a href="#Java不允许只有返回类型不同的方法重载" class="headerlink" title="Java不允许只有返回类型不同的方法重载"></a>Java不允许只有返回类型不同的方法重载</h2><p>在<code>同一个类</code>中，无论返回值、访问修饰符是否相同，方法名必须相同，参数列表必须不参相同。</p>
+<p>因为Java语言层面上<code>overload resolution</code>只看方法名和参数列表的类型，不看返回值类型。<br>如果<code>overload resolution</code>发现方法名+参数列表找到了多个版本匹配度一样，那<code>overload resolution</code>就以“冲突”失败。</p>
+<p>在JVM层面上，其实是允许同一个类里有多个同名同参数的方法只在返回值类型上不同。但这个特点没有暴露给Java语言（甚至反射API也处理不了这个特点，只有新的MethodHandle API能处理）。</p>
+<h2 id="协变式覆盖和泛型重载"><a href="#协变式覆盖和泛型重载" class="headerlink" title="协变式覆盖和泛型重载"></a>协变式覆盖和泛型重载</h2><h3 id="协变式覆盖"><a href="#协变式覆盖" class="headerlink" title="协变式覆盖"></a>协变式覆盖</h3><p>只要子类方法与超类方法具有相同的方法签名，或者子类方法的返回值是超类方法的子类型(增加了对协变返回值的支持)，就可以覆盖。</p>
+<h3 id="泛型重载"><a href="#泛型重载" class="headerlink" title="泛型重载"></a>泛型重载</h3><p>JDK7、8是不可以编译的，需要用JDK6才可以<br>泛型擦除指的是:比如<code>List&lt;String&gt;</code>和<code>List&lt;Integer&gt;</code>,擦除后都变成<code>List</code><br>如果两个泛型方法在擦除泛型信息后，如果只是具有相同的参数类型，而返回值不一样，就可以进行重载；</p>
+<p><img src="/uploads/%E6%B3%9B%E5%9E%8B%E8%A6%86%E7%9B%96.png" alt="泛型覆盖"></p>
+<h2 id="enum类型的弊端"><a href="#enum类型的弊端" class="headerlink" title="enum类型的弊端"></a>enum类型的弊端</h2><p>使用枚举类型进行映射有一个弊端就是,将来有一天修改了枚举类型的定义,<code>会造成数据库中的数据无法被加载</code>,所以如果对改动的枚举定义(如顺序调整了– ORDINAL;或名称改了;或增减了选项)时一定要同步update数据库中的记录,这对于产品数据库也是个麻烦事. 这一点上还是需要谨慎的思考是否真要用 Java 的枚举值来映射.<br>而用 Integer 或 String 来作为 Java 的属性时则不会造成数据加载的异常,顶多是数据混乱,或有些值无法理解而已.<br>所以,对于一些常用而又量不大的数据,可以一次性把它的映射关系加载进缓存里面,可以考虑用guava–谷歌开源一个jar,其中的BiMap很好用,但是要注意右边要保证唯一性,比如下面这个不能同时是22L</p>
+<p><img src="/uploads/bimap%E4%BE%8B%E5%AD%901.png" alt="bimap例子1"></p>
+<p>还有下面这个例子,左边的key重复了,会以后面执行的为主:</p>
+<p><img src="/uploads/bimap%E4%BE%8B%E5%AD%902.png" alt="bimap例子2"></p>
+<h2 id="Map基础知识"><a href="#Map基础知识" class="headerlink" title="Map基础知识"></a>Map基础知识</h2><h3 id="HashMap-底层实现原理"><a href="#HashMap-底层实现原理" class="headerlink" title="HashMap 底层实现原理"></a>HashMap 底层实现原理</h3><p>HashMap 是 Java 中最常用的集合之一，它底层是基于<strong>数组 + 链表&#x2F;红黑树</strong>实现的。</p>
+<h4 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h4><p>当你调用 <code>put(key, value)</code> 时：</p>
+<ol>
+<li><strong>计算哈希值</strong>：先用 <code>hashCode()</code> 计算 key 的哈希值</li>
+<li><strong>定位数组位置</strong>：通过哈希算法算出该 key 应该放在数组的哪个位置</li>
+<li><strong>存入数组</strong>：如果该位置为空，直接放入</li>
+<li><strong>处理冲突</strong>：如果该位置已有元素（哈希冲突），会用链表连接起来；如果链表太长（超过8个），会自动转成红黑树提高查询效率</li>
+</ol>
+<p>当你调用 <code>get(key)</code> 时：</p>
+<ol>
+<li>同样先计算 key 的哈希值</li>
+<li>找到数组对应的位置</li>
+<li>在链表&#x2F;红黑树中查找对应的 Entry</li>
+<li>返回 value</li>
+</ol>
+<h4 id="容量和负荷系数"><a href="#容量和负荷系数" class="headerlink" title="容量和负荷系数"></a>容量和负荷系数</h4><ul>
+<li><strong>默认初始容量</strong>：16</li>
+<li><strong>默认负荷系数</strong>：0.75</li>
+</ul>
+<p>当 HashMap 中的元素数量超过 <code>容量 × 负荷系数</code> 时，会进行<strong>扩容</strong>，容量翻倍。</p>
+<blockquote>
+<p>小技巧：如果你知道大概要存储多少数据，可以提前设置合适的初始容量，避免频繁扩容带来的性能损耗。</p>
+</blockquote>
+<h4 id="equals-和-hashCode-规则"><a href="#equals-和-hashCode-规则" class="headerlink" title="equals() 和 hashCode() 规则"></a>equals() 和 hashCode() 规则</h4><p>这两个方法是 HashMap 工作的基础，必须遵守以下规则：</p>
+<h5 id="规则一：相等的对象必须有相等的哈希值"><a href="#规则一：相等的对象必须有相等的哈希值" class="headerlink" title="规则一：相等的对象必须有相等的哈希值"></a>规则一：相等的对象必须有相等的哈希值</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">如果 a.equals(b) 为 <span class="literal">true</span>，那么 a.hashCode() == b.hashCode() 必须为 <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>这是因为 HashMap 先用 hashCode() 定位，如果哈希值不同就直接认为是不同的元素，不会调用 equals()。</p>
+<h5 id="规则二：哈希值相等不一定equals"><a href="#规则二：哈希值相等不一定equals" class="headerlink" title="规则二：哈希值相等不一定equals"></a>规则二：哈希值相等不一定equals</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">a.hashCode() == b.hashCode()，并不代表 a.equals(b) 为 <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>这是因为哈希算法可能会让不同的 key 产生相同的哈希值（哈希冲突），HashMap 会用 equals() 来最终确认。</p>
+<h4 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h4><p>如果你使用自定义类作为 HashMap 的 key，必须重写这两个方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object o)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span> == o) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (o == <span class="literal">null</span> || getClass() != o.getClass()) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="type">Person</span> <span class="variable">person</span> <span class="operator">=</span> (Person) o;</span><br><span class="line">        <span class="keyword">return</span> age == person.age &amp;&amp; Objects.equals(name, person.name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Objects.hash(name, age);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="如何让-Map-不可变"><a href="#如何让-Map-不可变" class="headerlink" title="如何让 Map 不可变"></a>如何让 Map 不可变</h3><p>即便把 Map 声明为 <code>final</code>，仍然可以添加或删除元素：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 这样仍然可以修改！</span></span><br><span class="line"><span class="keyword">final</span> Map&lt;String, String&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">map.put(<span class="string">&quot;key&quot;</span>, <span class="string">&quot;value&quot;</span>);  <span class="comment">// 可以执行</span></span><br></pre></td></tr></table></figure>
+
+<p>正确的不可变 Map 写法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Constants</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;Integer, String&gt; STATUS_MAP;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        Map&lt;Integer, String&gt; tempMap = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        tempMap.put(<span class="number">1</span>, <span class="string">&quot;成功&quot;</span>);</span><br><span class="line">        tempMap.put(<span class="number">2</span>, <span class="string">&quot;失败&quot;</span>);</span><br><span class="line">        <span class="comment">// 使用 Collections.unmodifiableMap() 包装</span></span><br><span class="line">        STATUS_MAP = Collections.unmodifiableMap(tempMap);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样尝试修改时会抛出 <code>UnsupportedOperationException</code> 异常。</p>
+<h3 id="Map的其他实现类"><a href="#Map的其他实现类" class="headerlink" title="Map的其他实现类"></a>Map的其他实现类</h3><p>跟HashMap同样实现Map接口的有：HashMap,LinkedHashMap与TreeMap</p>
+<p>区别：<br>HashMap不保证数据有序，LinkedHashMap保证数据可以保持插入顺序，而如果我们希望Map可以保持key的大小顺序的时候，我们就需要利用TreeMap了。</p>
+<h2 id="异常的分类"><a href="#异常的分类" class="headerlink" title="异常的分类"></a>异常的分类</h2><ol>
+<li>异常的继承结构：基类为Throwable，Error和Exception继承Throwable，RuntimeException和IOException等继承Exception，具体的RuntimeException继承RuntimeException。</li>
+<li>Error和RuntimeException及其子类成为未检查异常（unchecked），其它异常成为已检查异常（checked）。</li>
+</ol>
+<p><img src="/uploads/%E5%BC%82%E5%B8%B8%E7%B1%BB%E7%9A%84%E5%85%B3%E8%81%94.png" alt="异常类的关联"></p>
+<h2 id="性能问题排查"><a href="#性能问题排查" class="headerlink" title="性能问题排查"></a>性能问题排查</h2><p>先用 <code>jvisualvm.exe</code> 查看内存和线程情况：</p>
+<ol>
+<li><strong>内存问题</strong>：如果内存太高，右键 dump 出 hprof 文件，用 MAT 分析</li>
+<li><strong>线程问题</strong>：如果线程数太多，规范线程池名称，打印堆栈，检查有无死锁</li>
+</ol>
+<h2 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h2><p>QPS &#x3D; req&#x2F;sec &#x3D; 请求数&#x2F;秒【QPS计算PV和机器的方式】</p>
+<p>QPS统计方式 [一般使用 http_load 进行统计]QPS &#x3D; 总请求数 &#x2F; ( 进程总数 *   请求时间 )</p>
+<p>QPS: 单个进程每秒请求服务器的成功次数</p>
+<p>单台服务器每天PV计算<br>公式1：每天总PV &#x3D; QPS * 3600 * 6<br>公式2：每天总PV &#x3D; QPS * 3600 * 8</p>
+<p>服务器计算服务器数量 &#x3D;   ceil( 每天总PV &#x2F; 单台服务器每天总PV )</p>
+<p>【峰值QPS和机器计算公式】<br>原理：每天80%的访问集中在20%的时间里，这20%时间叫做峰值时间<br>公式：( 总PV数 * 80% ) &#x2F; ( 每天秒数 * 20% ) &#x3D; 峰值时间每秒请求数(QPS)<br>机器：峰值时间每秒QPS &#x2F; 单台机器的QPS   &#x3D; 需要的机器</p>
+<p>问：每天300w PV 的在单台机器上，这台机器需要多少QPS？<br>答：( 3000000 * 0.8 ) &#x2F; (86400 * 0.2 ) &#x3D; 139 (QPS)</p>
+<p>问：如果一台机器的QPS是58，需要几台机器来支持？<br>答：139 &#x2F; 58 &#x3D; 3</p>
+<p>PV&#x3D;page view<br>TPS&#x3D;transactions per second<br>QPS&#x3D;queries per second<br>RPS&#x3D;requests per second</p>
+<p>RPS&#x3D;并发数&#x2F;平均响应时间</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><img src="http://yikun.github.io/2015/04/06/Java-TreeMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/"></p>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+      <tags>
+        <tag>Java基础</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL开发实战笔记</title>
     <url>/article/11695.html</url>
     <content><![CDATA[<blockquote>
@@ -989,128 +1111,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java基础</title>
-    <url>/article/45792.html</url>
-    <content><![CDATA[<h2 id="public-private-protected-及不写时的区别"><a href="#public-private-protected-及不写时的区别" class="headerlink" title="public ,private ,protected 及不写时的区别"></a>public ,private ,protected 及不写时的区别</h2><p><code>注意:不写时默认为friendly</code><br>各个作用域所起的作用如下:</p>
-<table>
-<thead>
-<tr>
-<th>作用域</th>
-<th>当前类</th>
-<th>同一package</th>
-<th>子孙类</th>
-<th>其他package</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-</tr>
-<tr>
-<td>protected</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td>×</td>
-</tr>
-<tr>
-<td>friendly</td>
-<td>√</td>
-<td>√</td>
-<td>×</td>
-<td>×</td>
-</tr>
-<tr>
-<td>private</td>
-<td>√</td>
-<td>×</td>
-<td>×</td>
-<td>×</td>
-</tr>
-</tbody></table>
-<h2 id="为什么编译出的class的文件名有些带有-1-2这种"><a href="#为什么编译出的class的文件名有些带有-1-2这种" class="headerlink" title="为什么编译出的class的文件名有些带有$1,$2这种"></a>为什么编译出的class的文件名有些带有$1,$2这种</h2><p>Those are the <code>.class</code> files that hold the anonymous inner classes.<br>参考资料:<br><a href="https://stackoverflow.com/questions/1075207/what-are-the-1-in-class-file">https://stackoverflow.com/questions/1075207/what-are-the-1-in-class-file</a></p>
-<h2 id="Java不允许只有返回类型不同的方法重载"><a href="#Java不允许只有返回类型不同的方法重载" class="headerlink" title="Java不允许只有返回类型不同的方法重载"></a>Java不允许只有返回类型不同的方法重载</h2><p>在<code>同一个类</code>中，无论返回值、访问修饰符是否相同，方法名必须相同，参数列表必须不参相同。</p>
-<p>因为Java语言层面上<code>overload resolution</code>只看方法名和参数列表的类型，不看返回值类型。<br>如果<code>overload resolution</code>发现方法名+参数列表找到了多个版本匹配度一样，那<code>overload resolution</code>就以“冲突”失败。</p>
-<p>在JVM层面上，其实是允许同一个类里有多个同名同参数的方法只在返回值类型上不同。但这个特点没有暴露给Java语言（甚至反射API也处理不了这个特点，只有新的MethodHandle API能处理）。</p>
-<h2 id="协变式覆盖和泛型重载"><a href="#协变式覆盖和泛型重载" class="headerlink" title="协变式覆盖和泛型重载"></a>协变式覆盖和泛型重载</h2><h3 id="协变式覆盖"><a href="#协变式覆盖" class="headerlink" title="协变式覆盖"></a>协变式覆盖</h3><p>只要子类方法与超类方法具有相同的方法签名，或者子类方法的返回值是超类方法的子类型(增加了对协变返回值的支持)，就可以覆盖。</p>
-<h3 id="泛型重载"><a href="#泛型重载" class="headerlink" title="泛型重载"></a>泛型重载</h3><p>JDK7、8是不可以编译的，需要用JDK6才可以<br>泛型擦除指的是:比如<code>List&lt;String&gt;</code>和<code>List&lt;Integer&gt;</code>,擦除后都变成<code>List</code><br>如果两个泛型方法在擦除泛型信息后，如果只是具有相同的参数类型，而返回值不一样，就可以进行重载；</p>
-<p><img src="/uploads/%E6%B3%9B%E5%9E%8B%E8%A6%86%E7%9B%96.png" alt="泛型覆盖"></p>
-<h2 id="enum类型的弊端"><a href="#enum类型的弊端" class="headerlink" title="enum类型的弊端"></a>enum类型的弊端</h2><p>使用枚举类型进行映射有一个弊端就是,将来有一天修改了枚举类型的定义,<code>会造成数据库中的数据无法被加载</code>,所以如果对改动的枚举定义(如顺序调整了– ORDINAL;或名称改了;或增减了选项)时一定要同步update数据库中的记录,这对于产品数据库也是个麻烦事. 这一点上还是需要谨慎的思考是否真要用 Java 的枚举值来映射.<br>而用 Integer 或 String 来作为 Java 的属性时则不会造成数据加载的异常,顶多是数据混乱,或有些值无法理解而已.<br>所以,对于一些常用而又量不大的数据,可以一次性把它的映射关系加载进缓存里面,可以考虑用guava–谷歌开源一个jar,其中的BiMap很好用,但是要注意右边要保证唯一性,比如下面这个不能同时是22L</p>
-<p><img src="/uploads/bimap%E4%BE%8B%E5%AD%901.png" alt="bimap例子1"></p>
-<p>还有下面这个例子,左边的key重复了,会以后面执行的为主:</p>
-<p><img src="/uploads/bimap%E4%BE%8B%E5%AD%902.png" alt="bimap例子2"></p>
-<h2 id="Map基础知识"><a href="#Map基础知识" class="headerlink" title="Map基础知识"></a>Map基础知识</h2><h3 id="HashMap-底层实现原理"><a href="#HashMap-底层实现原理" class="headerlink" title="HashMap 底层实现原理"></a>HashMap 底层实现原理</h3><p>HashMap 是 Java 中最常用的集合之一，它底层是基于<strong>数组 + 链表&#x2F;红黑树</strong>实现的。</p>
-<h4 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h4><p>当你调用 <code>put(key, value)</code> 时：</p>
-<ol>
-<li><strong>计算哈希值</strong>：先用 <code>hashCode()</code> 计算 key 的哈希值</li>
-<li><strong>定位数组位置</strong>：通过哈希算法算出该 key 应该放在数组的哪个位置</li>
-<li><strong>存入数组</strong>：如果该位置为空，直接放入</li>
-<li><strong>处理冲突</strong>：如果该位置已有元素（哈希冲突），会用链表连接起来；如果链表太长（超过8个），会自动转成红黑树提高查询效率</li>
-</ol>
-<p>当你调用 <code>get(key)</code> 时：</p>
-<ol>
-<li>同样先计算 key 的哈希值</li>
-<li>找到数组对应的位置</li>
-<li>在链表&#x2F;红黑树中查找对应的 Entry</li>
-<li>返回 value</li>
-</ol>
-<h4 id="容量和负荷系数"><a href="#容量和负荷系数" class="headerlink" title="容量和负荷系数"></a>容量和负荷系数</h4><ul>
-<li><strong>默认初始容量</strong>：16</li>
-<li><strong>默认负荷系数</strong>：0.75</li>
-</ul>
-<p>当 HashMap 中的元素数量超过 <code>容量 × 负荷系数</code> 时，会进行<strong>扩容</strong>，容量翻倍。</p>
-<blockquote>
-<p>小技巧：如果你知道大概要存储多少数据，可以提前设置合适的初始容量，避免频繁扩容带来的性能损耗。</p>
-</blockquote>
-<h4 id="equals-和-hashCode-规则"><a href="#equals-和-hashCode-规则" class="headerlink" title="equals() 和 hashCode() 规则"></a>equals() 和 hashCode() 规则</h4><p>这两个方法是 HashMap 工作的基础，必须遵守以下规则：</p>
-<h5 id="规则一：相等的对象必须有相等的哈希值"><a href="#规则一：相等的对象必须有相等的哈希值" class="headerlink" title="规则一：相等的对象必须有相等的哈希值"></a>规则一：相等的对象必须有相等的哈希值</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">如果 a.equals(b) 为 <span class="literal">true</span>，那么 a.hashCode() == b.hashCode() 必须为 <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-
-<p>这是因为 HashMap 先用 hashCode() 定位，如果哈希值不同就直接认为是不同的元素，不会调用 equals()。</p>
-<h5 id="规则二：哈希值相等不一定equals"><a href="#规则二：哈希值相等不一定equals" class="headerlink" title="规则二：哈希值相等不一定equals"></a>规则二：哈希值相等不一定equals</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">a.hashCode() == b.hashCode()，并不代表 a.equals(b) 为 <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-
-<p>这是因为哈希算法可能会让不同的 key 产生相同的哈希值（哈希冲突），HashMap 会用 equals() 来最终确认。</p>
-<h4 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h4><p>如果你使用自定义类作为 HashMap 的 key，必须重写这两个方法：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object o)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span> == o) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (o == <span class="literal">null</span> || getClass() != o.getClass()) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="type">Person</span> <span class="variable">person</span> <span class="operator">=</span> (Person) o;</span><br><span class="line">        <span class="keyword">return</span> age == person.age &amp;&amp; Objects.equals(name, person.name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Objects.hash(name, age);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="如何让-Map-不可变"><a href="#如何让-Map-不可变" class="headerlink" title="如何让 Map 不可变"></a>如何让 Map 不可变</h3><p>即便把 Map 声明为 <code>final</code>，仍然可以添加或删除元素：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 这样仍然可以修改！</span></span><br><span class="line"><span class="keyword">final</span> Map&lt;String, String&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">map.put(<span class="string">&quot;key&quot;</span>, <span class="string">&quot;value&quot;</span>);  <span class="comment">// 可以执行</span></span><br></pre></td></tr></table></figure>
-
-<p>正确的不可变 Map 写法：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Constants</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;Integer, String&gt; STATUS_MAP;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        Map&lt;Integer, String&gt; tempMap = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        tempMap.put(<span class="number">1</span>, <span class="string">&quot;成功&quot;</span>);</span><br><span class="line">        tempMap.put(<span class="number">2</span>, <span class="string">&quot;失败&quot;</span>);</span><br><span class="line">        <span class="comment">// 使用 Collections.unmodifiableMap() 包装</span></span><br><span class="line">        STATUS_MAP = Collections.unmodifiableMap(tempMap);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这样尝试修改时会抛出 <code>UnsupportedOperationException</code> 异常。</p>
-<h3 id="Map的其他实现类"><a href="#Map的其他实现类" class="headerlink" title="Map的其他实现类"></a>Map的其他实现类</h3><p>跟HashMap同样实现Map接口的有：HashMap,LinkedHashMap与TreeMap</p>
-<p>区别：<br>HashMap不保证数据有序，LinkedHashMap保证数据可以保持插入顺序，而如果我们希望Map可以保持key的大小顺序的时候，我们就需要利用TreeMap了。</p>
-<h2 id="异常的分类"><a href="#异常的分类" class="headerlink" title="异常的分类"></a>异常的分类</h2><ol>
-<li>异常的继承结构：基类为Throwable，Error和Exception继承Throwable，RuntimeException和IOException等继承Exception，具体的RuntimeException继承RuntimeException。</li>
-<li>Error和RuntimeException及其子类成为未检查异常（unchecked），其它异常成为已检查异常（checked）。</li>
-</ol>
-<p><img src="/uploads/%E5%BC%82%E5%B8%B8%E7%B1%BB%E7%9A%84%E5%85%B3%E8%81%94.png" alt="异常类的关联"></p>
-<h2 id="性能问题排查"><a href="#性能问题排查" class="headerlink" title="性能问题排查"></a>性能问题排查</h2><p>先用 <code>jvisualvm.exe</code> 查看内存和线程情况：</p>
-<ol>
-<li><strong>内存问题</strong>：如果内存太高，右键 dump 出 hprof 文件，用 MAT 分析</li>
-<li><strong>线程问题</strong>：如果线程数太多，规范线程池名称，打印堆栈，检查有无死锁</li>
-</ol>
-<h2 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h2><p>QPS &#x3D; req&#x2F;sec &#x3D; 请求数&#x2F;秒【QPS计算PV和机器的方式】</p>
-<p>QPS统计方式 [一般使用 http_load 进行统计]QPS &#x3D; 总请求数 &#x2F; ( 进程总数 *   请求时间 )</p>
-<p>QPS: 单个进程每秒请求服务器的成功次数</p>
-<p>单台服务器每天PV计算<br>公式1：每天总PV &#x3D; QPS * 3600 * 6<br>公式2：每天总PV &#x3D; QPS * 3600 * 8</p>
-<p>服务器计算服务器数量 &#x3D;   ceil( 每天总PV &#x2F; 单台服务器每天总PV )</p>
-<p>【峰值QPS和机器计算公式】<br>原理：每天80%的访问集中在20%的时间里，这20%时间叫做峰值时间<br>公式：( 总PV数 * 80% ) &#x2F; ( 每天秒数 * 20% ) &#x3D; 峰值时间每秒请求数(QPS)<br>机器：峰值时间每秒QPS &#x2F; 单台机器的QPS   &#x3D; 需要的机器</p>
-<p>问：每天300w PV 的在单台机器上，这台机器需要多少QPS？<br>答：( 3000000 * 0.8 ) &#x2F; (86400 * 0.2 ) &#x3D; 139 (QPS)</p>
-<p>问：如果一台机器的QPS是58，需要几台机器来支持？<br>答：139 &#x2F; 58 &#x3D; 3</p>
-<p>PV&#x3D;page view<br>TPS&#x3D;transactions per second<br>QPS&#x3D;queries per second<br>RPS&#x3D;requests per second</p>
-<p>RPS&#x3D;并发数&#x2F;平均响应时间</p>
-<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><img src="http://yikun.github.io/2015/04/06/Java-TreeMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/"></p>
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
-      <tags>
-        <tag>Java基础</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Spring Bean创建与获取流程源码解析</title>
     <url>/article/74182031.html</url>
     <content><![CDATA[<h1 id="Spring-Bean-创建与获取流程源码解析"><a href="#Spring-Bean-创建与获取流程源码解析" class="headerlink" title="Spring Bean 创建与获取流程源码解析"></a>Spring Bean 创建与获取流程源码解析</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Spring 的核心是 IoC 容器，而 IoC 容器的核心就是 <strong>Bean 的创建与获取</strong>。理解这个流程，能帮助我们更深入地掌握 Spring 框架的设计思想。</p>
@@ -1281,6 +1281,156 @@
       </categories>
       <tags>
         <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>openwrt透明代理设置</title>
+    <url>/article/f7383d69.html</url>
+    <content><![CDATA[<blockquote>
+<p>适用场景：OpenWrt 副路由（自建子网）+ Shadowrocket 订阅（含 Trojan 节点），实现”被墙网站走代理、国内网站直连”的透明分流。<br>硬件参考：小米 Redmi AC2100（mt7621 &#x2F; mipsel_24kc），其他 OpenWrt 设备思路相同。</p>
+</blockquote>
+<hr>
+<h2 id="一、网络拓扑"><a href="#一、网络拓扑" class="headerlink" title="一、网络拓扑"></a>一、网络拓扑</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">光猫 (192.168.1.1)</span><br><span class="line">  └─ 主路由 (192.168.31.1，构建 31 子网)</span><br><span class="line">       └─ OpenWrt 副路由</span><br><span class="line">            WAN ← 接主路由 LAN（自动拿到 192.168.31.x）</span><br><span class="line">            LAN ← 自建 192.168.10.1 子网（DHCP 由副路由下发）</span><br><span class="line">            WiFi 客户端 (192.168.10.x) ← 所有流量天然经过副路由 → 透明代理</span><br></pre></td></tr></table></figure>
+
+<p><strong>要点</strong>：</p>
+<ul>
+<li>副路由自建子网（如 192.168.10.x），连它 WiFi 的设备网关&#x2F;DNS 都指向它自己，<strong>流量 100% 经过它</strong>，透明代理必然生效。</li>
+<li>主路由设备不受影响：连主路由 WiFi &#x3D; 直连，连副路由 WiFi &#x3D; 分流代理。</li>
+<li>三个网段（1.x &#x2F; 31.x &#x2F; 10.x）互不冲突。</li>
+</ul>
+<h3 id="副路由网络配置"><a href="#副路由网络配置" class="headerlink" title="副路由网络配置"></a>副路由网络配置</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh root@192.168.10.1</span><br><span class="line"></span><br><span class="line"><span class="comment"># LAN 改为 10 子网</span></span><br><span class="line">uci <span class="built_in">set</span> network.lan.ipaddr=<span class="string">&#x27;192.168.10.1&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> network.lan.netmask=<span class="string">&#x27;255.255.255.0&#x27;</span></span><br><span class="line">uci commit network</span><br><span class="line">/etc/init.d/network restart</span><br><span class="line"></span><br><span class="line"><span class="comment"># DHCP 保持开启（默认就是开的），确认：</span></span><br><span class="line">uci get dhcp.lan.ignore</span><br><span class="line"><span class="comment"># 空 或 0 = 开启；1 = 关闭（如被关了就改回来）</span></span><br><span class="line">uci <span class="built_in">set</span> dhcp.lan.ignore=<span class="string">&#x27;0&#x27;</span></span><br><span class="line">uci commit dhcp</span><br><span class="line">/etc/init.d/dnsmasq restart</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>WAN 口默认就是 DHCP 客户端，插主路由 LAN 口自动拿 31.x 地址，无需配置。</p>
+</blockquote>
+<hr>
+<h2 id="二、SSH-免密登录（Windows）"><a href="#二、SSH-免密登录（Windows）" class="headerlink" title="二、SSH 免密登录（Windows）"></a>二、SSH 免密登录（Windows）</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在 Windows 上生成密钥对（无密码短语）</span></span><br><span class="line">ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_openwrt -N <span class="string">&quot;&quot;</span> -C <span class="string">&quot;openwrt-secondary-router&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 公钥贴到 OpenWrt（dropbear 的 authorized_keys）</span></span><br><span class="line">ssh root@192.168.10.1 <span class="string">&quot;mkdir -p /etc/dropbear &amp;&amp; echo &#x27;ssh-ed25519 AAAA...== openwrt-secondary-router&#x27; &gt;&gt; /etc/dropbear/authorized_keys &amp;&amp; chmod 600 /etc/dropbear/authorized_keys&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>可选：<code>~/.ssh/config</code> 加别名，之后直接 <code>ssh openwrt</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Host openwrt</span><br><span class="line">    HostName 192.168.10.1</span><br><span class="line">    User root</span><br><span class="line">    IdentityFile ~/.ssh/id_ed25519_openwrt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="三、安装-HomeProxy"><a href="#三、安装-HomeProxy" class="headerlink" title="三、安装 HomeProxy"></a>三、安装 HomeProxy</h2><h3 id="问题：官方源里没有代理插件"><a href="#问题：官方源里没有代理插件" class="headerlink" title="问题：官方源里没有代理插件"></a>问题：官方源里没有代理插件</h3><p><strong>官方 OpenWrt 源里没有 homeproxy &#x2F; PassWall &#x2F; OpenClash</strong>（只有 shadowsocks-libev，不支持 Trojan）。这些插件在 <strong>ImmortalWrt</strong> 的源里。</p>
+<p>解法：把 ImmortalWrt 的源加为附加源（不用换固件）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt;&gt; /etc/opkg/customfeeds.conf &lt;&lt;<span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">src/gz iw_luci https://downloads.immortalwrt.org/releases/24.10.0/packages/mipsel_24kc/luci</span><br><span class="line">src/gz iw_packages https://downloads.immortalwrt.org/releases/24.10.0/packages/mipsel_24kc/packages</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>版本号要与固件对应（24.10 系固件用 24.10.0 源），架构看 <code>/etc/openwrt_release</code> 的 <code>DISTRIB_ARCH</code>（如 mipsel_24kc）。<br><strong>腾讯镜像没有 immortalwrt 目录</strong>，404 是正常的，用官方 downloads.immortalwrt.org。</p>
+</blockquote>
+<h3 id="问题：Signature-check-failed"><a href="#问题：Signature-check-failed" class="headerlink" title="问题：Signature check failed"></a>问题：Signature check failed</h3><p>ImmortalWrt 源带签名，官方固件没有对应公钥，<code>opkg update</code> 会报签名校验失败。关闭全局签名校验（走 https 传输保证安全性）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sed -i <span class="string">&#x27;s/^option check_signature/#option check_signature/&#x27;</span> /etc/opkg.conf</span><br><span class="line">opkg update</span><br></pre></td></tr></table></figure>
+
+<h3 id="问题：老固件源-404"><a href="#问题：老固件源-404" class="headerlink" title="问题：老固件源 404"></a>问题：老固件源 404</h3><p>自编译 SNAPSHOT &#x2F; Lean 固件（R22.x 时代）的 snapshots 源早就删了，无法”换个镜像继续用”。<br><strong>正确做法：直接 sysupgrade 刷官方 24.10</strong>（mt7621 设备官方支持完善）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 确认设备型号</span></span><br><span class="line"><span class="built_in">cat</span> /tmp/sysinfo/board_name     <span class="comment"># 例：xiaomi,redmi-router-ac2100</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载官方固件（注意小版本号取最新 24.10.x）</span></span><br><span class="line"><span class="comment"># https://downloads.openwrt.org/releases/24.10.0/targets/ramips/mt7621/</span></span><br><span class="line"><span class="comment"># 文件：openwrt-24.10.0-ramips-mt7621-xiaomi_redmi-router-ac2100-squashfs-sysupgrade.bin</span></span><br><span class="line"></span><br><span class="line">scp openwrt-*.bin root@192.168.10.1:/tmp/</span><br><span class="line">ssh root@192.168.10.1</span><br><span class="line">sysupgrade -n -v /tmp/openwrt-*.bin    <span class="comment"># -n 清空配置，跨大版本必须加</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>刷机注意事项</strong>：</p>
+<ul>
+<li>刷机过程 3~5 分钟，<strong>千万别断电</strong>。</li>
+<li><code>-n</code> 会清空一切：装的包、配置、SSH 公钥全没了，刷完要重头配。</li>
+<li>刷完默认 LAN IP 是 <code>192.168.1.1</code>，网线接 LAN 口连电脑，重新配回 192.168.10.1。</li>
+<li>WiFi 默认未开&#x2F;未加密，第一时间在 LuCI 配好。</li>
+</ul>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">opkg update</span><br><span class="line">opkg install luci-app-homeproxy    <span class="comment"># homeproxy 内核会作为依赖自动装上</span></span><br></pre></td></tr></table></figure>
+
+<p>依赖关系（供排错参考）：</p>
+<ul>
+<li><code>luci-app-homeproxy</code> → <code>sing-box</code>、<code>firewall4</code>、<code>kmod-nft-tproxy</code>、<code>ucode-mod-digest</code></li>
+<li><code>sing-box</code> → <code>ca-bundle</code>、<code>kmod-inet-diag</code>、<code>kmod-netlink-diag</code>、<code>kmod-tun</code></li>
+</ul>
+<p>官方 24.10 用 firewall4&#x2F;nftables，与 ImmortalWrt 24.10 一致，依赖基本都能自动解析。</p>
+<blockquote>
+<p><strong>PassWall2 &#x2F; OpenClash 对比</strong>：PassWall2 也吃 base64 Trojan 订阅、界面更简单，但依赖 <code>dnsmasq-full</code>，需先 <code>opkg remove dnsmasq &amp;&amp; opkg install dnsmasq-full</code>（配置在 &#x2F;etc&#x2F;config&#x2F;dhcp，不丢）。OpenClash 还要求把订阅转成 Clash YAML 格式（走第三方 subconverter 服务，订阅 token 会暴露给转换服务，需斟酌）。HomeProxy 最省事。</p>
+</blockquote>
+<hr>
+<h2 id="四、配置-HomeProxy（LuCI-界面）"><a href="#四、配置-HomeProxy（LuCI-界面）" class="headerlink" title="四、配置 HomeProxy（LuCI 界面）"></a>四、配置 HomeProxy（LuCI 界面）</h2><ol>
+<li><strong>服务 → Home Proxy → 节点订阅</strong>：填订阅 URL → 保存并更新 → 节点列表出现后，选一个 Trojan 节点作为<strong>主节点</strong>。</li>
+<li><strong>设置 → 路由模式</strong>：选 <strong><code>bypass_mainland_china</code>（大陆白名单）</strong> —— 国内直连、国外走代理。这是最实用的默认模式。</li>
+<li>开启透明代理主开关，DNS 劫持默认开启即可。</li>
+</ol>
+<p>对应 uci（命令行等价操作）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">uci show homeproxy | grep -E <span class="string">&#x27;routing_mode|default_outbound&#x27;</span></span><br><span class="line"><span class="comment"># homeproxy.config.routing_mode=&#x27;bypass_mainland_china&#x27;</span></span><br><span class="line"><span class="comment"># homeproxy.routing.default_outbound=&#x27;direct-out&#x27;   ← 未命中任何规则的流量走直连</span></span><br><span class="line"><span class="comment"># homeproxy.routing.sniff_override=&#x27;1&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 换全局模式（所有流量走代理）</span></span><br><span class="line">uci <span class="built_in">set</span> homeproxy.config.routing_mode=<span class="string">&#x27;global&#x27;</span></span><br><span class="line"><span class="comment"># 或 GFW 列表模式（仅被墙网站走代理）</span></span><br><span class="line">uci <span class="built_in">set</span> homeproxy.config.routing_mode=<span class="string">&#x27;bypass_china_mainland_gfwlist&#x27;</span></span><br><span class="line">uci commit homeproxy</span><br><span class="line">/etc/init.d/homeproxy restart</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="五、验证代理是否生效"><a href="#五、验证代理是否生效" class="headerlink" title="五、验证代理是否生效"></a>五、验证代理是否生效</h2><h3 id="终端设备上（最直观）"><a href="#终端设备上（最直观）" class="headerlink" title="终端设备上（最直观）"></a>终端设备上（最直观）</h3><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Windows PowerShell</span></span><br><span class="line">curl.exe <span class="literal">-s</span> https://ipinfo.io | findstr ip      <span class="comment"># 出口 = 节点 IP → 走了代理</span></span><br><span class="line">curl.exe <span class="literal">-s</span> https://myip.ipip.net               <span class="comment"># 出口 = 家宽 IP → 国内直连正常</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="透明代理日志（最详细）"><a href="#透明代理日志（最详细）" class="headerlink" title="透明代理日志（最详细）"></a>透明代理日志（最详细）</h3><p><strong>注意：<code>logread -f</code> 看不到 homeproxy 日志</strong>——sing-box 默认写自己的日志文件，不进 syslog。日志路径先从启动脚本确认：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 从 init 脚本确认 sing-box 启动参数里的日志路径</span></span><br><span class="line">grep -E <span class="string">&#x27;log|procd_set_param&#x27;</span> /etc/init.d/homeproxy</span><br><span class="line"></span><br><span class="line"><span class="comment"># 常见位置（以上面 grep 结果为准）</span></span><br><span class="line"><span class="built_in">ls</span> /var/run/homeproxy/</span><br></pre></td></tr></table></figure>
+
+<p>实测日志文件是 <code>/var/run/homeproxy/sing-box-c.log</code>（客户端）。实时跟踪路由决策：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 按域名过滤，实时看走向</span></span><br><span class="line"><span class="built_in">tail</span> -f /var/run/homeproxy/sing-box-c.log | grep google</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关键行解读：</span></span><br><span class="line"><span class="comment"># outbound/trojan[main-out]: outbound connection to www.google.com:443  ← 走了代理 ✅</span></span><br><span class="line"><span class="comment"># dns: match[3] ... rule_set=geoip-cn =&gt; route(china-dns)                ← 国内流量直连</span></span><br><span class="line"><span class="comment"># router: sniffed protocol: tls, domain: xxx                           ← 嗅探出的真实域名</span></span><br></pre></td></tr></table></figure>
+
+<p>判断方法（对比测试，一目了然）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 国外站 → 出现 outbound/trojan[main-out] = 走代理</span></span><br><span class="line"><span class="built_in">tail</span> -f /var/run/homeproxy/sing-box-c.log | grep google</span><br><span class="line"><span class="comment"># outbound/trojan[main-out]: outbound connection to www.google.com.hk:443</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 国内站 → 只有 dns 交换记录，无 trojan 出站 = 直连</span></span><br><span class="line"><span class="built_in">tail</span> -f /var/run/homeproxy/sing-box-c.log | grep bilibili</span><br><span class="line"><span class="comment"># （一堆 dns: exchange xxx 记录，但没有 outbound/trojan 行）</span></span><br></pre></td></tr></table></figure>
+
+<p>LuCI → Home Proxy → <strong>状态</strong> 页也有实时连接列表（目标域名 → 出站节点）。</p>
+<hr>
+<h2 id="六、常见问题（FAQ）"><a href="#六、常见问题（FAQ）" class="headerlink" title="六、常见问题（FAQ）"></a>六、常见问题（FAQ）</h2><h3 id="Q1：怎么知道某个网站走没走代理？"><a href="#Q1：怎么知道某个网站走没走代理？" class="headerlink" title="Q1：怎么知道某个网站走没走代理？"></a>Q1：怎么知道某个网站走没走代理？</h3><p>开着 <code>tail -f /var/run/homeproxy/sing-box-c.log | grep 域名</code>，然后访问该网站：</p>
+<ul>
+<li>出现 <code>outbound/trojan[main-out]</code> → 走代理</li>
+<li>只有 dns 交换记录、无 trojan 出站行 → 直连</li>
+</ul>
+<p>（注意是 <code>tail -f</code> sing-box 日志文件，<strong>不是 <code>logread -f</code></strong>——sing-box 不写 syslog。）</p>
+<h3 id="Q2：怎么改单个网站的分流走向？"><a href="#Q2：怎么改单个网站的分流走向？" class="headerlink" title="Q2：怎么改单个网站的分流走向？"></a>Q2：怎么改单个网站的分流走向？</h3><p>加自定义路由规则（优先级高于内置规则集）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">uci add homeproxy routing_rule</span><br><span class="line">uci <span class="built_in">set</span> homeproxy.@routing_rule[-1].label=<span class="string">&#x27;force-proxy-example&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> homeproxy.@routing_rule[-1].enabled=<span class="string">&#x27;1&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> homeproxy.@routing_rule[-1].<span class="built_in">type</span>=<span class="string">&#x27;domain&#x27;</span></span><br><span class="line">uci add_list homeproxy.@routing_rule[-1].domain_suffix=<span class="string">&#x27;example.com&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> homeproxy.@routing_rule[-1].outbound=<span class="string">&#x27;main-out&#x27;</span>    <span class="comment"># 或 direct-out 强制直连</span></span><br><span class="line">uci commit homeproxy</span><br><span class="line">/etc/init.d/homeproxy restart</span><br></pre></td></tr></table></figure>
+
+<p>或 LuCI → Home Proxy → 访问控制 → 添加自定义规则。</p>
+<h3 id="Q3：bypass-mainland-china-的名单数据在哪？"><a href="#Q3：bypass-mainland-china-的名单数据在哪？" class="headerlink" title="Q3：bypass_mainland_china 的名单数据在哪？"></a>Q3：<code>bypass_mainland_china</code> 的名单数据在哪？</h3><p>名单不是本地维护的静态文件，而是 <strong>sing-box 的 <code>.srs</code> 规则集</strong>，启动时从网上下载并缓存（约每天自动更新一次）：</p>
+<ul>
+<li><code>geosite-cn</code>（中国域名）：<a href="https://github.com/v2fly/domain-list-community/blob/master/data/cn">https://github.com/v2fly/domain-list-community/blob/master/data/cn</a></li>
+<li><code>geoip-cn</code>（中国 IP 段）：APNIC&#x2F;CNNIC 分配的 CN 地址段</li>
+<li>打包源：<a href="https://github.com/SagerNet/sing-geosite">https://github.com/SagerNet/sing-geosite</a> &#x2F; <a href="https://github.com/SagerNet/sing-geoip">https://github.com/SagerNet/sing-geoip</a></li>
+</ul>
+<p>查看本机实际用的规则集 URL：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">grep -A3 rule_set /etc/homeproxy/config.json | grep url</span><br></pre></td></tr></table></figure>
+
+<h3 id="Q4：订阅-403-更新失败？"><a href="#Q4：订阅-403-更新失败？" class="headerlink" title="Q4：订阅 403 &#x2F; 更新失败？"></a>Q4：订阅 403 &#x2F; 更新失败？</h3><p>订阅面板按 User-Agent 过滤。测：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl -A <span class="string">&quot;clash-verge/v1.0&quot;</span>    <span class="string">&quot;你的订阅URL&quot;</span></span><br><span class="line">curl -A <span class="string">&quot;Shadowrocket/1908&quot;</span>   <span class="string">&quot;你的订阅URL&quot;</span></span><br><span class="line">curl -A <span class="string">&quot;Shadowrocket/1908 CFNetwork&quot;</span>   <span class="string">&quot;你的订阅URL&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>能通的 UA 填进 HomeProxy 订阅设置的 User-Agent 项。都不通则检查订阅是否被重置&#x2F;过期。<br><strong>注意</strong>：订阅 URL 带 token，等于密码，别公开分享，泄露了去面板重置。</p>
+<h3 id="Q5：WiFi-老掉线（mt7621-mt76-驱动）"><a href="#Q5：WiFi-老掉线（mt7621-mt76-驱动）" class="headerlink" title="Q5：WiFi 老掉线（mt7621 &#x2F; mt76 驱动）"></a>Q5：WiFi 老掉线（mt7621 &#x2F; mt76 驱动）</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 关闭低应答踢人（默认开启，误杀弱信号客户端）</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.default_radio0.disassoc_low_ack=<span class="string">&#x27;0&#x27;</span></span><br><span class="line">uci commit wireless</span><br><span class="line">wifi reload</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5G 打开并固定信道，2.4G 干扰大易掉线</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio1.disabled=<span class="string">&#x27;0&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio1.channel=<span class="string">&#x27;36&#x27;</span>        <span class="comment"># 避开 52-144 DFS 信道</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio1.htmode=<span class="string">&#x27;VHT80&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio0.country=<span class="string">&#x27;CN&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio1.country=<span class="string">&#x27;CN&#x27;</span></span><br><span class="line"><span class="comment"># 5G 记得配加密 psk2 + 强密码</span></span><br><span class="line">uci commit wireless</span><br><span class="line">wifi reload</span><br></pre></td></tr></table></figure>
+
+<p>掉线时抓现场：<code>logread | grep -iE &#39;deauth|disassoc&#39;</code>，看 <code>reason=</code>（4&#x3D;不活跃超时，7&#x3D;AP 踢）。</p>
+<h3 id="Q6：mips-架构选什么二进制？"><a href="#Q6：mips-架构选什么二进制？" class="headerlink" title="Q6：mips 架构选什么二进制？"></a>Q6：mips 架构选什么二进制？</h3><p><code>uname -m</code> 显示 <code>mips</code>，选 <strong><code>linux-mipsle-softfloat</code></strong>（MIPS 小端、软浮点）。amd64&#x2F;arm64 的跑不了。opkg 不用操心，源路径已锁定架构。</p>
+<h3 id="Q7：装了-homeproxy-想换-OpenClash-PassWall2？"><a href="#Q7：装了-homeproxy-想换-OpenClash-PassWall2？" class="headerlink" title="Q7：装了 homeproxy 想换 OpenClash &#x2F; PassWall2？"></a>Q7：装了 homeproxy 想换 OpenClash &#x2F; PassWall2？</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">opkg remove luci-app-homeproxy</span><br><span class="line">opkg remove sing-box          <span class="comment"># 确认无其他依赖再卸</span></span><br></pre></td></tr></table></figure>
+
+<p>OpenClash &#x2F; PassWall2 也都在 ImmortalWrt 源（iw_luci）里，附加源已加好的话直接装。PassWall2 注意先处理 dnsmasq 冲突（见第三节）。</p>
+<hr>
+<h2 id="七、架构速查"><a href="#七、架构速查" class="headerlink" title="七、架构速查"></a>七、架构速查</h2><table>
+<thead>
+<tr>
+<th>架构名</th>
+<th>说明</th>
+<th>典型设备</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mips &#x2F; mipsel_24kc</td>
+<td>MIPS 32 位小端</td>
+<td>MT7621 路由器（AC2100 等）</td>
+</tr>
+<tr>
+<td>amd64 &#x2F; x86_64</td>
+<td>x86 64 位</td>
+<td>PC、软路由</td>
+</tr>
+<tr>
+<td>arm64 &#x2F; aarch64</td>
+<td>ARM 64 位</td>
+<td>树莓派 4、高通 IPQ 系列</td>
+</tr>
+<tr>
+<td>armv7</td>
+<td>ARM 32 位</td>
+<td>老树莓派、ARM 路由器</td>
+</tr>
+</tbody></table>
+<p>查看本机：<code>uname -m</code>、<code>opkg print-architecture</code>、<code>cat /etc/openwrt_release</code>。</p>
+<hr>
+<h2 id="附录：完整初始化命令清单（刷机后照抄）"><a href="#附录：完整初始化命令清单（刷机后照抄）" class="headerlink" title="附录：完整初始化命令清单（刷机后照抄）"></a>附录：完整初始化命令清单（刷机后照抄）</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># ---- 1. 网络：LAN 改 10 子网 ----</span></span><br><span class="line">ssh root@192.168.1.1</span><br><span class="line">uci <span class="built_in">set</span> network.lan.ipaddr=<span class="string">&#x27;192.168.10.1&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> network.lan.netmask=<span class="string">&#x27;255.255.255.0&#x27;</span></span><br><span class="line">uci commit network</span><br><span class="line">/etc/init.d/network restart</span><br><span class="line"><span class="comment"># 断开重连：ssh root@192.168.10.1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ---- 2. 贴 SSH 公钥（Windows 上执行，公钥内容换成自己的）----</span></span><br><span class="line">ssh root@192.168.10.1 <span class="string">&quot;mkdir -p /etc/dropbear &amp;&amp; echo &#x27;ssh-ed25519 AAAA... openwrt&#x27; &gt;&gt; /etc/dropbear/authorized_keys &amp;&amp; chmod 600 /etc/dropbear/authorized_keys&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ---- 3. 加 ImmortalWrt 附加源 ----</span></span><br><span class="line"><span class="built_in">cat</span> &gt;&gt; /etc/opkg/customfeeds.conf &lt;&lt;<span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">src/gz iw_luci https://downloads.immortalwrt.org/releases/24.10.0/packages/mipsel_24kc/luci</span><br><span class="line">src/gz iw_packages https://downloads.immortalwrt.org/releases/24.10.0/packages/mipsel_24kc/packages</span><br><span class="line">EOF</span><br><span class="line">sed -i <span class="string">&#x27;s/^option check_signature/#option check_signature/&#x27;</span> /etc/opkg.conf</span><br><span class="line">opkg update</span><br><span class="line"></span><br><span class="line"><span class="comment"># ---- 4. 无线：关踢人、开 5G、固定信道 ----</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.default_radio0.disassoc_low_ack=<span class="string">&#x27;0&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio0.country=<span class="string">&#x27;CN&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio1.disabled=<span class="string">&#x27;0&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio1.channel=<span class="string">&#x27;36&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio1.htmode=<span class="string">&#x27;VHT80&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio1.country=<span class="string">&#x27;CN&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.default_radio1.ssid=<span class="string">&#x27;OpenWrt&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.default_radio1.encryption=<span class="string">&#x27;psk2&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.default_radio1.key=<span class="string">&#x27;你的强密码&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.default_radio0.key=<span class="string">&#x27;你的强密码&#x27;</span></span><br><span class="line">uci commit wireless</span><br><span class="line">wifi reload</span><br><span class="line"></span><br><span class="line"><span class="comment"># ---- 5. 安装 HomeProxy ----</span></span><br><span class="line">opkg install luci-app-homeproxy</span><br><span class="line"></span><br><span class="line"><span class="comment"># ---- 6. LuCI 配置（界面操作）----</span></span><br><span class="line"><span class="comment"># 服务 → Home Proxy → 节点订阅 → 填订阅 URL → 更新</span></span><br><span class="line"><span class="comment"># 主节点选 Trojan 节点；路由模式选 bypass_mainland_china；开主开关</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ---- 7. 验证 ----</span></span><br><span class="line"><span class="comment"># 连WiFi的电脑上：</span></span><br><span class="line"><span class="comment"># curl.exe -s https://ipinfo.io          → 节点 IP = 代理生效</span></span><br><span class="line"><span class="comment"># curl.exe -s https://myip.ipip.net       → 家宽 IP = 国内直连正常</span></span><br></pre></td></tr></table></figure>
+
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+      <tags>
+        <tag>openwrt</tag>
       </tags>
   </entry>
   <entry>
@@ -2029,370 +2179,6 @@
       </tags>
   </entry>
   <entry>
-    <title>设计模式核心思想与实践</title>
-    <url>/article/1eacb680.html</url>
-    <content><![CDATA[<h1 id="设计模式核心思想与实践"><a href="#设计模式核心思想与实践" class="headerlink" title="设计模式核心思想与实践"></a>设计模式核心思想与实践</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>设计模式不是为了炫技而存在，它本质上是前人对常见软件设计问题的总结。很多人第一次接触设计模式时，容易把重点放在类图和定义上，但真正重要的并不是记住多少个模式，而是理解这些模式分别在解决什么问题。</p>
-<p>写代码的过程，本质上是在处理变化。需求会变，依赖会变，业务边界会变，系统规模也会变。设计模式的价值，就在于帮助我们用更稳定的方式去应对这些变化。</p>
-<h2 id="概览总览"><a href="#概览总览" class="headerlink" title="概览总览"></a>概览总览</h2><p>如果只看分类，设计模式很多；但如果从“解决什么问题”的角度看，可以归纳为四类核心思想：</p>
-<table>
-<thead>
-<tr>
-<th>核心问题</th>
-<th>代表模式</th>
-<th>解决思路</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>对象怎么创建</td>
-<td>工厂、单例、建造者</td>
-<td>把对象创建过程与使用过程解耦</td>
-</tr>
-<tr>
-<td>类和对象怎么组合</td>
-<td>代理、适配器、装饰器</td>
-<td>通过组合替代继承，增强扩展性</td>
-</tr>
-<tr>
-<td>行为怎么切换</td>
-<td>策略、状态、命令</td>
-<td>把行为抽象出来，运行时动态替换</td>
-</tr>
-<tr>
-<td>流程怎么编排</td>
-<td>模板方法、责任链、观察者</td>
-<td>将流程标准化或解耦事件传播</td>
-</tr>
-</tbody></table>
-<h3 id="一、创建型模式（5-种）"><a href="#一、创建型模式（5-种）" class="headerlink" title="一、创建型模式（5 种）"></a>一、创建型模式（5 种）</h3><table>
-<thead>
-<tr>
-<th align="left">模式</th>
-<th align="left">一句话描述</th>
-<th align="left">框架代表示例</th>
-<th align="left">高频使用程度</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><strong>单例模式</strong></td>
-<td align="left">确保类只有一个实例，并提供全局访问点</td>
-<td align="left">Spring 默认 Bean 作用域就是单例</td>
-<td align="left">⭐⭐⭐⭐⭐ 极其高频</td>
-</tr>
-<tr>
-<td align="left"><strong>工厂方法</strong></td>
-<td align="left">定义创建对象的接口，子类决定实例化哪个类</td>
-<td align="left">MyBatis <code>MapperProxyFactory</code> 生成 Mapper 代理</td>
-<td align="left">⭐⭐⭐⭐⭐ 极其高频</td>
-</tr>
-<tr>
-<td align="left"><strong>抽象工厂</strong></td>
-<td align="left">创建一系列相关或相互依赖的对象</td>
-<td align="left">Spring <code>FactoryBean</code>，如 <code>SqlSessionFactoryBean</code></td>
-<td align="left">⭐⭐⭐ 中频</td>
-</tr>
-<tr>
-<td align="left"><strong>建造者模式</strong></td>
-<td align="left">将复杂对象的构建与表示分离</td>
-<td align="left">MyBatis <code>SqlSessionFactoryBuilder</code> 一步步构建</td>
-<td align="left">⭐⭐⭐ 中频</td>
-</tr>
-<tr>
-<td align="left"><strong>原型模式</strong></td>
-<td align="left">用原型实例指定创建对象的种类，通过拷贝创建</td>
-<td align="left">Spring <code>@Scope(&quot;prototype&quot;)</code>，每次获取新建 Bean</td>
-<td align="left">⭐⭐⭐ 中频</td>
-</tr>
-</tbody></table>
-<hr>
-<h3 id="二、结构型模式（7-种）"><a href="#二、结构型模式（7-种）" class="headerlink" title="二、结构型模式（7 种）"></a>二、结构型模式（7 种）</h3><table>
-<thead>
-<tr>
-<th align="left">模式</th>
-<th align="left">一句话描述</th>
-<th align="left">框架代表示例</th>
-<th align="left">高频使用程度</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><strong>适配器模式</strong></td>
-<td align="left">将一个类的接口转换成客户期望的另一个接口</td>
-<td align="left">Spring MVC <code>HandlerAdapter</code> 适配不同 Controller</td>
-<td align="left">⭐⭐⭐⭐ 高频</td>
-</tr>
-<tr>
-<td align="left"><strong>桥接模式</strong></td>
-<td align="left">将抽象与实现分离，使它们独立变化</td>
-<td align="left">JDBC 抽象驱动接口与各数据库实现分离</td>
-<td align="left">⭐⭐⭐ 中频</td>
-</tr>
-<tr>
-<td align="left"><strong>组合模式</strong></td>
-<td align="left">把对象组合成树形结构表示”部分-整体”</td>
-<td align="left">Spring Security <code>SecurityConfigurer</code> 树形配置</td>
-<td align="left">⭐⭐ 低频</td>
-</tr>
-<tr>
-<td align="left"><strong>装饰器模式</strong></td>
-<td align="left">动态地给对象增加额外职责</td>
-<td align="left">MyBatis Cache 装饰器链 (<code>LruCache</code> → <code>PerpetualCache</code>)</td>
-<td align="left">⭐⭐⭐⭐ 高频</td>
-</tr>
-<tr>
-<td align="left"><strong>外观模式</strong></td>
-<td align="left">为子系统提供统一入口</td>
-<td align="left">MyBatis <code>SqlSession</code> 封装配置、执行、事务等</td>
-<td align="left">⭐⭐⭐⭐ 高频</td>
-</tr>
-<tr>
-<td align="left"><strong>享元模式</strong></td>
-<td align="left">共享技术支持大量细粒度对象复用</td>
-<td align="left">MyBatis 一级缓存 (<code>PerpetualCache</code> in <code>BaseExecutor</code>)</td>
-<td align="left">⭐⭐⭐ 中频</td>
-</tr>
-<tr>
-<td align="left"><strong>代理模式</strong></td>
-<td align="left">为对象提供代理控制访问</td>
-<td align="left">Spring AOP <code>JdkDynamicAopProxy</code> 拦截方法织入切面</td>
-<td align="left">⭐⭐⭐⭐⭐ 极其高频</td>
-</tr>
-</tbody></table>
-<hr>
-<h3 id="三、行为型模式（11-种）"><a href="#三、行为型模式（11-种）" class="headerlink" title="三、行为型模式（11 种）"></a>三、行为型模式（11 种）</h3><table>
-<thead>
-<tr>
-<th align="left">模式</th>
-<th align="left">一句话描述</th>
-<th align="left">框架代表示例</th>
-<th align="left">高频使用程度</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><strong>责任链模式</strong></td>
-<td align="left">多个对象都有机会处理请求，避免耦合</td>
-<td align="left">Spring MVC <code>HandlerInterceptor</code> 链，preHandle 顺序调用</td>
-<td align="left">⭐⭐⭐⭐⭐ 极其高频</td>
-</tr>
-<tr>
-<td align="left"><strong>命令模式</strong></td>
-<td align="left">把请求封装成对象</td>
-<td align="left">MyBatis <code>MappedStatement</code> 封装 SQL 映射</td>
-<td align="left">⭐⭐ 低频</td>
-</tr>
-<tr>
-<td align="left"><strong>解释器模式</strong></td>
-<td align="left">定义语言文法并解释</td>
-<td align="left">Spring EL <code>SpelExpressionParser</code> 解析表达式</td>
-<td align="left">⭐⭐ 低频</td>
-</tr>
-<tr>
-<td align="left"><strong>迭代器模式</strong></td>
-<td align="left">顺序访问聚合元素，不暴露内部表示</td>
-<td align="left">MyBatis <code>DefaultCursor</code> 流式处理大结果集</td>
-<td align="left">⭐⭐⭐ 中频</td>
-</tr>
-<tr>
-<td align="left"><strong>中介者模式</strong></td>
-<td align="left">中介对象封装交互，减少耦合</td>
-<td align="left">Spring MVC <code>DispatcherServlet</code> 协调各组件</td>
-<td align="left">⭐⭐⭐ 中频</td>
-</tr>
-<tr>
-<td align="left"><strong>备忘录模式</strong></td>
-<td align="left">捕获对象内部状态并存储</td>
-<td align="left">Spring Web Flow <code>FlowExecutionRepository</code> 状态快照</td>
-<td align="left">⭐ 极低频</td>
-</tr>
-<tr>
-<td align="left"><strong>观察者模式</strong></td>
-<td align="left">一对多依赖，状态变化通知依赖者</td>
-<td align="left">Spring 事件机制 <code>ApplicationEvent</code> + <code>@EventListener</code></td>
-<td align="left">⭐⭐⭐⭐ 高频</td>
-</tr>
-<tr>
-<td align="left"><strong>状态模式</strong></td>
-<td align="left">对象内部状态改变时改变行为</td>
-<td align="left">Spring Statemachine 状态机</td>
-<td align="left">⭐ 极低频</td>
-</tr>
-<tr>
-<td align="left"><strong>策略模式</strong></td>
-<td align="left">定义算法族，分别封装互相替换</td>
-<td align="left">Spring <code>InstantiationStrategy</code>（Bean 实例化策略）</td>
-<td align="left">⭐⭐⭐⭐⭐ 极其高频</td>
-</tr>
-<tr>
-<td align="left"><strong>模板方法模式</strong></td>
-<td align="left">定义算法骨架，延迟步骤到子类</td>
-<td align="left">MyBatis <code>BaseExecutor</code> 定义查询骨架，子类实现细节</td>
-<td align="left">⭐⭐⭐⭐⭐ 极其高频</td>
-</tr>
-<tr>
-<td align="left"><strong>访问者模式</strong></td>
-<td align="left">不改变元素类前提下增加新操作</td>
-<td align="left">Spring <code>BeanDefinitionVisitor</code> 遍历元数据</td>
-<td align="left">⭐ 极低频</td>
-</tr>
-</tbody></table>
-<h2 id="详细解析"><a href="#详细解析" class="headerlink" title="详细解析"></a>详细解析</h2><h3 id="创建型模式"><a href="#创建型模式" class="headerlink" title="创建型模式"></a>创建型模式</h3><p>创建型模式关注的是：<strong>对象应该如何被创建，才能让系统更灵活</strong>。</p>
-<h4 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h4><p>单例模式保证一个类在系统中只有一个实例，常用于配置中心、线程池、缓存管理器等场景。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Singleton</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> Singleton instance;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Singleton</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title function_">getInstance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">                <span class="keyword">if</span> (instance == <span class="literal">null</span>) &#123;</span><br><span class="line">                    instance = <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>适用场景</strong>：</p>
-<ul>
-<li>资源需要全局共享</li>
-<li>创建对象成本高</li>
-<li>需要统一访问入口</li>
-</ul>
-<p><strong>注意点</strong>：</p>
-<ul>
-<li>线程安全</li>
-<li>反射破坏单例</li>
-<li>序列化破坏单例</li>
-</ul>
-<h4 id="工厂方法模式"><a href="#工厂方法模式" class="headerlink" title="工厂方法模式"></a>工厂方法模式</h4><p>工厂方法模式把“创建对象”的逻辑抽到工厂里，调用方只依赖抽象，不依赖具体实现。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Product</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">use</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Phone</span> <span class="keyword">implements</span> <span class="title class_">Product</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">use</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;使用手机&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Factory</span> &#123;</span><br><span class="line">    Product <span class="title function_">create</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PhoneFactory</span> <span class="keyword">implements</span> <span class="title class_">Factory</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> Product <span class="title function_">create</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Phone</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>核心价值</strong>：</p>
-<ul>
-<li>隔离对象创建细节</li>
-<li>降低调用方对具体类的依赖</li>
-<li>符合开闭原则</li>
-</ul>
-<h4 id="建造者模式"><a href="#建造者模式" class="headerlink" title="建造者模式"></a>建造者模式</h4><p>建造者模式用于构建复杂对象，尤其适合字段多、构造过程复杂的对象。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> String email;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Builder</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> Builder <span class="title function_">name</span><span class="params">(String name)</span> &#123;</span><br><span class="line">            user.name = name;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> Builder <span class="title function_">age</span><span class="params">(<span class="type">int</span> age)</span> &#123;</span><br><span class="line">            user.age = age;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> Builder <span class="title function_">email</span><span class="params">(String email)</span> &#123;</span><br><span class="line">            user.email = email;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> User <span class="title function_">build</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> user;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>适用场景</strong>：</p>
-<ul>
-<li>参数很多且有可选项</li>
-<li>需要链式构建</li>
-<li>想避免构造函数重载爆炸</li>
-</ul>
-<hr>
-<h3 id="结构型模式"><a href="#结构型模式" class="headerlink" title="结构型模式"></a>结构型模式</h3><p>结构型模式关注的是：<strong>如何组织类和对象之间的关系</strong>。</p>
-<h4 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h4><p>代理模式通过一个代理对象控制对目标对象的访问。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Service</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RealService</span> <span class="keyword">implements</span> <span class="title class_">Service</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;执行真实业务&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ServiceProxy</span> <span class="keyword">implements</span> <span class="title class_">Service</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Service target;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ServiceProxy</span><span class="params">(Service target)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.target = target;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;前置处理&quot;</span>);</span><br><span class="line">        target.execute();</span><br><span class="line">        System.out.println(<span class="string">&quot;后置处理&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>常见应用</strong>：</p>
-<ul>
-<li>Spring AOP</li>
-<li>MyBatis Mapper 代理</li>
-<li>RPC 远程调用代理</li>
-</ul>
-<h4 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h4><p>适配器模式的本质，是让两个原本不兼容的接口协同工作。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">OldPrinter</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">printOld</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;旧接口打印&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Printer</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PrinterAdapter</span> <span class="keyword">implements</span> <span class="title class_">Printer</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> OldPrinter oldPrinter;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">PrinterAdapter</span><span class="params">(OldPrinter oldPrinter)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.oldPrinter = oldPrinter;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span> &#123;</span><br><span class="line">        oldPrinter.printOld();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>核心价值</strong>：</p>
-<ul>
-<li>兼容旧系统</li>
-<li>接入第三方 SDK</li>
-<li>降低改造成本</li>
-</ul>
-<h4 id="装饰器模式"><a href="#装饰器模式" class="headerlink" title="装饰器模式"></a>装饰器模式</h4><p>装饰器模式是在不修改原对象的前提下，动态增强对象功能。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Coffee</span> &#123;</span><br><span class="line">    String <span class="title function_">getName</span><span class="params">()</span>;</span><br><span class="line">    <span class="type">int</span> <span class="title function_">getPrice</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BasicCoffee</span> <span class="keyword">implements</span> <span class="title class_">Coffee</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;咖啡&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getPrice</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MilkDecorator</span> <span class="keyword">implements</span> <span class="title class_">Coffee</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Coffee coffee;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MilkDecorator</span><span class="params">(Coffee coffee)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.coffee = coffee;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> coffee.getName() + <span class="string">&quot;+牛奶&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getPrice</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> coffee.getPrice() + <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>常见应用</strong>：</p>
-<ul>
-<li>Java IO 流体系</li>
-<li>Spring Wrapper 体系</li>
-<li>动态功能叠加</li>
-</ul>
-<hr>
-<h3 id="行为型模式"><a href="#行为型模式" class="headerlink" title="行为型模式"></a>行为型模式</h3><p>行为型模式关注的是：<strong>对象之间的职责如何协作，行为如何变化</strong>。</p>
-<h4 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h4><p>策略模式把一组可替换的算法抽象出来，在运行时动态选择。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">PayStrategy</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">pay</span><span class="params">(<span class="type">int</span> amount)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WechatPay</span> <span class="keyword">implements</span> <span class="title class_">PayStrategy</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">pay</span><span class="params">(<span class="type">int</span> amount)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;微信支付：&quot;</span> + amount);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">AliPay</span> <span class="keyword">implements</span> <span class="title class_">PayStrategy</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">pay</span><span class="params">(<span class="type">int</span> amount)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;支付宝支付：&quot;</span> + amount);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PayContext</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> PayStrategy strategy;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">PayContext</span><span class="params">(PayStrategy strategy)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.strategy = strategy;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">(<span class="type">int</span> amount)</span> &#123;</span><br><span class="line">        strategy.pay(amount);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>适用场景</strong>：</p>
-<ul>
-<li>支付方式切换</li>
-<li>排序规则切换</li>
-<li>风控策略切换</li>
-</ul>
-<h4 id="模板方法模式"><a href="#模板方法模式" class="headerlink" title="模板方法模式"></a>模板方法模式</h4><p>模板方法模式把流程骨架定义在父类中，把具体实现延迟到子类完成。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">DataParser</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">parse</span><span class="params">()</span> &#123;</span><br><span class="line">        readData();</span><br><span class="line">        processData();</span><br><span class="line">        saveData();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">readData</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">processData</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">saveData</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;保存数据&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>适用场景</strong>：</p>
-<ul>
-<li>流程固定，但局部实现不同</li>
-<li>框架设计中的扩展点</li>
-</ul>
-<h4 id="责任链模式"><a href="#责任链模式" class="headerlink" title="责任链模式"></a>责任链模式</h4><p>责任链模式将多个处理器串成链，请求沿着链传递，直到被某个处理器消费。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">Handler</span> &#123;</span><br><span class="line">    <span class="keyword">protected</span> Handler next;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setNext</span><span class="params">(Handler next)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.next = next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">handle</span><span class="params">(String request)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LoginHandler</span> <span class="keyword">extends</span> <span class="title class_">Handler</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handle</span><span class="params">(String request)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;登录校验&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (next != <span class="literal">null</span>) &#123;</span><br><span class="line">            next.handle(request);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>常见应用</strong>：</p>
-<ul>
-<li>Servlet Filter</li>
-<li>Spring Security 过滤链</li>
-<li>审批流系统</li>
-</ul>
-<h4 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h4><p>观察者模式定义了一对多的依赖关系，一个对象状态改变时，所有依赖它的对象都会收到通知。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Observer</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(String message)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">UserObserver</span> <span class="keyword">implements</span> <span class="title class_">Observer</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(String message)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;收到通知：&quot;</span> + message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>常见应用</strong>：</p>
-<ul>
-<li>事件通知系统</li>
-<li>消息订阅</li>
-<li>GUI 事件监听</li>
-</ul>
-<hr>
-<h2 id="总述"><a href="#总述" class="headerlink" title="总述"></a>总述</h2><p>设计模式的本质，不是记忆 23 种模式的名字，而是理解软件设计中的几类高频问题，以及它们的通用解法。</p>
-<blockquote>
-<p>创建型模式解决的是“对象怎么创建才不会把系统写死”；结构型模式解决的是“对象之间怎么组合才更灵活”；行为型模式解决的是“流程和行为怎么变化才不会牵一发而动全身”。</p>
-<p>从更高的角度看，设计模式并不是独立存在的技巧，而是对“高内聚、低耦合、面向抽象、组合优于继承”这些设计原则的具体落地。很多优秀框架，比如 Spring、MyBatis、Netty，本质上都是这些模式的组合应用。</p>
-<p>真正掌握设计模式的标志，不是能背出类图，而是遇到问题时，能够自然想到：这里是不是要把创建过程隔离出来？这里是不是应该把行为抽象成策略？这里是不是该用责任链解耦流程？</p>
-</blockquote>
-<hr>
-<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="设计模式与设计原则的关系"><a href="#设计模式与设计原则的关系" class="headerlink" title="设计模式与设计原则的关系"></a>设计模式与设计原则的关系</h3><p>设计模式并不是孤立的，它们通常建立在以下原则之上：</p>
-<table>
-<thead>
-<tr>
-<th>原则</th>
-<th>含义</th>
-<th>典型模式</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>单一职责原则</td>
-<td>一个类只做一件事</td>
-<td>策略、责任链</td>
-</tr>
-<tr>
-<td>开闭原则</td>
-<td>对扩展开放，对修改关闭</td>
-<td>工厂、装饰器</td>
-</tr>
-<tr>
-<td>依赖倒置原则</td>
-<td>依赖抽象而不是实现</td>
-<td>工厂、代理</td>
-</tr>
-<tr>
-<td>组合复用原则</td>
-<td>多用组合，少用继承</td>
-<td>装饰器、桥接</td>
-</tr>
-</tbody></table>
-<h3 id="什么时候不该用设计模式"><a href="#什么时候不该用设计模式" class="headerlink" title="什么时候不该用设计模式"></a>什么时候不该用设计模式</h3><p>不是所有代码都值得抽象。以下场景不必强行上模式：</p>
-<ul>
-<li>业务很简单且变化不大</li>
-<li>只有一次性逻辑</li>
-<li>引入模式的复杂度高于收益</li>
-</ul>
-<blockquote>
-<p>参考：</p>
-<ul>
-<li>《设计模式：可复用面向对象软件的基础》</li>
-<li>《Head First Design Patterns》</li>
-</ul>
-</blockquote>
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
-      <categories>
-        <category>软件设计</category>
-      </categories>
-      <tags>
-        <tag>设计模式</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>后端知识体系</title>
     <url>/article/90001.html</url>
     <content><![CDATA[<h1 id="个人后端知识体系整理（完善中）"><a href="#个人后端知识体系整理（完善中）" class="headerlink" title="个人后端知识体系整理（完善中）"></a>个人后端知识体系整理（完善中）</h1><blockquote class="pullquote mindmap mindmap-md"><ul>
@@ -2826,6 +2612,370 @@
       </tags>
   </entry>
   <entry>
+    <title>设计模式核心思想与实践</title>
+    <url>/article/1eacb680.html</url>
+    <content><![CDATA[<h1 id="设计模式核心思想与实践"><a href="#设计模式核心思想与实践" class="headerlink" title="设计模式核心思想与实践"></a>设计模式核心思想与实践</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>设计模式不是为了炫技而存在，它本质上是前人对常见软件设计问题的总结。很多人第一次接触设计模式时，容易把重点放在类图和定义上，但真正重要的并不是记住多少个模式，而是理解这些模式分别在解决什么问题。</p>
+<p>写代码的过程，本质上是在处理变化。需求会变，依赖会变，业务边界会变，系统规模也会变。设计模式的价值，就在于帮助我们用更稳定的方式去应对这些变化。</p>
+<h2 id="概览总览"><a href="#概览总览" class="headerlink" title="概览总览"></a>概览总览</h2><p>如果只看分类，设计模式很多；但如果从“解决什么问题”的角度看，可以归纳为四类核心思想：</p>
+<table>
+<thead>
+<tr>
+<th>核心问题</th>
+<th>代表模式</th>
+<th>解决思路</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>对象怎么创建</td>
+<td>工厂、单例、建造者</td>
+<td>把对象创建过程与使用过程解耦</td>
+</tr>
+<tr>
+<td>类和对象怎么组合</td>
+<td>代理、适配器、装饰器</td>
+<td>通过组合替代继承，增强扩展性</td>
+</tr>
+<tr>
+<td>行为怎么切换</td>
+<td>策略、状态、命令</td>
+<td>把行为抽象出来，运行时动态替换</td>
+</tr>
+<tr>
+<td>流程怎么编排</td>
+<td>模板方法、责任链、观察者</td>
+<td>将流程标准化或解耦事件传播</td>
+</tr>
+</tbody></table>
+<h3 id="一、创建型模式（5-种）"><a href="#一、创建型模式（5-种）" class="headerlink" title="一、创建型模式（5 种）"></a>一、创建型模式（5 种）</h3><table>
+<thead>
+<tr>
+<th align="left">模式</th>
+<th align="left">一句话描述</th>
+<th align="left">框架代表示例</th>
+<th align="left">高频使用程度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>单例模式</strong></td>
+<td align="left">确保类只有一个实例，并提供全局访问点</td>
+<td align="left">Spring 默认 Bean 作用域就是单例</td>
+<td align="left">⭐⭐⭐⭐⭐ 极其高频</td>
+</tr>
+<tr>
+<td align="left"><strong>工厂方法</strong></td>
+<td align="left">定义创建对象的接口，子类决定实例化哪个类</td>
+<td align="left">MyBatis <code>MapperProxyFactory</code> 生成 Mapper 代理</td>
+<td align="left">⭐⭐⭐⭐⭐ 极其高频</td>
+</tr>
+<tr>
+<td align="left"><strong>抽象工厂</strong></td>
+<td align="left">创建一系列相关或相互依赖的对象</td>
+<td align="left">Spring <code>FactoryBean</code>，如 <code>SqlSessionFactoryBean</code></td>
+<td align="left">⭐⭐⭐ 中频</td>
+</tr>
+<tr>
+<td align="left"><strong>建造者模式</strong></td>
+<td align="left">将复杂对象的构建与表示分离</td>
+<td align="left">MyBatis <code>SqlSessionFactoryBuilder</code> 一步步构建</td>
+<td align="left">⭐⭐⭐ 中频</td>
+</tr>
+<tr>
+<td align="left"><strong>原型模式</strong></td>
+<td align="left">用原型实例指定创建对象的种类，通过拷贝创建</td>
+<td align="left">Spring <code>@Scope(&quot;prototype&quot;)</code>，每次获取新建 Bean</td>
+<td align="left">⭐⭐⭐ 中频</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="二、结构型模式（7-种）"><a href="#二、结构型模式（7-种）" class="headerlink" title="二、结构型模式（7 种）"></a>二、结构型模式（7 种）</h3><table>
+<thead>
+<tr>
+<th align="left">模式</th>
+<th align="left">一句话描述</th>
+<th align="left">框架代表示例</th>
+<th align="left">高频使用程度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>适配器模式</strong></td>
+<td align="left">将一个类的接口转换成客户期望的另一个接口</td>
+<td align="left">Spring MVC <code>HandlerAdapter</code> 适配不同 Controller</td>
+<td align="left">⭐⭐⭐⭐ 高频</td>
+</tr>
+<tr>
+<td align="left"><strong>桥接模式</strong></td>
+<td align="left">将抽象与实现分离，使它们独立变化</td>
+<td align="left">JDBC 抽象驱动接口与各数据库实现分离</td>
+<td align="left">⭐⭐⭐ 中频</td>
+</tr>
+<tr>
+<td align="left"><strong>组合模式</strong></td>
+<td align="left">把对象组合成树形结构表示”部分-整体”</td>
+<td align="left">Spring Security <code>SecurityConfigurer</code> 树形配置</td>
+<td align="left">⭐⭐ 低频</td>
+</tr>
+<tr>
+<td align="left"><strong>装饰器模式</strong></td>
+<td align="left">动态地给对象增加额外职责</td>
+<td align="left">MyBatis Cache 装饰器链 (<code>LruCache</code> → <code>PerpetualCache</code>)</td>
+<td align="left">⭐⭐⭐⭐ 高频</td>
+</tr>
+<tr>
+<td align="left"><strong>外观模式</strong></td>
+<td align="left">为子系统提供统一入口</td>
+<td align="left">MyBatis <code>SqlSession</code> 封装配置、执行、事务等</td>
+<td align="left">⭐⭐⭐⭐ 高频</td>
+</tr>
+<tr>
+<td align="left"><strong>享元模式</strong></td>
+<td align="left">共享技术支持大量细粒度对象复用</td>
+<td align="left">MyBatis 一级缓存 (<code>PerpetualCache</code> in <code>BaseExecutor</code>)</td>
+<td align="left">⭐⭐⭐ 中频</td>
+</tr>
+<tr>
+<td align="left"><strong>代理模式</strong></td>
+<td align="left">为对象提供代理控制访问</td>
+<td align="left">Spring AOP <code>JdkDynamicAopProxy</code> 拦截方法织入切面</td>
+<td align="left">⭐⭐⭐⭐⭐ 极其高频</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="三、行为型模式（11-种）"><a href="#三、行为型模式（11-种）" class="headerlink" title="三、行为型模式（11 种）"></a>三、行为型模式（11 种）</h3><table>
+<thead>
+<tr>
+<th align="left">模式</th>
+<th align="left">一句话描述</th>
+<th align="left">框架代表示例</th>
+<th align="left">高频使用程度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>责任链模式</strong></td>
+<td align="left">多个对象都有机会处理请求，避免耦合</td>
+<td align="left">Spring MVC <code>HandlerInterceptor</code> 链，preHandle 顺序调用</td>
+<td align="left">⭐⭐⭐⭐⭐ 极其高频</td>
+</tr>
+<tr>
+<td align="left"><strong>命令模式</strong></td>
+<td align="left">把请求封装成对象</td>
+<td align="left">MyBatis <code>MappedStatement</code> 封装 SQL 映射</td>
+<td align="left">⭐⭐ 低频</td>
+</tr>
+<tr>
+<td align="left"><strong>解释器模式</strong></td>
+<td align="left">定义语言文法并解释</td>
+<td align="left">Spring EL <code>SpelExpressionParser</code> 解析表达式</td>
+<td align="left">⭐⭐ 低频</td>
+</tr>
+<tr>
+<td align="left"><strong>迭代器模式</strong></td>
+<td align="left">顺序访问聚合元素，不暴露内部表示</td>
+<td align="left">MyBatis <code>DefaultCursor</code> 流式处理大结果集</td>
+<td align="left">⭐⭐⭐ 中频</td>
+</tr>
+<tr>
+<td align="left"><strong>中介者模式</strong></td>
+<td align="left">中介对象封装交互，减少耦合</td>
+<td align="left">Spring MVC <code>DispatcherServlet</code> 协调各组件</td>
+<td align="left">⭐⭐⭐ 中频</td>
+</tr>
+<tr>
+<td align="left"><strong>备忘录模式</strong></td>
+<td align="left">捕获对象内部状态并存储</td>
+<td align="left">Spring Web Flow <code>FlowExecutionRepository</code> 状态快照</td>
+<td align="left">⭐ 极低频</td>
+</tr>
+<tr>
+<td align="left"><strong>观察者模式</strong></td>
+<td align="left">一对多依赖，状态变化通知依赖者</td>
+<td align="left">Spring 事件机制 <code>ApplicationEvent</code> + <code>@EventListener</code></td>
+<td align="left">⭐⭐⭐⭐ 高频</td>
+</tr>
+<tr>
+<td align="left"><strong>状态模式</strong></td>
+<td align="left">对象内部状态改变时改变行为</td>
+<td align="left">Spring Statemachine 状态机</td>
+<td align="left">⭐ 极低频</td>
+</tr>
+<tr>
+<td align="left"><strong>策略模式</strong></td>
+<td align="left">定义算法族，分别封装互相替换</td>
+<td align="left">Spring <code>InstantiationStrategy</code>（Bean 实例化策略）</td>
+<td align="left">⭐⭐⭐⭐⭐ 极其高频</td>
+</tr>
+<tr>
+<td align="left"><strong>模板方法模式</strong></td>
+<td align="left">定义算法骨架，延迟步骤到子类</td>
+<td align="left">MyBatis <code>BaseExecutor</code> 定义查询骨架，子类实现细节</td>
+<td align="left">⭐⭐⭐⭐⭐ 极其高频</td>
+</tr>
+<tr>
+<td align="left"><strong>访问者模式</strong></td>
+<td align="left">不改变元素类前提下增加新操作</td>
+<td align="left">Spring <code>BeanDefinitionVisitor</code> 遍历元数据</td>
+<td align="left">⭐ 极低频</td>
+</tr>
+</tbody></table>
+<h2 id="详细解析"><a href="#详细解析" class="headerlink" title="详细解析"></a>详细解析</h2><h3 id="创建型模式"><a href="#创建型模式" class="headerlink" title="创建型模式"></a>创建型模式</h3><p>创建型模式关注的是：<strong>对象应该如何被创建，才能让系统更灵活</strong>。</p>
+<h4 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h4><p>单例模式保证一个类在系统中只有一个实例，常用于配置中心、线程池、缓存管理器等场景。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Singleton</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> Singleton instance;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Singleton</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title function_">getInstance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">                <span class="keyword">if</span> (instance == <span class="literal">null</span>) &#123;</span><br><span class="line">                    instance = <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li>资源需要全局共享</li>
+<li>创建对象成本高</li>
+<li>需要统一访问入口</li>
+</ul>
+<p><strong>注意点</strong>：</p>
+<ul>
+<li>线程安全</li>
+<li>反射破坏单例</li>
+<li>序列化破坏单例</li>
+</ul>
+<h4 id="工厂方法模式"><a href="#工厂方法模式" class="headerlink" title="工厂方法模式"></a>工厂方法模式</h4><p>工厂方法模式把“创建对象”的逻辑抽到工厂里，调用方只依赖抽象，不依赖具体实现。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Product</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">use</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Phone</span> <span class="keyword">implements</span> <span class="title class_">Product</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">use</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;使用手机&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Factory</span> &#123;</span><br><span class="line">    Product <span class="title function_">create</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PhoneFactory</span> <span class="keyword">implements</span> <span class="title class_">Factory</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> Product <span class="title function_">create</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Phone</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>核心价值</strong>：</p>
+<ul>
+<li>隔离对象创建细节</li>
+<li>降低调用方对具体类的依赖</li>
+<li>符合开闭原则</li>
+</ul>
+<h4 id="建造者模式"><a href="#建造者模式" class="headerlink" title="建造者模式"></a>建造者模式</h4><p>建造者模式用于构建复杂对象，尤其适合字段多、构造过程复杂的对象。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> String email;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Builder</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> Builder <span class="title function_">name</span><span class="params">(String name)</span> &#123;</span><br><span class="line">            user.name = name;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> Builder <span class="title function_">age</span><span class="params">(<span class="type">int</span> age)</span> &#123;</span><br><span class="line">            user.age = age;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> Builder <span class="title function_">email</span><span class="params">(String email)</span> &#123;</span><br><span class="line">            user.email = email;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> User <span class="title function_">build</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> user;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li>参数很多且有可选项</li>
+<li>需要链式构建</li>
+<li>想避免构造函数重载爆炸</li>
+</ul>
+<hr>
+<h3 id="结构型模式"><a href="#结构型模式" class="headerlink" title="结构型模式"></a>结构型模式</h3><p>结构型模式关注的是：<strong>如何组织类和对象之间的关系</strong>。</p>
+<h4 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h4><p>代理模式通过一个代理对象控制对目标对象的访问。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Service</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RealService</span> <span class="keyword">implements</span> <span class="title class_">Service</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;执行真实业务&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ServiceProxy</span> <span class="keyword">implements</span> <span class="title class_">Service</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Service target;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ServiceProxy</span><span class="params">(Service target)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.target = target;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;前置处理&quot;</span>);</span><br><span class="line">        target.execute();</span><br><span class="line">        System.out.println(<span class="string">&quot;后置处理&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>常见应用</strong>：</p>
+<ul>
+<li>Spring AOP</li>
+<li>MyBatis Mapper 代理</li>
+<li>RPC 远程调用代理</li>
+</ul>
+<h4 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h4><p>适配器模式的本质，是让两个原本不兼容的接口协同工作。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">OldPrinter</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">printOld</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;旧接口打印&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Printer</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PrinterAdapter</span> <span class="keyword">implements</span> <span class="title class_">Printer</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> OldPrinter oldPrinter;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">PrinterAdapter</span><span class="params">(OldPrinter oldPrinter)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.oldPrinter = oldPrinter;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span> &#123;</span><br><span class="line">        oldPrinter.printOld();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>核心价值</strong>：</p>
+<ul>
+<li>兼容旧系统</li>
+<li>接入第三方 SDK</li>
+<li>降低改造成本</li>
+</ul>
+<h4 id="装饰器模式"><a href="#装饰器模式" class="headerlink" title="装饰器模式"></a>装饰器模式</h4><p>装饰器模式是在不修改原对象的前提下，动态增强对象功能。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Coffee</span> &#123;</span><br><span class="line">    String <span class="title function_">getName</span><span class="params">()</span>;</span><br><span class="line">    <span class="type">int</span> <span class="title function_">getPrice</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BasicCoffee</span> <span class="keyword">implements</span> <span class="title class_">Coffee</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;咖啡&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getPrice</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MilkDecorator</span> <span class="keyword">implements</span> <span class="title class_">Coffee</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Coffee coffee;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MilkDecorator</span><span class="params">(Coffee coffee)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.coffee = coffee;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> coffee.getName() + <span class="string">&quot;+牛奶&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getPrice</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> coffee.getPrice() + <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>常见应用</strong>：</p>
+<ul>
+<li>Java IO 流体系</li>
+<li>Spring Wrapper 体系</li>
+<li>动态功能叠加</li>
+</ul>
+<hr>
+<h3 id="行为型模式"><a href="#行为型模式" class="headerlink" title="行为型模式"></a>行为型模式</h3><p>行为型模式关注的是：<strong>对象之间的职责如何协作，行为如何变化</strong>。</p>
+<h4 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h4><p>策略模式把一组可替换的算法抽象出来，在运行时动态选择。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">PayStrategy</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">pay</span><span class="params">(<span class="type">int</span> amount)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WechatPay</span> <span class="keyword">implements</span> <span class="title class_">PayStrategy</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">pay</span><span class="params">(<span class="type">int</span> amount)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;微信支付：&quot;</span> + amount);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">AliPay</span> <span class="keyword">implements</span> <span class="title class_">PayStrategy</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">pay</span><span class="params">(<span class="type">int</span> amount)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;支付宝支付：&quot;</span> + amount);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PayContext</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> PayStrategy strategy;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">PayContext</span><span class="params">(PayStrategy strategy)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.strategy = strategy;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">(<span class="type">int</span> amount)</span> &#123;</span><br><span class="line">        strategy.pay(amount);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li>支付方式切换</li>
+<li>排序规则切换</li>
+<li>风控策略切换</li>
+</ul>
+<h4 id="模板方法模式"><a href="#模板方法模式" class="headerlink" title="模板方法模式"></a>模板方法模式</h4><p>模板方法模式把流程骨架定义在父类中，把具体实现延迟到子类完成。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">DataParser</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">parse</span><span class="params">()</span> &#123;</span><br><span class="line">        readData();</span><br><span class="line">        processData();</span><br><span class="line">        saveData();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">readData</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">processData</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">saveData</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;保存数据&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li>流程固定，但局部实现不同</li>
+<li>框架设计中的扩展点</li>
+</ul>
+<h4 id="责任链模式"><a href="#责任链模式" class="headerlink" title="责任链模式"></a>责任链模式</h4><p>责任链模式将多个处理器串成链，请求沿着链传递，直到被某个处理器消费。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">Handler</span> &#123;</span><br><span class="line">    <span class="keyword">protected</span> Handler next;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setNext</span><span class="params">(Handler next)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.next = next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">handle</span><span class="params">(String request)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LoginHandler</span> <span class="keyword">extends</span> <span class="title class_">Handler</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handle</span><span class="params">(String request)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;登录校验&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (next != <span class="literal">null</span>) &#123;</span><br><span class="line">            next.handle(request);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>常见应用</strong>：</p>
+<ul>
+<li>Servlet Filter</li>
+<li>Spring Security 过滤链</li>
+<li>审批流系统</li>
+</ul>
+<h4 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h4><p>观察者模式定义了一对多的依赖关系，一个对象状态改变时，所有依赖它的对象都会收到通知。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Observer</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(String message)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">UserObserver</span> <span class="keyword">implements</span> <span class="title class_">Observer</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(String message)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;收到通知：&quot;</span> + message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>常见应用</strong>：</p>
+<ul>
+<li>事件通知系统</li>
+<li>消息订阅</li>
+<li>GUI 事件监听</li>
+</ul>
+<hr>
+<h2 id="总述"><a href="#总述" class="headerlink" title="总述"></a>总述</h2><p>设计模式的本质，不是记忆 23 种模式的名字，而是理解软件设计中的几类高频问题，以及它们的通用解法。</p>
+<blockquote>
+<p>创建型模式解决的是“对象怎么创建才不会把系统写死”；结构型模式解决的是“对象之间怎么组合才更灵活”；行为型模式解决的是“流程和行为怎么变化才不会牵一发而动全身”。</p>
+<p>从更高的角度看，设计模式并不是独立存在的技巧，而是对“高内聚、低耦合、面向抽象、组合优于继承”这些设计原则的具体落地。很多优秀框架，比如 Spring、MyBatis、Netty，本质上都是这些模式的组合应用。</p>
+<p>真正掌握设计模式的标志，不是能背出类图，而是遇到问题时，能够自然想到：这里是不是要把创建过程隔离出来？这里是不是应该把行为抽象成策略？这里是不是该用责任链解耦流程？</p>
+</blockquote>
+<hr>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="设计模式与设计原则的关系"><a href="#设计模式与设计原则的关系" class="headerlink" title="设计模式与设计原则的关系"></a>设计模式与设计原则的关系</h3><p>设计模式并不是孤立的，它们通常建立在以下原则之上：</p>
+<table>
+<thead>
+<tr>
+<th>原则</th>
+<th>含义</th>
+<th>典型模式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单一职责原则</td>
+<td>一个类只做一件事</td>
+<td>策略、责任链</td>
+</tr>
+<tr>
+<td>开闭原则</td>
+<td>对扩展开放，对修改关闭</td>
+<td>工厂、装饰器</td>
+</tr>
+<tr>
+<td>依赖倒置原则</td>
+<td>依赖抽象而不是实现</td>
+<td>工厂、代理</td>
+</tr>
+<tr>
+<td>组合复用原则</td>
+<td>多用组合，少用继承</td>
+<td>装饰器、桥接</td>
+</tr>
+</tbody></table>
+<h3 id="什么时候不该用设计模式"><a href="#什么时候不该用设计模式" class="headerlink" title="什么时候不该用设计模式"></a>什么时候不该用设计模式</h3><p>不是所有代码都值得抽象。以下场景不必强行上模式：</p>
+<ul>
+<li>业务很简单且变化不大</li>
+<li>只有一次性逻辑</li>
+<li>引入模式的复杂度高于收益</li>
+</ul>
+<blockquote>
+<p>参考：</p>
+<ul>
+<li>《设计模式：可复用面向对象软件的基础》</li>
+<li>《Head First Design Patterns》</li>
+</ul>
+</blockquote>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+      <categories>
+        <category>软件设计</category>
+      </categories>
+      <tags>
+        <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>语言与规则处理工具</title>
     <url>/article/36229.html</url>
     <content><![CDATA[<h2 id="解析器生成器（Parser-Generator）"><a href="#解析器生成器（Parser-Generator）" class="headerlink" title="解析器生成器（Parser Generator）"></a>解析器生成器（Parser Generator）</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>解析器生成器是一种<strong>工具</strong>，它根据用户定义的语法规则（通常是上下文无关文法），自动生成能够将<strong>字符串</strong>转换为<strong>抽象语法树（AST）</strong> 的代码。它解决的是“如何将文本解析为计算机可理解的结构”这一底层问题。</p>
@@ -2942,152 +3092,5 @@
       <tags>
         <tag>语言与规则处理工具</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>openwrt透明代理设置</title>
-    <url>/article/f7383d69.html</url>
-    <content><![CDATA[<blockquote>
-<p>适用场景：OpenWrt 副路由（自建子网）+ Shadowrocket 订阅（含 Trojan 节点），实现”被墙网站走代理、国内网站直连”的透明分流。<br>硬件参考：小米 Redmi AC2100（mt7621 &#x2F; mipsel_24kc），其他 OpenWrt 设备思路相同。</p>
-</blockquote>
-<hr>
-<h1 id="openwrt透明代理设置"><a href="#openwrt透明代理设置" class="headerlink" title="openwrt透明代理设置"></a>openwrt透明代理设置</h1><h2 id="一、网络拓扑"><a href="#一、网络拓扑" class="headerlink" title="一、网络拓扑"></a>一、网络拓扑</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">光猫 (192.168.1.1)</span><br><span class="line">  └─ 主路由 (192.168.31.1，构建 31 子网)</span><br><span class="line">       └─ OpenWrt 副路由</span><br><span class="line">            WAN ← 接主路由 LAN（自动拿到 192.168.31.x）</span><br><span class="line">            LAN ← 自建 192.168.10.1 子网（DHCP 由副路由下发）</span><br><span class="line">            WiFi 客户端 (192.168.10.x) ← 所有流量天然经过副路由 → 透明代理</span><br></pre></td></tr></table></figure>
-
-<p><strong>要点</strong>：</p>
-<ul>
-<li>副路由自建子网（如 192.168.10.x），连它 WiFi 的设备网关&#x2F;DNS 都指向它自己，<strong>流量 100% 经过它</strong>，透明代理必然生效。</li>
-<li>主路由设备不受影响：连主路由 WiFi &#x3D; 直连，连副路由 WiFi &#x3D; 分流代理。</li>
-<li>三个网段（1.x &#x2F; 31.x &#x2F; 10.x）互不冲突。</li>
-</ul>
-<h3 id="副路由网络配置"><a href="#副路由网络配置" class="headerlink" title="副路由网络配置"></a>副路由网络配置</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh root@192.168.10.1</span><br><span class="line"></span><br><span class="line"><span class="comment"># LAN 改为 10 子网</span></span><br><span class="line">uci <span class="built_in">set</span> network.lan.ipaddr=<span class="string">&#x27;192.168.10.1&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> network.lan.netmask=<span class="string">&#x27;255.255.255.0&#x27;</span></span><br><span class="line">uci commit network</span><br><span class="line">/etc/init.d/network restart</span><br><span class="line"></span><br><span class="line"><span class="comment"># DHCP 保持开启（默认就是开的），确认：</span></span><br><span class="line">uci get dhcp.lan.ignore</span><br><span class="line"><span class="comment"># 空 或 0 = 开启；1 = 关闭（如被关了就改回来）</span></span><br><span class="line">uci <span class="built_in">set</span> dhcp.lan.ignore=<span class="string">&#x27;0&#x27;</span></span><br><span class="line">uci commit dhcp</span><br><span class="line">/etc/init.d/dnsmasq restart</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>WAN 口默认就是 DHCP 客户端，插主路由 LAN 口自动拿 31.x 地址，无需配置。</p>
-</blockquote>
-<hr>
-<h2 id="二、SSH-免密登录（Windows）"><a href="#二、SSH-免密登录（Windows）" class="headerlink" title="二、SSH 免密登录（Windows）"></a>二、SSH 免密登录（Windows）</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在 Windows 上生成密钥对（无密码短语）</span></span><br><span class="line">ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_openwrt -N <span class="string">&quot;&quot;</span> -C <span class="string">&quot;openwrt-secondary-router&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 公钥贴到 OpenWrt（dropbear 的 authorized_keys）</span></span><br><span class="line">ssh root@192.168.10.1 <span class="string">&quot;mkdir -p /etc/dropbear &amp;&amp; echo &#x27;ssh-ed25519 AAAA...== openwrt-secondary-router&#x27; &gt;&gt; /etc/dropbear/authorized_keys &amp;&amp; chmod 600 /etc/dropbear/authorized_keys&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>可选：<code>~/.ssh/config</code> 加别名，之后直接 <code>ssh openwrt</code>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Host openwrt</span><br><span class="line">    HostName 192.168.10.1</span><br><span class="line">    User root</span><br><span class="line">    IdentityFile ~/.ssh/id_ed25519_openwrt</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="三、安装-HomeProxy"><a href="#三、安装-HomeProxy" class="headerlink" title="三、安装 HomeProxy"></a>三、安装 HomeProxy</h2><h3 id="问题：官方源里没有代理插件"><a href="#问题：官方源里没有代理插件" class="headerlink" title="问题：官方源里没有代理插件"></a>问题：官方源里没有代理插件</h3><p><strong>官方 OpenWrt 源里没有 homeproxy &#x2F; PassWall &#x2F; OpenClash</strong>（只有 shadowsocks-libev，不支持 Trojan）。这些插件在 <strong>ImmortalWrt</strong> 的源里。</p>
-<p>解法：把 ImmortalWrt 的源加为附加源（不用换固件）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt;&gt; /etc/opkg/customfeeds.conf &lt;&lt;<span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">src/gz iw_luci https://downloads.immortalwrt.org/releases/24.10.0/packages/mipsel_24kc/luci</span><br><span class="line">src/gz iw_packages https://downloads.immortalwrt.org/releases/24.10.0/packages/mipsel_24kc/packages</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>版本号要与固件对应（24.10 系固件用 24.10.0 源），架构看 <code>/etc/openwrt_release</code> 的 <code>DISTRIB_ARCH</code>（如 mipsel_24kc）。<br><strong>腾讯镜像没有 immortalwrt 目录</strong>，404 是正常的，用官方 downloads.immortalwrt.org。</p>
-</blockquote>
-<h3 id="问题：Signature-check-failed"><a href="#问题：Signature-check-failed" class="headerlink" title="问题：Signature check failed"></a>问题：Signature check failed</h3><p>ImmortalWrt 源带签名，官方固件没有对应公钥，<code>opkg update</code> 会报签名校验失败。关闭全局签名校验（走 https 传输保证安全性）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sed -i <span class="string">&#x27;s/^option check_signature/#option check_signature/&#x27;</span> /etc/opkg.conf</span><br><span class="line">opkg update</span><br></pre></td></tr></table></figure>
-
-<h3 id="问题：老固件源-404"><a href="#问题：老固件源-404" class="headerlink" title="问题：老固件源 404"></a>问题：老固件源 404</h3><p>自编译 SNAPSHOT &#x2F; Lean 固件（R22.x 时代）的 snapshots 源早就删了，无法”换个镜像继续用”。<br><strong>正确做法：直接 sysupgrade 刷官方 24.10</strong>（mt7621 设备官方支持完善）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 确认设备型号</span></span><br><span class="line"><span class="built_in">cat</span> /tmp/sysinfo/board_name     <span class="comment"># 例：xiaomi,redmi-router-ac2100</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载官方固件（注意小版本号取最新 24.10.x）</span></span><br><span class="line"><span class="comment"># https://downloads.openwrt.org/releases/24.10.0/targets/ramips/mt7621/</span></span><br><span class="line"><span class="comment"># 文件：openwrt-24.10.0-ramips-mt7621-xiaomi_redmi-router-ac2100-squashfs-sysupgrade.bin</span></span><br><span class="line"></span><br><span class="line">scp openwrt-*.bin root@192.168.10.1:/tmp/</span><br><span class="line">ssh root@192.168.10.1</span><br><span class="line">sysupgrade -n -v /tmp/openwrt-*.bin    <span class="comment"># -n 清空配置，跨大版本必须加</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>刷机注意事项</strong>：</p>
-<ul>
-<li>刷机过程 3~5 分钟，<strong>千万别断电</strong>。</li>
-<li><code>-n</code> 会清空一切：装的包、配置、SSH 公钥全没了，刷完要重头配。</li>
-<li>刷完默认 LAN IP 是 <code>192.168.1.1</code>，网线接 LAN 口连电脑，重新配回 192.168.10.1。</li>
-<li>WiFi 默认未开&#x2F;未加密，第一时间在 LuCI 配好。</li>
-</ul>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">opkg update</span><br><span class="line">opkg install luci-app-homeproxy    <span class="comment"># homeproxy 内核会作为依赖自动装上</span></span><br></pre></td></tr></table></figure>
-
-<p>依赖关系（供排错参考）：</p>
-<ul>
-<li><code>luci-app-homeproxy</code> → <code>sing-box</code>、<code>firewall4</code>、<code>kmod-nft-tproxy</code>、<code>ucode-mod-digest</code></li>
-<li><code>sing-box</code> → <code>ca-bundle</code>、<code>kmod-inet-diag</code>、<code>kmod-netlink-diag</code>、<code>kmod-tun</code></li>
-</ul>
-<p>官方 24.10 用 firewall4&#x2F;nftables，与 ImmortalWrt 24.10 一致，依赖基本都能自动解析。</p>
-<blockquote>
-<p><strong>PassWall2 &#x2F; OpenClash 对比</strong>：PassWall2 也吃 base64 Trojan 订阅、界面更简单，但依赖 <code>dnsmasq-full</code>，需先 <code>opkg remove dnsmasq &amp;&amp; opkg install dnsmasq-full</code>（配置在 &#x2F;etc&#x2F;config&#x2F;dhcp，不丢）。OpenClash 还要求把订阅转成 Clash YAML 格式（走第三方 subconverter 服务，订阅 token 会暴露给转换服务，需斟酌）。HomeProxy 最省事。</p>
-</blockquote>
-<hr>
-<h2 id="四、配置-HomeProxy（LuCI-界面）"><a href="#四、配置-HomeProxy（LuCI-界面）" class="headerlink" title="四、配置 HomeProxy（LuCI 界面）"></a>四、配置 HomeProxy（LuCI 界面）</h2><ol>
-<li><strong>服务 → Home Proxy → 节点订阅</strong>：填订阅 URL → 保存并更新 → 节点列表出现后，选一个 Trojan 节点作为<strong>主节点</strong>。</li>
-<li><strong>设置 → 路由模式</strong>：选 <strong><code>bypass_mainland_china</code>（大陆白名单）</strong> —— 国内直连、国外走代理。这是最实用的默认模式。</li>
-<li>开启透明代理主开关，DNS 劫持默认开启即可。</li>
-</ol>
-<p>对应 uci（命令行等价操作）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">uci show homeproxy | grep -E <span class="string">&#x27;routing_mode|default_outbound&#x27;</span></span><br><span class="line"><span class="comment"># homeproxy.config.routing_mode=&#x27;bypass_mainland_china&#x27;</span></span><br><span class="line"><span class="comment"># homeproxy.routing.default_outbound=&#x27;direct-out&#x27;   ← 未命中任何规则的流量走直连</span></span><br><span class="line"><span class="comment"># homeproxy.routing.sniff_override=&#x27;1&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 换全局模式（所有流量走代理）</span></span><br><span class="line">uci <span class="built_in">set</span> homeproxy.config.routing_mode=<span class="string">&#x27;global&#x27;</span></span><br><span class="line"><span class="comment"># 或 GFW 列表模式（仅被墙网站走代理）</span></span><br><span class="line">uci <span class="built_in">set</span> homeproxy.config.routing_mode=<span class="string">&#x27;bypass_china_mainland_gfwlist&#x27;</span></span><br><span class="line">uci commit homeproxy</span><br><span class="line">/etc/init.d/homeproxy restart</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="五、验证代理是否生效"><a href="#五、验证代理是否生效" class="headerlink" title="五、验证代理是否生效"></a>五、验证代理是否生效</h2><h3 id="终端设备上（最直观）"><a href="#终端设备上（最直观）" class="headerlink" title="终端设备上（最直观）"></a>终端设备上（最直观）</h3><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Windows PowerShell</span></span><br><span class="line">curl.exe <span class="literal">-s</span> https://ipinfo.io | findstr ip      <span class="comment"># 出口 = 节点 IP → 走了代理</span></span><br><span class="line">curl.exe <span class="literal">-s</span> https://myip.ipip.net               <span class="comment"># 出口 = 家宽 IP → 国内直连正常</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="透明代理日志（最详细）"><a href="#透明代理日志（最详细）" class="headerlink" title="透明代理日志（最详细）"></a>透明代理日志（最详细）</h3><p><strong>注意：<code>logread -f</code> 看不到 homeproxy 日志</strong>——sing-box 默认写自己的日志文件，不进 syslog。日志路径先从启动脚本确认：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 从 init 脚本确认 sing-box 启动参数里的日志路径</span></span><br><span class="line">grep -E <span class="string">&#x27;log|procd_set_param&#x27;</span> /etc/init.d/homeproxy</span><br><span class="line"></span><br><span class="line"><span class="comment"># 常见位置（以上面 grep 结果为准）</span></span><br><span class="line"><span class="built_in">ls</span> /var/run/homeproxy/</span><br></pre></td></tr></table></figure>
-
-<p>实测日志文件是 <code>/var/run/homeproxy/sing-box-c.log</code>（客户端）。实时跟踪路由决策：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 按域名过滤，实时看走向</span></span><br><span class="line"><span class="built_in">tail</span> -f /var/run/homeproxy/sing-box-c.log | grep google</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关键行解读：</span></span><br><span class="line"><span class="comment"># outbound/trojan[main-out]: outbound connection to www.google.com:443  ← 走了代理 ✅</span></span><br><span class="line"><span class="comment"># dns: match[3] ... rule_set=geoip-cn =&gt; route(china-dns)                ← 国内流量直连</span></span><br><span class="line"><span class="comment"># router: sniffed protocol: tls, domain: xxx                           ← 嗅探出的真实域名</span></span><br></pre></td></tr></table></figure>
-
-<p>判断方法（对比测试，一目了然）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 国外站 → 出现 outbound/trojan[main-out] = 走代理</span></span><br><span class="line"><span class="built_in">tail</span> -f /var/run/homeproxy/sing-box-c.log | grep google</span><br><span class="line"><span class="comment"># outbound/trojan[main-out]: outbound connection to www.google.com.hk:443</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 国内站 → 只有 dns 交换记录，无 trojan 出站 = 直连</span></span><br><span class="line"><span class="built_in">tail</span> -f /var/run/homeproxy/sing-box-c.log | grep bilibili</span><br><span class="line"><span class="comment"># （一堆 dns: exchange xxx 记录，但没有 outbound/trojan 行）</span></span><br></pre></td></tr></table></figure>
-
-<p>LuCI → Home Proxy → <strong>状态</strong> 页也有实时连接列表（目标域名 → 出站节点）。</p>
-<hr>
-<h2 id="六、常见问题（FAQ）"><a href="#六、常见问题（FAQ）" class="headerlink" title="六、常见问题（FAQ）"></a>六、常见问题（FAQ）</h2><h3 id="Q1：怎么知道某个网站走没走代理？"><a href="#Q1：怎么知道某个网站走没走代理？" class="headerlink" title="Q1：怎么知道某个网站走没走代理？"></a>Q1：怎么知道某个网站走没走代理？</h3><p>开着 <code>tail -f /var/run/homeproxy/sing-box-c.log | grep 域名</code>，然后访问该网站：</p>
-<ul>
-<li>出现 <code>outbound/trojan[main-out]</code> → 走代理</li>
-<li>只有 dns 交换记录、无 trojan 出站行 → 直连</li>
-</ul>
-<p>（注意是 <code>tail -f</code> sing-box 日志文件，<strong>不是 <code>logread -f</code></strong>——sing-box 不写 syslog。）</p>
-<h3 id="Q2：怎么改单个网站的分流走向？"><a href="#Q2：怎么改单个网站的分流走向？" class="headerlink" title="Q2：怎么改单个网站的分流走向？"></a>Q2：怎么改单个网站的分流走向？</h3><p>加自定义路由规则（优先级高于内置规则集）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">uci add homeproxy routing_rule</span><br><span class="line">uci <span class="built_in">set</span> homeproxy.@routing_rule[-1].label=<span class="string">&#x27;force-proxy-example&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> homeproxy.@routing_rule[-1].enabled=<span class="string">&#x27;1&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> homeproxy.@routing_rule[-1].<span class="built_in">type</span>=<span class="string">&#x27;domain&#x27;</span></span><br><span class="line">uci add_list homeproxy.@routing_rule[-1].domain_suffix=<span class="string">&#x27;example.com&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> homeproxy.@routing_rule[-1].outbound=<span class="string">&#x27;main-out&#x27;</span>    <span class="comment"># 或 direct-out 强制直连</span></span><br><span class="line">uci commit homeproxy</span><br><span class="line">/etc/init.d/homeproxy restart</span><br></pre></td></tr></table></figure>
-
-<p>或 LuCI → Home Proxy → 访问控制 → 添加自定义规则。</p>
-<h3 id="Q3：bypass-mainland-china-的名单数据在哪？"><a href="#Q3：bypass-mainland-china-的名单数据在哪？" class="headerlink" title="Q3：bypass_mainland_china 的名单数据在哪？"></a>Q3：<code>bypass_mainland_china</code> 的名单数据在哪？</h3><p>名单不是本地维护的静态文件，而是 <strong>sing-box 的 <code>.srs</code> 规则集</strong>，启动时从网上下载并缓存（约每天自动更新一次）：</p>
-<ul>
-<li><code>geosite-cn</code>（中国域名）：<a href="https://github.com/v2fly/domain-list-community/blob/master/data/cn">https://github.com/v2fly/domain-list-community/blob/master/data/cn</a></li>
-<li><code>geoip-cn</code>（中国 IP 段）：APNIC&#x2F;CNNIC 分配的 CN 地址段</li>
-<li>打包源：<a href="https://github.com/SagerNet/sing-geosite">https://github.com/SagerNet/sing-geosite</a> &#x2F; <a href="https://github.com/SagerNet/sing-geoip">https://github.com/SagerNet/sing-geoip</a></li>
-</ul>
-<p>查看本机实际用的规则集 URL：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">grep -A3 rule_set /etc/homeproxy/config.json | grep url</span><br></pre></td></tr></table></figure>
-
-<h3 id="Q4：订阅-403-更新失败？"><a href="#Q4：订阅-403-更新失败？" class="headerlink" title="Q4：订阅 403 &#x2F; 更新失败？"></a>Q4：订阅 403 &#x2F; 更新失败？</h3><p>订阅面板按 User-Agent 过滤。测：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl -A <span class="string">&quot;clash-verge/v1.0&quot;</span>    <span class="string">&quot;你的订阅URL&quot;</span></span><br><span class="line">curl -A <span class="string">&quot;Shadowrocket/1908&quot;</span>   <span class="string">&quot;你的订阅URL&quot;</span></span><br><span class="line">curl -A <span class="string">&quot;Shadowrocket/1908 CFNetwork&quot;</span>   <span class="string">&quot;你的订阅URL&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>能通的 UA 填进 HomeProxy 订阅设置的 User-Agent 项。都不通则检查订阅是否被重置&#x2F;过期。<br><strong>注意</strong>：订阅 URL 带 token，等于密码，别公开分享，泄露了去面板重置。</p>
-<h3 id="Q5：WiFi-老掉线（mt7621-mt76-驱动）"><a href="#Q5：WiFi-老掉线（mt7621-mt76-驱动）" class="headerlink" title="Q5：WiFi 老掉线（mt7621 &#x2F; mt76 驱动）"></a>Q5：WiFi 老掉线（mt7621 &#x2F; mt76 驱动）</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 关闭低应答踢人（默认开启，误杀弱信号客户端）</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.default_radio0.disassoc_low_ack=<span class="string">&#x27;0&#x27;</span></span><br><span class="line">uci commit wireless</span><br><span class="line">wifi reload</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5G 打开并固定信道，2.4G 干扰大易掉线</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio1.disabled=<span class="string">&#x27;0&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio1.channel=<span class="string">&#x27;36&#x27;</span>        <span class="comment"># 避开 52-144 DFS 信道</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio1.htmode=<span class="string">&#x27;VHT80&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio0.country=<span class="string">&#x27;CN&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio1.country=<span class="string">&#x27;CN&#x27;</span></span><br><span class="line"><span class="comment"># 5G 记得配加密 psk2 + 强密码</span></span><br><span class="line">uci commit wireless</span><br><span class="line">wifi reload</span><br></pre></td></tr></table></figure>
-
-<p>掉线时抓现场：<code>logread | grep -iE &#39;deauth|disassoc&#39;</code>，看 <code>reason=</code>（4&#x3D;不活跃超时，7&#x3D;AP 踢）。</p>
-<h3 id="Q6：mips-架构选什么二进制？"><a href="#Q6：mips-架构选什么二进制？" class="headerlink" title="Q6：mips 架构选什么二进制？"></a>Q6：mips 架构选什么二进制？</h3><p><code>uname -m</code> 显示 <code>mips</code>，选 <strong><code>linux-mipsle-softfloat</code></strong>（MIPS 小端、软浮点）。amd64&#x2F;arm64 的跑不了。opkg 不用操心，源路径已锁定架构。</p>
-<h3 id="Q7：装了-homeproxy-想换-OpenClash-PassWall2？"><a href="#Q7：装了-homeproxy-想换-OpenClash-PassWall2？" class="headerlink" title="Q7：装了 homeproxy 想换 OpenClash &#x2F; PassWall2？"></a>Q7：装了 homeproxy 想换 OpenClash &#x2F; PassWall2？</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">opkg remove luci-app-homeproxy</span><br><span class="line">opkg remove sing-box          <span class="comment"># 确认无其他依赖再卸</span></span><br></pre></td></tr></table></figure>
-
-<p>OpenClash &#x2F; PassWall2 也都在 ImmortalWrt 源（iw_luci）里，附加源已加好的话直接装。PassWall2 注意先处理 dnsmasq 冲突（见第三节）。</p>
-<hr>
-<h2 id="七、架构速查"><a href="#七、架构速查" class="headerlink" title="七、架构速查"></a>七、架构速查</h2><table>
-<thead>
-<tr>
-<th>架构名</th>
-<th>说明</th>
-<th>典型设备</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>mips &#x2F; mipsel_24kc</td>
-<td>MIPS 32 位小端</td>
-<td>MT7621 路由器（AC2100 等）</td>
-</tr>
-<tr>
-<td>amd64 &#x2F; x86_64</td>
-<td>x86 64 位</td>
-<td>PC、软路由</td>
-</tr>
-<tr>
-<td>arm64 &#x2F; aarch64</td>
-<td>ARM 64 位</td>
-<td>树莓派 4、高通 IPQ 系列</td>
-</tr>
-<tr>
-<td>armv7</td>
-<td>ARM 32 位</td>
-<td>老树莓派、ARM 路由器</td>
-</tr>
-</tbody></table>
-<p>查看本机：<code>uname -m</code>、<code>opkg print-architecture</code>、<code>cat /etc/openwrt_release</code>。</p>
-<hr>
-<h2 id="附录：完整初始化命令清单（刷机后照抄）"><a href="#附录：完整初始化命令清单（刷机后照抄）" class="headerlink" title="附录：完整初始化命令清单（刷机后照抄）"></a>附录：完整初始化命令清单（刷机后照抄）</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># ---- 1. 网络：LAN 改 10 子网 ----</span></span><br><span class="line">ssh root@192.168.1.1</span><br><span class="line">uci <span class="built_in">set</span> network.lan.ipaddr=<span class="string">&#x27;192.168.10.1&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> network.lan.netmask=<span class="string">&#x27;255.255.255.0&#x27;</span></span><br><span class="line">uci commit network</span><br><span class="line">/etc/init.d/network restart</span><br><span class="line"><span class="comment"># 断开重连：ssh root@192.168.10.1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ---- 2. 贴 SSH 公钥（Windows 上执行，公钥内容换成自己的）----</span></span><br><span class="line">ssh root@192.168.10.1 <span class="string">&quot;mkdir -p /etc/dropbear &amp;&amp; echo &#x27;ssh-ed25519 AAAA... openwrt&#x27; &gt;&gt; /etc/dropbear/authorized_keys &amp;&amp; chmod 600 /etc/dropbear/authorized_keys&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ---- 3. 加 ImmortalWrt 附加源 ----</span></span><br><span class="line"><span class="built_in">cat</span> &gt;&gt; /etc/opkg/customfeeds.conf &lt;&lt;<span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">src/gz iw_luci https://downloads.immortalwrt.org/releases/24.10.0/packages/mipsel_24kc/luci</span><br><span class="line">src/gz iw_packages https://downloads.immortalwrt.org/releases/24.10.0/packages/mipsel_24kc/packages</span><br><span class="line">EOF</span><br><span class="line">sed -i <span class="string">&#x27;s/^option check_signature/#option check_signature/&#x27;</span> /etc/opkg.conf</span><br><span class="line">opkg update</span><br><span class="line"></span><br><span class="line"><span class="comment"># ---- 4. 无线：关踢人、开 5G、固定信道 ----</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.default_radio0.disassoc_low_ack=<span class="string">&#x27;0&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio0.country=<span class="string">&#x27;CN&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio1.disabled=<span class="string">&#x27;0&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio1.channel=<span class="string">&#x27;36&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio1.htmode=<span class="string">&#x27;VHT80&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.radio1.country=<span class="string">&#x27;CN&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.default_radio1.ssid=<span class="string">&#x27;OpenWrt&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.default_radio1.encryption=<span class="string">&#x27;psk2&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.default_radio1.key=<span class="string">&#x27;你的强密码&#x27;</span></span><br><span class="line">uci <span class="built_in">set</span> wireless.default_radio0.key=<span class="string">&#x27;你的强密码&#x27;</span></span><br><span class="line">uci commit wireless</span><br><span class="line">wifi reload</span><br><span class="line"></span><br><span class="line"><span class="comment"># ---- 5. 安装 HomeProxy ----</span></span><br><span class="line">opkg install luci-app-homeproxy</span><br><span class="line"></span><br><span class="line"><span class="comment"># ---- 6. LuCI 配置（界面操作）----</span></span><br><span class="line"><span class="comment"># 服务 → Home Proxy → 节点订阅 → 填订阅 URL → 更新</span></span><br><span class="line"><span class="comment"># 主节点选 Trojan 节点；路由模式选 bypass_mainland_china；开主开关</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ---- 7. 验证 ----</span></span><br><span class="line"><span class="comment"># 连WiFi的电脑上：</span></span><br><span class="line"><span class="comment"># curl.exe -s https://ipinfo.io          → 节点 IP = 代理生效</span></span><br><span class="line"><span class="comment"># curl.exe -s https://myip.ipip.net       → 家宽 IP = 国内直连正常</span></span><br></pre></td></tr></table></figure>
-
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
   </entry>
 </search>
