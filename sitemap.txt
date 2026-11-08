@@ -1,5 +1,3 @@
-https://aitestperson.github.io/article/36229.html
-https://aitestperson.github.io/tags/index.html
 https://aitestperson.github.io/article/3975004e.html
 https://aitestperson.github.io/article/12425.html
 https://aitestperson.github.io/article/45792.html
@@ -14,6 +12,8 @@ https://aitestperson.github.io/article/90001.html
 https://aitestperson.github.io/article/4352.html
 https://aitestperson.github.io/article/37573.html
 https://aitestperson.github.io/article/1eacb680.html
+https://aitestperson.github.io/article/36229.html
+https://aitestperson.github.io/tags/index.html
 https://aitestperson.github.io/article/2135.html
 https://aitestperson.github.io/
 https://aitestperson.github.io/tags/ClassLoader/
