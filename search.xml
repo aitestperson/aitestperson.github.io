@@ -1290,7 +1290,7 @@
 <p>适用场景：OpenWrt 副路由（自建子网）+ Shadowrocket 订阅（含 Trojan 节点），实现”被墙网站走代理、国内网站直连”的透明分流。<br>硬件参考：小米 Redmi AC2100（mt7621 &#x2F; mipsel_24kc），其他 OpenWrt 设备思路相同。</p>
 </blockquote>
 <hr>
-<h2 id="一、网络拓扑"><a href="#一、网络拓扑" class="headerlink" title="一、网络拓扑"></a>一、网络拓扑</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">光猫 (192.168.1.1)</span><br><span class="line">  └─ 主路由 (192.168.31.1，构建 31 子网)</span><br><span class="line">       └─ OpenWrt 副路由</span><br><span class="line">            WAN ← 接主路由 LAN（自动拿到 192.168.31.x）</span><br><span class="line">            LAN ← 自建 192.168.10.1 子网（DHCP 由副路由下发）</span><br><span class="line">            WiFi 客户端 (192.168.10.x) ← 所有流量天然经过副路由 → 透明代理</span><br></pre></td></tr></table></figure>
+<h2 id="网络拓扑"><a href="#网络拓扑" class="headerlink" title="网络拓扑"></a>网络拓扑</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">光猫 (192.168.1.1)</span><br><span class="line">  └─ 主路由 (192.168.31.1，构建 31 子网)</span><br><span class="line">       └─ OpenWrt 副路由</span><br><span class="line">            WAN ← 接主路由 LAN（自动拿到 192.168.31.x）</span><br><span class="line">            LAN ← 自建 192.168.10.1 子网（DHCP 由副路由下发）</span><br><span class="line">            WiFi 客户端 (192.168.10.x) ← 所有流量天然经过副路由 → 透明代理</span><br></pre></td></tr></table></figure>
 
 <p><strong>要点</strong>：</p>
 <ul>
@@ -1304,13 +1304,13 @@
 <p>WAN 口默认就是 DHCP 客户端，插主路由 LAN 口自动拿 31.x 地址，无需配置。</p>
 </blockquote>
 <hr>
-<h2 id="二、SSH-免密登录（Windows）"><a href="#二、SSH-免密登录（Windows）" class="headerlink" title="二、SSH 免密登录（Windows）"></a>二、SSH 免密登录（Windows）</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在 Windows 上生成密钥对（无密码短语）</span></span><br><span class="line">ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_openwrt -N <span class="string">&quot;&quot;</span> -C <span class="string">&quot;openwrt-secondary-router&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 公钥贴到 OpenWrt（dropbear 的 authorized_keys）</span></span><br><span class="line">ssh root@192.168.10.1 <span class="string">&quot;mkdir -p /etc/dropbear &amp;&amp; echo &#x27;ssh-ed25519 AAAA...== openwrt-secondary-router&#x27; &gt;&gt; /etc/dropbear/authorized_keys &amp;&amp; chmod 600 /etc/dropbear/authorized_keys&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="SSH-免密登录（Windows）"><a href="#SSH-免密登录（Windows）" class="headerlink" title="SSH 免密登录（Windows）"></a>SSH 免密登录（Windows）</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在 Windows 上生成密钥对（无密码短语）</span></span><br><span class="line">ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_openwrt -N <span class="string">&quot;&quot;</span> -C <span class="string">&quot;openwrt-secondary-router&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 公钥贴到 OpenWrt（dropbear 的 authorized_keys）</span></span><br><span class="line">ssh root@192.168.10.1 <span class="string">&quot;mkdir -p /etc/dropbear &amp;&amp; echo &#x27;ssh-ed25519 AAAA...== openwrt-secondary-router&#x27; &gt;&gt; /etc/dropbear/authorized_keys &amp;&amp; chmod 600 /etc/dropbear/authorized_keys&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p>可选：<code>~/.ssh/config</code> 加别名，之后直接 <code>ssh openwrt</code>：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Host openwrt</span><br><span class="line">    HostName 192.168.10.1</span><br><span class="line">    User root</span><br><span class="line">    IdentityFile ~/.ssh/id_ed25519_openwrt</span><br></pre></td></tr></table></figure>
 
 <hr>
-<h2 id="三、安装-HomeProxy"><a href="#三、安装-HomeProxy" class="headerlink" title="三、安装 HomeProxy"></a>三、安装 HomeProxy</h2><h3 id="问题：官方源里没有代理插件"><a href="#问题：官方源里没有代理插件" class="headerlink" title="问题：官方源里没有代理插件"></a>问题：官方源里没有代理插件</h3><p><strong>官方 OpenWrt 源里没有 homeproxy &#x2F; PassWall &#x2F; OpenClash</strong>（只有 shadowsocks-libev，不支持 Trojan）。这些插件在 <strong>ImmortalWrt</strong> 的源里。</p>
+<h2 id="安装-HomeProxy"><a href="#安装-HomeProxy" class="headerlink" title="安装 HomeProxy"></a>安装 HomeProxy</h2><h3 id="问题：官方源里没有代理插件"><a href="#问题：官方源里没有代理插件" class="headerlink" title="问题：官方源里没有代理插件"></a>问题：官方源里没有代理插件</h3><p><strong>官方 OpenWrt 源里没有 homeproxy &#x2F; PassWall &#x2F; OpenClash</strong>（只有 shadowsocks-libev，不支持 Trojan）。这些插件在 <strong>ImmortalWrt</strong> 的源里。</p>
 <p>解法：把 ImmortalWrt 的源加为附加源（不用换固件）：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt;&gt; /etc/opkg/customfeeds.conf &lt;&lt;<span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">src/gz iw_luci https://downloads.immortalwrt.org/releases/24.10.0/packages/mipsel_24kc/luci</span><br><span class="line">src/gz iw_packages https://downloads.immortalwrt.org/releases/24.10.0/packages/mipsel_24kc/packages</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
 
@@ -1342,7 +1342,7 @@
 <p><strong>PassWall2 &#x2F; OpenClash 对比</strong>：PassWall2 也吃 base64 Trojan 订阅、界面更简单，但依赖 <code>dnsmasq-full</code>，需先 <code>opkg remove dnsmasq &amp;&amp; opkg install dnsmasq-full</code>（配置在 &#x2F;etc&#x2F;config&#x2F;dhcp，不丢）。OpenClash 还要求把订阅转成 Clash YAML 格式（走第三方 subconverter 服务，订阅 token 会暴露给转换服务，需斟酌）。HomeProxy 最省事。</p>
 </blockquote>
 <hr>
-<h2 id="四、配置-HomeProxy（LuCI-界面）"><a href="#四、配置-HomeProxy（LuCI-界面）" class="headerlink" title="四、配置 HomeProxy（LuCI 界面）"></a>四、配置 HomeProxy（LuCI 界面）</h2><ol>
+<h2 id="配置-HomeProxy（LuCI-界面）"><a href="#配置-HomeProxy（LuCI-界面）" class="headerlink" title="配置 HomeProxy（LuCI 界面）"></a>配置 HomeProxy（LuCI 界面）</h2><ol>
 <li><strong>服务 → Home Proxy → 节点订阅</strong>：填订阅 URL → 保存并更新 → 节点列表出现后，选一个 Trojan 节点作为<strong>主节点</strong>。</li>
 <li><strong>设置 → 路由模式</strong>：选 <strong><code>bypass_mainland_china</code>（大陆白名单）</strong> —— 国内直连、国外走代理。这是最实用的默认模式。</li>
 <li>开启透明代理主开关，DNS 劫持默认开启即可。</li>
@@ -1351,7 +1351,7 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">uci show homeproxy | grep -E <span class="string">&#x27;routing_mode|default_outbound&#x27;</span></span><br><span class="line"><span class="comment"># homeproxy.config.routing_mode=&#x27;bypass_mainland_china&#x27;</span></span><br><span class="line"><span class="comment"># homeproxy.routing.default_outbound=&#x27;direct-out&#x27;   ← 未命中任何规则的流量走直连</span></span><br><span class="line"><span class="comment"># homeproxy.routing.sniff_override=&#x27;1&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 换全局模式（所有流量走代理）</span></span><br><span class="line">uci <span class="built_in">set</span> homeproxy.config.routing_mode=<span class="string">&#x27;global&#x27;</span></span><br><span class="line"><span class="comment"># 或 GFW 列表模式（仅被墙网站走代理）</span></span><br><span class="line">uci <span class="built_in">set</span> homeproxy.config.routing_mode=<span class="string">&#x27;bypass_china_mainland_gfwlist&#x27;</span></span><br><span class="line">uci commit homeproxy</span><br><span class="line">/etc/init.d/homeproxy restart</span><br></pre></td></tr></table></figure>
 
 <hr>
-<h2 id="五、验证代理是否生效"><a href="#五、验证代理是否生效" class="headerlink" title="五、验证代理是否生效"></a>五、验证代理是否生效</h2><h3 id="终端设备上（最直观）"><a href="#终端设备上（最直观）" class="headerlink" title="终端设备上（最直观）"></a>终端设备上（最直观）</h3><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Windows PowerShell</span></span><br><span class="line">curl.exe <span class="literal">-s</span> https://ipinfo.io | findstr ip      <span class="comment"># 出口 = 节点 IP → 走了代理</span></span><br><span class="line">curl.exe <span class="literal">-s</span> https://myip.ipip.net               <span class="comment"># 出口 = 家宽 IP → 国内直连正常</span></span><br></pre></td></tr></table></figure>
+<h2 id="验证代理是否生效"><a href="#验证代理是否生效" class="headerlink" title="验证代理是否生效"></a>验证代理是否生效</h2><h3 id="终端设备上（最直观）"><a href="#终端设备上（最直观）" class="headerlink" title="终端设备上（最直观）"></a>终端设备上（最直观）</h3><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Windows PowerShell</span></span><br><span class="line">curl.exe <span class="literal">-s</span> https://ipinfo.io | findstr ip      <span class="comment"># 出口 = 节点 IP → 走了代理</span></span><br><span class="line">curl.exe <span class="literal">-s</span> https://myip.ipip.net               <span class="comment"># 出口 = 家宽 IP → 国内直连正常</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="透明代理日志（最详细）"><a href="#透明代理日志（最详细）" class="headerlink" title="透明代理日志（最详细）"></a>透明代理日志（最详细）</h3><p><strong>注意：<code>logread -f</code> 看不到 homeproxy 日志</strong>——sing-box 默认写自己的日志文件，不进 syslog。日志路径先从启动脚本确认：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 从 init 脚本确认 sing-box 启动参数里的日志路径</span></span><br><span class="line">grep -E <span class="string">&#x27;log|procd_set_param&#x27;</span> /etc/init.d/homeproxy</span><br><span class="line"></span><br><span class="line"><span class="comment"># 常见位置（以上面 grep 结果为准）</span></span><br><span class="line"><span class="built_in">ls</span> /var/run/homeproxy/</span><br></pre></td></tr></table></figure>
@@ -1364,7 +1364,7 @@
 
 <p>LuCI → Home Proxy → <strong>状态</strong> 页也有实时连接列表（目标域名 → 出站节点）。</p>
 <hr>
-<h2 id="六、常见问题（FAQ）"><a href="#六、常见问题（FAQ）" class="headerlink" title="六、常见问题（FAQ）"></a>六、常见问题（FAQ）</h2><h3 id="Q1：怎么知道某个网站走没走代理？"><a href="#Q1：怎么知道某个网站走没走代理？" class="headerlink" title="Q1：怎么知道某个网站走没走代理？"></a>Q1：怎么知道某个网站走没走代理？</h3><p>开着 <code>tail -f /var/run/homeproxy/sing-box-c.log | grep 域名</code>，然后访问该网站：</p>
+<h2 id="常见问题（FAQ）"><a href="#常见问题（FAQ）" class="headerlink" title="常见问题（FAQ）"></a>常见问题（FAQ）</h2><h3 id="Q1：怎么知道某个网站走没走代理？"><a href="#Q1：怎么知道某个网站走没走代理？" class="headerlink" title="Q1：怎么知道某个网站走没走代理？"></a>Q1：怎么知道某个网站走没走代理？</h3><p>开着 <code>tail -f /var/run/homeproxy/sing-box-c.log | grep 域名</code>，然后访问该网站：</p>
 <ul>
 <li>出现 <code>outbound/trojan[main-out]</code> → 走代理</li>
 <li>只有 dns 交换记录、无 trojan 出站行 → 直连</li>
@@ -1395,7 +1395,7 @@
 
 <p>OpenClash &#x2F; PassWall2 也都在 ImmortalWrt 源（iw_luci）里，附加源已加好的话直接装。PassWall2 注意先处理 dnsmasq 冲突（见第三节）。</p>
 <hr>
-<h2 id="七、架构速查"><a href="#七、架构速查" class="headerlink" title="七、架构速查"></a>七、架构速查</h2><table>
+<h2 id="架构速查"><a href="#架构速查" class="headerlink" title="架构速查"></a>架构速查</h2><table>
 <thead>
 <tr>
 <th>架构名</th>
